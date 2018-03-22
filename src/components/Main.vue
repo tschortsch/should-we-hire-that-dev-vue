@@ -24,8 +24,9 @@
       </div>
 
       <div class="col-xl-8 col-lg-10 text-center">
-        <div v-if="errorMessage !== ''" class="text-danger">{{ this.errorMessage }}</div>
+        <div v-if="errorMessage !== ''" class="text-danger">{{ errorMessage }}</div>
         <user-info :userdata="userdata" :isLoading="isLoading" />
+        <statistics v-if="(userdata && commitsTotalCount) || isLoading" :userdata="userdata" :commits-total-count="commitsTotalCount" />
       </div>
     </div>
   </div>
@@ -36,10 +37,12 @@ import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faGithub } from '@fortawesome/fontawesome-free-brands'
 import moment from 'moment'
 import UserInfo from './UserInfo'
+import Statistics from './Statistics'
 
 export default {
   name: 'main',
   components: {
+    Statistics,
     UserInfo,
     FontAwesomeIcon
   },
@@ -219,39 +222,39 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "~bootstrap/scss/functions";
-  @import "../variables";
-  @import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/functions";
+@import "../variables";
+@import "~bootstrap/scss/mixins";
 
-  .question {
-    font-size: $h1-font-size;
-    flex: 1;
+.question {
+  font-size: $h1-font-size;
+  flex: 1;
 
   @include media-breakpoint-up(md) {
     display: flex;
   }
 
   > .flex-item {
-  @include media-breakpoint-up(md) {
-    flex: 1;
-  }
+    @include media-breakpoint-up(md) {
+      flex: 1;
+    }
   }
 
   .label {
     margin-right: 0.7rem;
 
-  @include media-breakpoint-up(md) {
-    text-align: right;
-  }
+    @include media-breakpoint-up(md) {
+      text-align: right;
+    }
   }
 
   .username-input-wrapper {
     display: flex;
     align-items: baseline;
 
-  .questionmark {
-    margin-left: 0.7rem;
-  }
+    .questionmark {
+      margin-left: 0.7rem;
+    }
   }
 
   .form-text {
@@ -268,5 +271,5 @@ export default {
     color: $body-color;
     width: 100%;
   }
-  }
+}
 </style>
