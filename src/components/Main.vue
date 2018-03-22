@@ -24,7 +24,8 @@
       </div>
 
       <div class="col-xl-8 col-lg-10 text-center">
-        Bla
+        <div v-if="errorMessage !== ''" class="text-danger">{{ this.errorMessage }}</div>
+        <UserInfo :userdata="userdata" :isLoading="isLoading" />
       </div>
     </div>
   </div>
@@ -32,9 +33,13 @@
 
 <script>
 import moment from 'moment'
+import UserInfo from './UserInfo'
 
 export default {
   name: 'main',
+  components: {
+    UserInfo
+  },
   data () {
     return {
       accessToken: window.localStorage.getItem('swhtd-gh-access-token'),
@@ -48,6 +53,12 @@ export default {
   methods: {
     submitUsernameForm: function (e) {
       e.preventDefault()
+      if (this.username === '') {
+        this.resetState()
+        this.errorMessage = 'Please enter username.'
+        this.isLoading = false
+        return
+      }
       this.fetchUserInfo(this.username)
     }
   },
@@ -119,6 +130,7 @@ export default {
           if (userResponse.errors) {
             this.resetState()
             this.errorMessage = userResponse.errors[0].message
+            this.isLoading = false
             return
           }
           this.userdata = userResponse.data.user
