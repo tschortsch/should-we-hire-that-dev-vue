@@ -16,7 +16,7 @@
                   />
                   <div class="questionmark">?</div>
                 </div>
-                <p class="form-text text-muted">Enter GitHub GitHub##ICON## username</p>
+                <p class="form-text text-muted">Enter GitHub <font-awesome-icon :icon="iconGithub" /> username</p>
               </div>
             </div>
           </div>
@@ -25,20 +25,23 @@
 
       <div class="col-xl-8 col-lg-10 text-center">
         <div v-if="errorMessage !== ''" class="text-danger">{{ this.errorMessage }}</div>
-        <UserInfo :userdata="userdata" :isLoading="isLoading" />
+        <user-info :userdata="userdata" :isLoading="isLoading" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { faGithub } from '@fortawesome/fontawesome-free-brands'
 import moment from 'moment'
 import UserInfo from './UserInfo'
 
 export default {
   name: 'main',
   components: {
-    UserInfo
+    UserInfo,
+    FontAwesomeIcon
   },
   data () {
     return {
@@ -48,6 +51,11 @@ export default {
       commitsTotalCount: null,
       errorMessage: '',
       isLoading: false
+    }
+  },
+  computed: {
+    iconGithub () {
+      return faGithub
     }
   },
   methods: {
