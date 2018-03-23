@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-6 col-10">
     <h3>Languages</h3>
-    <language-pie-chart :data="chartData" :options="chartOptions" />
+    <language-pie-chart :chartData="chartData" :options="chartOptions" />
   </div>
 </template>
 
