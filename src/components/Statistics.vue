@@ -13,6 +13,7 @@
       :value="overallRankingValue"
       :maxRanking="maxRanking"
     />
+    <language-statistics :repositoriesContributedTo="repositoriesContributedTo" />
   </div>
 </template>
 
@@ -20,9 +21,11 @@
 import moment from 'moment'
 import StatisticsBox from './StatisticsBox'
 import OverallRanking from './OverallRanking'
+import LanguageStatistics from './LanguageStatistics'
 
 export default {
   components: {
+    LanguageStatistics,
     OverallRanking,
     StatisticsBox
   },
