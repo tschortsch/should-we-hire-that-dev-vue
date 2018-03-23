@@ -19,7 +19,7 @@ export default {
   methods: {
     handleAuth: function (e) {
       e.preventDefault()
-      window.localStorage.setItem('swhtd-gh-access-token', '7abe7252165cb823829fc4a6fd0fe68e25e7f883')
+      window.localStorage.setItem('swhtd-gh-access-token', 'blabla')
       window.location.reload()
       // TODO redirect to auth page
       // window.location.href = './github-auth.php'
