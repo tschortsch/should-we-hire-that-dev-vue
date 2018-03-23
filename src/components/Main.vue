@@ -2,29 +2,7 @@
   <div class="container my-5">
     <div class="row justify-content-center">
       <github-auth :accessToken="accessToken" />
-      <div class="col-xl-8 col-lg-10">
-        <form v-if="accessToken" class="form-inline mb-3" v-on:submit="submitUsernameForm">
-          <div class="form-group">
-            <div class="question">
-              <div class="label flex-item">Should we hire</div>
-              <div class="flex-item">
-                <div class="username-input-wrapper">
-                  <label for="username" class="sr-only">Please enter GitHub username:</label>
-                  <input type="search" name="username" id="username" class="form-control"
-                         v-model="username"
-                         placeholder="that dev"
-                         :disabled="isLoading"
-                  />
-                  <div class="questionmark">?</div>
-                </div>
-                <p class="form-text text-muted">Enter GitHub <font-awesome-icon :icon="iconGithub" /> username</p>
-              </div>
-            </div>
-          </div>
-        </form>
-        <h1 v-else class="text-center">Should we hire that dev?</h1>
-      </div>
-
+      <github-username-input :accessToken="accessToken" :isLoading="isLoading" />
       <div class="col-xl-8 col-lg-10 text-center">
         <div v-if="errorMessage !== ''" class="text-danger">{{ errorMessage }}</div>
         <p v-if="!accessToken">
@@ -39,20 +17,19 @@
 </template>
 
 <script>
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import { faGithub } from '@fortawesome/fontawesome-free-brands'
 import moment from 'moment'
 import UserInfo from './UserInfo'
 import Statistics from './Statistics'
 import GithubAuth from './GithubAuth'
+import GithubUsernameInput from './GithubUsernameInput'
 
 export default {
   name: 'main',
   components: {
+    GithubUsernameInput,
     GithubAuth,
     Statistics,
-    UserInfo,
-    FontAwesomeIcon
+    UserInfo
   },
   data () {
     return {
@@ -64,29 +41,15 @@ export default {
       isLoading: false
     }
   },
-  computed: {
-    iconGithub () {
-      return faGithub
-    }
-  },
   watch: {
     '$route' (to, from) {
       if (to.params.username) {
         this.username = to.params.username
         this.fetchUserInfo(this.username)
-      }
-    }
-  },
-  methods: {
-    submitUsernameForm: function (e) {
-      e.preventDefault()
-      if (this.username === '') {
+      } else {
+        this.username = ''
         this.resetState()
         this.errorMessage = 'Please enter username.'
-        this.isLoading = false
-        this.$router.push({ name: 'Main' })
-      } else {
-        this.$router.push({ name: 'Main', params: { username: this.username } })
       }
     }
   },
