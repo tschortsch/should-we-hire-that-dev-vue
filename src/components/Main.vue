@@ -200,7 +200,7 @@ export default {
     }
 
     // fetch userinfo on load if username is passed in url
-    if (this.username) {
+    if (this.accessToken && this.username) {
       this.fetchUserInfo(this.username)
     }
   }
