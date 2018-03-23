@@ -19,11 +19,13 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.8",
     "@fortawesome/vue-fontawesome": "^0.0.22",
     "bootstrap": "^4.0.0",
+    "countup.js": "^1.9.3",
     "jquery": "^3.3.1",
     "moment": "^2.21.0",
     "popper.js": "^1.14.1",
     "request": "^2.85.0",
     "vue": "^2.5.2",
+    "vue-countup-v2": "^1.0.3",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
