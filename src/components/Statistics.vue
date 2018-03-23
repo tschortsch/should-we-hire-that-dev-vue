@@ -8,15 +8,24 @@
       :additional-value="statisticsValue.additionalValue"
       :ranking="statisticsValue.ranking "
     />
+    <overall-ranking
+      title="Overall ranking"
+      :value="overallRankingValue"
+      :maxRanking="maxRanking"
+    />
   </div>
 </template>
 
 <script>
 import moment from 'moment'
 import StatisticsBox from './StatisticsBox'
+import OverallRanking from './OverallRanking'
 
 export default {
-  components: { StatisticsBox },
+  components: {
+    OverallRanking,
+    StatisticsBox
+  },
   name: 'statistics',
   props: {
     userdata: {
@@ -206,15 +215,56 @@ export default {
       return this.userdata ? this.userdata.repositoriesContributedTo.nodes : []
     },
     overallRankingValue () {
-      return this.getOverallRankingValue(this.statisticsValues())
+      return this.getOverallRankingValue(this.statisticsValues)
     },
     maxRanking () {
-      return this.getMaxRanking(this.statisticsValues())
+      return this.getMaxRanking(this.statisticsValues)
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import "~bootstrap/scss/functions";
+@import "../variables";
+@import "~bootstrap/scss/mixins";
 
+.statistics {
+  h3 {
+    font-size: $h5-font-size;
+    margin-bottom: 0;
+  }
+  p {
+    margin-bottom: 5px;
+  }
+  p.value {
+    font-size: $h1-font-size;
+    margin-bottom: 0;
+  }
+}
+
+@function get-rank-color($rank) {
+  $step: 255 / 5;
+  $red: 0;
+  $green: 0;
+  @if $rank <= 50 {
+    $red: 255;
+    $green: ($rank / 10 * $step);
+  } @else {
+    $red: 255 - ((($rank - 50) / 10) * $step);
+    @if $red < 0 {
+      $red: 0
+    }
+    $green: 255;
+  }
+  @return rgb($red, $green, 0);
+}
+$rank-list: 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100;
+@each $rank in $rank-list {
+  .rank-#{$rank} {
+    .progress-bar {
+      background-color: get-rank-color($rank);
+    }
+  }
+}
 </style>

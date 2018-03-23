@@ -36,44 +36,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "~bootstrap/scss/functions";
-  @import "../variables";
-  @import "~bootstrap/scss/mixins";
 
-  h3 {
-    font-size: $h5-font-size;
-    margin-bottom: 0;
-  }
-  p {
-    margin-bottom: 5px;
-  }
-  p.value {
-    font-size: $h1-font-size;
-    margin-bottom: 0;
-  }
-
-  @function get-rank-color($rank) {
-    $step: 255 / 5;
-    $red: 0;
-    $green: 0;
-    @if $rank <= 50 {
-      $red: 255;
-      $green: ($rank / 10 * $step);
-    } @else {
-      $red: 255 - ((($rank - 50) / 10) * $step);
-      @if $red < 0 {
-        $red: 0
-      }
-      $green: 255;
-    }
-    @return rgb($red, $green, 0);
-  }
-  $rank-list: 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100;
-  @each $rank in $rank-list {
-    .rank-#{$rank} {
-      .progress-bar {
-        background-color: get-rank-color($rank);
-      }
-    }
-  }
 </style>
