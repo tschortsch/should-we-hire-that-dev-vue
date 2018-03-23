@@ -9,8 +9,10 @@
               <label for="username" class="sr-only">Please enter GitHub username:</label>
               <input type="search" name="username" id="username" class="form-control"
                      v-model="username"
-                     placeholder="that dev"
+                     :placeholder="placeholder"
                      :disabled="isLoading"
+                     v-on:focus="handleUsernameFocus"
+                     v-on:blur="handleUsernameBlur"
               />
               <div class="questionmark">?</div>
             </div>
@@ -35,7 +37,9 @@ export default {
   props: ['accessToken', 'isLoading'],
   data () {
     return {
-      username: this.$route.params.username
+      username: this.$route.params.username,
+      placeholder: 'that dev',
+      placeholderTimeout: null
     }
   },
   watch: {
@@ -55,12 +59,103 @@ export default {
       } else {
         this.$router.push({ name: 'Main', params: { username: this.username } })
       }
+    },
+    handleUsernameFocus: function (e) {
+      this.clearPlaceholderTimeout()
+      this.placeholder = 'that dev'
+    },
+    handleUsernameBlur: function (e) {
+      if (e.target.value === '') {
+        this.startUsernameAnimation()
+      }
     }
   },
   computed: {
     iconGithub () {
       return faGithub
     }
+  },
+  created: function () {
+    /**
+     * Username Placeholder Animation
+     */
+    this.startUsernameAnimation = () => {
+      this.clearPlaceholderTimeout()
+      this.placeholderTimeout = setTimeout(this.usernameAnimation, 5000)
+    }
+
+    this.clearPlaceholderTimeout = () => {
+      if (this.placeholderTimeout) {
+        clearTimeout(this.placeholderTimeout)
+        this.placeholderTimeout = null
+      }
+    }
+
+    this.usernameAnimation = () => {
+      new Promise((resolve) => {
+        this.placeholder = ''
+        this.type('tschortsch', resolve)
+      }).then(() => {
+        this.clearPlaceholderTimeout()
+        this.placeholderTimeout = setTimeout(() => {
+          new Promise((resolve) => {
+            this.erase(resolve)
+          }).then(() => {
+            new Promise((resolve) => {
+              this.clearPlaceholderTimeout()
+              this.placeholderTimeout = setTimeout(() => {
+                this.type('GitHub username', resolve)
+              }, 1000)
+            }).then(() => {
+              this.clearPlaceholderTimeout()
+              this.placeholderTimeout = setTimeout(() => {
+                new Promise((resolve) => {
+                  this.erase(resolve)
+                }).then(() => {
+                  this.clearPlaceholderTimeout()
+                  this.placeholderTimeout = setTimeout(() => {
+                    this.placeholder = 'that dev'
+                  }, 1000)
+                })
+              }, 2000)
+            })
+          })
+        }, 2000)
+      })
+    }
+
+    this.type = (text, resolve) => {
+      let textLength = text.length
+
+      if (textLength > 0) {
+        const nextCharacter = text.charAt(0)
+        const remainingText = text.substr(1, textLength)
+        this.placeholder = this.placeholder + nextCharacter
+        this.clearPlaceholderTimeout()
+        this.placeholderTimeout = setTimeout(() => {
+          this.type(remainingText, resolve)
+        }, 300)
+      } else {
+        this.clearPlaceholderTimeout()
+        resolve()
+      }
+    }
+
+    this.erase = (resolve) => {
+      const currentPlaceholderText = this.placeholder
+      this.placeholder = currentPlaceholderText.substr(0, currentPlaceholderText.length - 1)
+      if (this.placeholder.length > 0) {
+        this.clearPlaceholderTimeout()
+        this.placeholderTimeout = setTimeout(() => {
+          this.erase(resolve)
+        }, 150)
+      } else {
+        this.clearPlaceholderTimeout()
+        resolve()
+      }
+    }
+
+    this.startUsernameAnimation()
   }
 }
 </script>
