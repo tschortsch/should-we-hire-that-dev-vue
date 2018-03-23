@@ -3,7 +3,7 @@
     <div class="row justify-content-center">
       <github-auth :accessToken="accessToken" />
       <div class="col-xl-8 col-lg-10">
-        <form class="form-inline mb-3" v-on:submit="submitUsernameForm">
+        <form v-if="accessToken" class="form-inline mb-3" v-on:submit="submitUsernameForm">
           <div class="form-group">
             <div class="question">
               <div class="label flex-item">Should we hire</div>
@@ -22,10 +22,15 @@
             </div>
           </div>
         </form>
+        <h1 v-else class="text-center">Should we hire that dev?</h1>
       </div>
 
       <div class="col-xl-8 col-lg-10 text-center">
         <div v-if="errorMessage !== ''" class="text-danger">{{ errorMessage }}</div>
+        <p v-if="!accessToken">
+          Since GitHub doesn't allow to do <a href="https://developer.github.com/v4/">GraphQL queries</a> without authorization please sign in with your GitHub account first.
+          The Authorization only grants this website to request data which is already public anyway. So, no worries!
+        </p>
         <user-info :userdata="userdata" :isLoading="isLoading" />
         <statistics v-if="(userdata && commitsTotalCount) || isLoading" :userdata="userdata" :commits-total-count="commitsTotalCount" />
       </div>
@@ -122,18 +127,19 @@ export default {
       let userCheckPromise = this.doGraphQlQuery(query)
 
       userCheckPromise.then((responseRaw) => {
-        if (this.rateLimitExceeded(responseRaw.headers)) {
-          this.resetState()
-          this.errorMessage = this.getRateLimitReason(responseRaw.headers)
-          return
-        }
         if (!responseRaw.ok) {
           this.resetState()
           if (responseRaw.status === 401) {
-            this.errorMessage = 'Something is wrong with your access_token. Please login again.'
-            this.removeAccessTokenFromLocalStorage()
+            if (this.accessToken) {
+              this.errorMessage = 'Something is wrong with your access_token. Please login again.'
+              this.removeAccessTokenFromLocalStorage()
+            } else {
+              this.errorMessage = 'Please authorize with GitHub before searching for a user.'
+            }
           } else if (responseRaw.status === 404) {
             this.errorMessage = 'User not found. Try another username.'
+          } else if (this.rateLimitExceeded(responseRaw.headers)) {
+            this.errorMessage = this.getRateLimitReason(responseRaw.headers)
           } else {
             this.errorMessage = 'Something went wrong!'
           }
