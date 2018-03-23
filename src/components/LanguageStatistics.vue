@@ -109,7 +109,10 @@ export default {
 
         return languageStatisticsPieChartData
       }
-      return null
+      return {
+        labels: [],
+        datasets: []
+      }
     }
   },
   created () {
