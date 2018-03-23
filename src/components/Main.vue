@@ -1,6 +1,7 @@
 <template>
   <div class="container my-5">
     <div class="row justify-content-center">
+      <github-auth :accessToken="accessToken" />
       <div class="col-xl-8 col-lg-10">
         <form class="form-inline mb-3" v-on:submit="submitUsernameForm">
           <div class="form-group">
@@ -38,10 +39,12 @@ import { faGithub } from '@fortawesome/fontawesome-free-brands'
 import moment from 'moment'
 import UserInfo from './UserInfo'
 import Statistics from './Statistics'
+import GithubAuth from './GithubAuth'
 
 export default {
   name: 'main',
   components: {
+    GithubAuth,
     Statistics,
     UserInfo,
     FontAwesomeIcon
