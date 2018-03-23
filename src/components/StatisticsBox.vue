@@ -2,7 +2,12 @@
   <div class="col-md-6 mb-5" v-bind:class="rankingClass">
     <h3>{{ title }}</h3>
     <p class="value">
-      {{ value }}
+      <template v-if="Number.isInteger(value)">
+        <ICountUp :startVal=0 :endVal="value" :duration=2.5 />
+      </template>
+      <template v-else>
+        {{ value }}
+      </template>
     </p>
     <p v-if="additionalValue !== ''">{{ additionalValue }}</p>
     <div class="row justify-content-center">
@@ -16,8 +21,13 @@
 </template>
 
 <script>
+import ICountUp from 'vue-countup-v2'
+
 export default {
   name: 'statistics-box',
+  components: {
+    ICountUp
+  },
   props: [
     'title',
     'value',
