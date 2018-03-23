@@ -57,7 +57,7 @@ export default {
   data () {
     return {
       accessToken: window.localStorage.getItem('swhtd-gh-access-token'),
-      username: '',
+      username: this.$route.params.username,
       userdata: null,
       commitsTotalCount: null,
       errorMessage: '',
@@ -69,6 +69,14 @@ export default {
       return faGithub
     }
   },
+  watch: {
+    '$route' (to, from) {
+      if (to.params.username) {
+        this.username = to.params.username
+        this.fetchUserInfo(this.username)
+      }
+    }
+  },
   methods: {
     submitUsernameForm: function (e) {
       e.preventDefault()
@@ -76,9 +84,10 @@ export default {
         this.resetState()
         this.errorMessage = 'Please enter username.'
         this.isLoading = false
-        return
+        this.$router.push({ name: 'Main' })
+      } else {
+        this.$router.push({ name: 'Main', params: { username: this.username } })
       }
-      this.fetchUserInfo(this.username)
     }
   },
   created: function () {
@@ -225,6 +234,11 @@ export default {
     this.removeAccessTokenFromLocalStorage = () => {
       window.localStorage.removeItem('swhtd-gh-access-token')
       this.accessToken = false
+    }
+
+    // fetch userinfo on load if username is passed in url
+    if (this.username) {
+      this.fetchUserInfo(this.username)
     }
   }
 }
