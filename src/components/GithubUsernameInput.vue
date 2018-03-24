@@ -91,40 +91,52 @@ export default {
       }
     }
 
-    this.usernameAnimation = () => {
-      new Promise((resolve) => {
-        this.placeholder = ''
-        this.type('tschortsch', resolve)
-      }).then(() => {
-        this.clearPlaceholderTimeout()
-        this.placeholderTimeout = setTimeout(() => {
-          new Promise((resolve) => {
-            this.erase(resolve)
-          }).then(() => {
-            new Promise((resolve) => {
-              this.clearPlaceholderTimeout()
-              this.placeholderTimeout = setTimeout(() => {
-                this.type('GitHub username', resolve)
-              }, 1000)
-            }).then(() => {
-              this.clearPlaceholderTimeout()
-              this.placeholderTimeout = setTimeout(() => {
-                new Promise((resolve) => {
-                  this.erase(resolve)
-                }).then(() => {
-                  this.clearPlaceholderTimeout()
-                  this.placeholderTimeout = setTimeout(() => {
-                    this.placeholder = 'that dev'
-                  }, 1000)
-                })
-              }, 2000)
-            })
-          })
-        }, 2000)
+    this.sleep = (ms) => {
+      return new Promise(resolve => {
+        this.placeholderTimeout = setTimeout(resolve, ms)
       })
     }
 
-    this.type = (text, resolve) => {
+    this.usernameAnimation = () => {
+      new Promise(resolve => {
+        this.placeholder = ''
+        this.type('tschortsch', resolve)
+      }).then(
+        () => this.sleep(2000)
+      ).then(
+        () => {
+          return new Promise((resolve) => {
+            this.erase(resolve)
+          })
+        }
+      ).then(
+        () => this.sleep(1000)
+      ).then(
+        () => {
+          return new Promise((resolve) => {
+            this.type('GitHub username', resolve)
+          })
+        }
+      ).then(
+        () => this.sleep(2000)
+      ).then(
+        () => {
+          return new Promise((resolve) => {
+            this.erase(resolve)
+          })
+        }
+      ).then(
+        () => this.sleep(1000)
+      ).then(
+        () => {
+          return new Promise((resolve) => {
+            this.type('that dev', resolve, 150)
+          })
+        }
+      )
+    }
+
+    this.type = (text, resolve, speed = 300) => {
       let textLength = text.length
 
       if (textLength > 0) {
@@ -134,23 +146,21 @@ export default {
         this.clearPlaceholderTimeout()
         this.placeholderTimeout = setTimeout(() => {
           this.type(remainingText, resolve)
-        }, 300)
+        }, speed)
       } else {
-        this.clearPlaceholderTimeout()
         resolve()
       }
     }
 
-    this.erase = (resolve) => {
+    this.erase = (resolve, speed = 150) => {
       const currentPlaceholderText = this.placeholder
       this.placeholder = currentPlaceholderText.substr(0, currentPlaceholderText.length - 1)
       if (this.placeholder.length > 0) {
         this.clearPlaceholderTimeout()
         this.placeholderTimeout = setTimeout(() => {
           this.erase(resolve)
-        }, 150)
+        }, speed)
       } else {
-        this.clearPlaceholderTimeout()
         resolve()
       }
     }
