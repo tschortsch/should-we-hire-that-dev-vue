@@ -1,9 +1,9 @@
-var express = require('express');
-var serveStatic = require('serve-static');
-const request = require('request');
-app = express();
-app.use(serveStatic(__dirname + "/dist"));
-var port = process.env.PORT || 5000;
+var express = require('express')
+var serveStatic = require('serve-static')
+const request = require('request')
+app = express()
+app.use(serveStatic(__dirname + "/dist"))
+var port = process.env.PORT || 5000
 var clientId = process.env.GH_CLIENT_ID || ''
 var clientSecret = process.env.GH_CLIENT_SECRET || ''
 
@@ -25,7 +25,7 @@ router.get('/auth', function(req, res) {
       }
     }
     new Promise((resolve, reject) => {
-      request(options, function(err, res, body) {
+      request(options, function (err, res, body) {
         let json = JSON.parse(body);
         if (json.error) {
           reject(json.error)
@@ -35,18 +35,19 @@ router.get('/auth', function(req, res) {
         }
       })
     }).then((accessToken) => {
-      res.redirect('/#/token/' + accessToken);
+      res.redirect('/#/token/' + accessToken)
     }).catch((error) => {
       console.log('There was an error during the authorization. Error: ' + error)
-      res.redirect('/');
+      res.redirect('/')
     })
+  } else {
+    console.log('Authorization code missing.')
+    res.redirect('/')
   }
-  console.log('Authorization code missing.')
-  res.redirect('/');
-});
+})
 // Register the router
-app.use('/', router);
+app.use('/', router)
 // Start the server
-app.listen(port, function(){
+app.listen(port, function () {
   console.log('Server listening on port ' + port)
 });
