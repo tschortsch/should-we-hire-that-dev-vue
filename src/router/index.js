@@ -6,6 +6,7 @@ import Token from '@/components/Token'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/:username?',

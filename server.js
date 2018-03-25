@@ -35,7 +35,7 @@ router.get('/auth', function(req, res) {
         }
       })
     }).then((accessToken) => {
-      res.redirect('/#/token/' + accessToken)
+      res.redirect('/token/' + accessToken)
     }).catch((error) => {
       console.log('There was an error during the authorization. Error: ' + error)
       res.redirect('/')
