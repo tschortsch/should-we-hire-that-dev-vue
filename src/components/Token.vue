@@ -1,7 +1,3 @@
-<template>
-
-</template>
-
 <script>
 export default {
   name: 'token',
@@ -11,7 +7,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
