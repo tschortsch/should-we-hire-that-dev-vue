@@ -12,12 +12,14 @@ export default new Router({
     {
       path: '/:username?',
       name: 'Main',
-      component: Main
+      component: Main,
+      props: true
     },
     {
       path: '/token/:token',
       name: 'Token',
-      component: Token
+      component: Token,
+      props: true
     },
     { path: '*', component: NotFoundComponent }
   ]
