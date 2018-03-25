@@ -2,7 +2,7 @@
   <div class="container my-5">
     <div class="row justify-content-center">
       <github-auth :accessToken="accessToken" />
-      <github-username-input :accessToken="accessToken" :isLoading="isLoading" />
+      <github-username-input :username="username" :accessToken="accessToken" :isLoading="isLoading" />
       <div class="col-xl-8 col-lg-10 text-center">
         <div v-if="errorMessage !== ''" class="text-danger">{{ errorMessage }}</div>
         <p v-if="!accessToken">
@@ -31,10 +31,10 @@ export default {
     Statistics,
     UserInfo
   },
+  props: ['username'],
   data () {
     return {
       accessToken: window.localStorage.getItem('swhtd-gh-access-token'),
-      username: this.$route.params.username,
       userdata: null,
       commitsTotalCount: null,
       errorMessage: '',
@@ -42,12 +42,10 @@ export default {
     }
   },
   watch: {
-    '$route' (to, from) {
-      if (to.params.username) {
-        this.username = to.params.username
+    username: function (newUsername, oldUsername) {
+      if (newUsername) {
         this.fetchUserInfo(this.username)
       } else {
-        this.username = ''
         this.resetState()
         this.errorMessage = 'Please enter username.'
       }

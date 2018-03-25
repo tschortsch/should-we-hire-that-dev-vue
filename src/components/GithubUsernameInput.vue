@@ -8,7 +8,7 @@
             <div class="username-input-wrapper">
               <label for="username" class="sr-only">Please enter GitHub username:</label>
               <input type="search" name="username" id="username" class="form-control"
-                     v-model="username"
+                     v-model="usernameInputValue"
                      :placeholder="placeholder"
                      :disabled="isLoading"
                      v-on:focus="handleUsernameFocus"
@@ -34,30 +34,30 @@ export default {
   components: {
     FontAwesomeIcon
   },
-  props: ['accessToken', 'isLoading'],
+  props: ['username', 'accessToken', 'isLoading'],
   data () {
     return {
-      username: this.$route.params.username,
       placeholder: 'that dev',
-      placeholderTimeout: null
+      placeholderTimeout: null,
+      usernameInputValue: this.username
     }
   },
   watch: {
-    '$route' (to, from) {
-      if (to.params.username) {
-        this.username = to.params.username
+    username: function (newUsername, oldUsername) {
+      if (newUsername) {
+        this.usernameInputValue = newUsername
       } else {
-        this.username = ''
+        this.usernameInputValue = ''
       }
     }
   },
   methods: {
     submitUsernameForm: function (e) {
       e.preventDefault()
-      if (this.username === '') {
+      if (this.usernameInputValue === '') {
         this.$router.push({ name: 'Main' })
       } else {
-        this.$router.push({ name: 'Main', params: { username: this.username } })
+        this.$router.push({ name: 'Main', params: { username: this.usernameInputValue } })
       }
     },
     handleUsernameFocus: function (e) {
