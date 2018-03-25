@@ -45,6 +45,12 @@ router.get('/auth', function(req, res) {
     res.redirect('/')
   }
 })
+
+// Catch all routes and redirect to the index file
+router.get('*', function (req, res) {
+  res.sendFile(__dirname + '/dist/index.html')
+})
+
 // Register the router
 app.use('/', router)
 // Start the server
