@@ -3,10 +3,10 @@ var serveStatic = require('serve-static')
 const request = require('request')
 app = express()
 app.use(serveStatic(__dirname + "/dist"))
+require('dotenv').config()
 var port = process.env.PORT || 5000
 var clientId = process.env.GH_CLIENT_ID || ''
 var clientSecret = process.env.GH_CLIENT_SECRET || ''
-
 var router = express.Router()
 
 router.get('/auth', function(req, res) {

@@ -19,10 +19,12 @@ export default {
   methods: {
     handleAuth: function (e) {
       e.preventDefault()
-      window.localStorage.setItem('swhtd-gh-access-token', 'blabla')
-      window.location.reload()
-      // TODO redirect to auth page
-      // window.location.href = './github-auth.php'
+      const clientId = process.env.GH_CLIENT_ID || ''
+      if (clientId !== '') {
+        window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + clientId + '&scope=read:org'
+      } else {
+        console.log('GH_CLIENT_ID environment variable not set!')
+      }
     },
     handleLogout: function (e) {
       e.preventDefault()
