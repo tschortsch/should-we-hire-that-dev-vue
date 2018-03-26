@@ -71,6 +71,9 @@ export default {
           organizations {
             totalCount
           },
+          pullRequests(first: 1) {
+            totalCount
+          },
           repositories(first: 100) {
             totalCount,
             nodes {

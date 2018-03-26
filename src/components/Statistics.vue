@@ -49,7 +49,8 @@ export default {
         stars: 'Stars',
         followers: 'Followers',
         commits: 'Total commits',
-        repos: 'Public repos'
+        repos: 'Public repos',
+        pullRequests: 'Pull requests'
       }
       return statisticsTitles[name]
     }
@@ -114,6 +115,18 @@ export default {
         [30, 2 * (365 * 24 * 60 * 60)],
         [20, 1.5 * (365 * 24 * 60 * 60)],
         [10, (365 * 24 * 60 * 60)]
+      ]),
+      pullRequests: new Map([
+        [100, 1000],
+        [90, 800],
+        [80, 600],
+        [70, 450],
+        [60, 300],
+        [50, 200],
+        [40, 100],
+        [30, 50],
+        [20, 10],
+        [10, 5]
       ])
     }
 
@@ -181,6 +194,13 @@ export default {
           value: reposValue,
           ranking: this.getJudgement('repos', reposValue)
         })
+
+        const pullRequestsValue = this.userdata.pullRequests.totalCount
+        statisticsValues.push({
+          name: 'pullRequests',
+          value: pullRequestsValue,
+          ranking: this.getJudgement('pullRequests', pullRequestsValue)
+        })
       } else {
         statisticsValues = [
           {
@@ -206,6 +226,11 @@ export default {
           },
           {
             name: 'repos',
+            value: 0,
+            ranking: 0
+          },
+          {
+            name: 'pullRequests',
             value: 0,
             ranking: 0
           }
