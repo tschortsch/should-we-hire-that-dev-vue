@@ -10,7 +10,7 @@
     "start": "node server.js",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
-    "test": "npm run unit && npm run e2e",
+    "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/build.js",
     "postinstall": "npm run build"
@@ -68,6 +68,7 @@
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
     "jest": "^22.0.4",
+    "jest-localstorage-mock": "^2.2.0",
     "jest-serializer-vue": "^0.3.0",
     "nightwatch": "^0.9.12",
     "node-notifier": "^5.1.2",

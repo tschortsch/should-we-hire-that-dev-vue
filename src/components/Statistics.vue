@@ -38,10 +38,6 @@ export default {
       type: Number
     }
   },
-  data () {
-    return {
-    }
-  },
   created: function () {
     this.getStatisticsTitles = (name) => {
       const statisticsTitles = {

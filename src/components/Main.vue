@@ -24,7 +24,7 @@ import GithubAuth from './GithubAuth'
 import GithubUsernameInput from './GithubUsernameInput'
 
 export default {
-  name: 'main',
+  name: 'Main',
   components: {
     GithubUsernameInput,
     GithubAuth,
