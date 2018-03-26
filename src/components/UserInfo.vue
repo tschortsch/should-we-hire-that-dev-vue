@@ -8,6 +8,7 @@
       <h2><a :href="userdata.url" id="url">{{ userdata.name }}</a></h2>
       <p class="text-muted"><font-awesome-icon :icon="iconMapMarkerAlt" /> {{ userdata.location }}</p>
       <p>{{ userdata.bio }}</p>
+      <organizations :organizations="userdata.organizations" />
     </template>
   </div>
 </template>
@@ -15,6 +16,7 @@
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faMapMarkerAlt } from '@fortawesome/fontawesome-free-solid'
+import Organizations from './Organizations'
 
 export default {
   name: 'user-info',
@@ -27,6 +29,7 @@ export default {
     }
   },
   components: {
+    Organizations,
     FontAwesomeIcon
   },
   computed: {

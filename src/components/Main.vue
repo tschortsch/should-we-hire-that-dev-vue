@@ -68,9 +68,17 @@ export default {
           followers {
             totalCount
           },
-          organizations {
+          organizations(first: 100) {
             totalCount
-          },
+            edges {
+              node {
+                id,
+                name,
+                url,
+                avatarUrl
+              }
+            }
+          }
           pullRequests(first: 1) {
             totalCount
           },
