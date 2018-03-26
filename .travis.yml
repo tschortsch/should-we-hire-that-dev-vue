@@ -1,12 +1,12 @@
 language: node_js
 node_js:
-  - '6'
+- '6'
 sudo: false
 deploy:
   provider: heroku
   app: shouldwehirethatdev
   api_key:
-      secure: fleyZjQ8c7cyGU4g0n5HP6KZ2qwu05YaXQRAiJxcsEeo0FmM1/KrUPMISImTJRDY/M8yhboxA0Z157cEhEB1+VDQRBAw8gT0KENho+7WZICRrDTSUEuT6rhtjnVBFnNHDJ4C1J4qetJRqdgZLiJz/9+4A5IyM2XXTj77rkoG9JzmgnDPzTZsVk0RgBfYWAKTq4GywQC1Sq8qn6WS4vle9ET/dvkvKu+vOISr57ICNmEQY1NoJC1SDU3lDcU7wgX9nxizwILnE+2l1VHkWbFimF35s7jmZKvuS5nOX1HBkis7jjy2PT88y2EmVuMcuJ2wIQwOTarOJdiq3U+6NKO6i1e/D4KNPFyIm5DO8PIIfBRQUGZo04bqKVcc1jPATpBLmS039Jx1g/PHcIsmSxMlCxbK/INjMwB1Xg0fS6P504uckEr967YlRIG6naJJJ58kiAbsX0aFq4t3I9SfqPYKtP3ZMVrCvw7qt4hjMQBzSnzw/R2+lSxxFgJ2b4bQR/s+eDlgAEswH4YU75YhqM03uW/s2XjpMxvc/eipzbwuFhoesK1vclhjrFCaye4s98OrpqVXCoqKsJ/z4yP5kbIFAKPzOxInG7R1QDWy7Dk6mejs8++Aq8JvIdlthLErDhDlIKDXuxWRsvzO/KDzuZ00y8UJb06QL7h1hch9LZhgolU=
+    secure: i2HA6vwcQ5MFNsZHZbxkBOEBduUG+3mS/Lsxdv1kavbBu0j17VWwjFgsjpcLd1+egl+nh9g3Ya2XNVY/7JzcW+bVZVQ6Nn83U1YHNcBqcKmli0R5xdachgcj5W65kAVHkMSsHvKGuCwrQom6ULr6EQGb7oouSZa7G3Kp2iiKFfR7tmDJss9dxUNhmvqJ7jo5b+dik/+F+rIMayrEzEPkeNhqHtnQCh9wGLcFTgU+q1sD3tAUmXOte/TK2yaTXQTSzScPjwXsv1afi1BIXpwuozKb9ZJ9tID0Lhyd+lyfHVZ7gZMpDmrkK4qsdHqXsVJLhAwFTMFYNRsh/ipbN5RqayDe+KgT5rD5v/HNEBUsGMga+X4sFZgTiDbBM0zdVA5Kp2pv34c6/VJm23fzv63z/+NMs6w1LgZmSBWnZiMGkLqIrvsr6Dv8bpaH0K1W798VpRVx8B9aKz5/0LkngX/n2E4kAXBp8rCoSOT8Gd+IMvi+XLJivwdaXuAtn33kOy5fZtdMSICoPuR4nmfXp/7djPwg0KJz3yS3TOcBa/ot8nZTq+lB9vO9+agmMDZyM5gArxYJGlIiWcIRVFISyn2yVT8r2EQegi7+WdvEDf7gCFtGmcZ6DvpZy6Yls0JRwd+shaXaUHiUO3f2iwWSp4jxXlu3mRCh6Mmo0Ni8Y+OSwO8=
   on:
     node_js: '6'
-    branch: 'master'
+    branch: master
