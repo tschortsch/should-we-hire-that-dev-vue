@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - '7'
+  - '6'
 sudo: false
 deploy:
   provider: heroku
@@ -8,5 +8,5 @@ deploy:
   api_key:
       secure: fleyZjQ8c7cyGU4g0n5HP6KZ2qwu05YaXQRAiJxcsEeo0FmM1/KrUPMISImTJRDY/M8yhboxA0Z157cEhEB1+VDQRBAw8gT0KENho+7WZICRrDTSUEuT6rhtjnVBFnNHDJ4C1J4qetJRqdgZLiJz/9+4A5IyM2XXTj77rkoG9JzmgnDPzTZsVk0RgBfYWAKTq4GywQC1Sq8qn6WS4vle9ET/dvkvKu+vOISr57ICNmEQY1NoJC1SDU3lDcU7wgX9nxizwILnE+2l1VHkWbFimF35s7jmZKvuS5nOX1HBkis7jjy2PT88y2EmVuMcuJ2wIQwOTarOJdiq3U+6NKO6i1e/D4KNPFyIm5DO8PIIfBRQUGZo04bqKVcc1jPATpBLmS039Jx1g/PHcIsmSxMlCxbK/INjMwB1Xg0fS6P504uckEr967YlRIG6naJJJ58kiAbsX0aFq4t3I9SfqPYKtP3ZMVrCvw7qt4hjMQBzSnzw/R2+lSxxFgJ2b4bQR/s+eDlgAEswH4YU75YhqM03uW/s2XjpMxvc/eipzbwuFhoesK1vclhjrFCaye4s98OrpqVXCoqKsJ/z4yP5kbIFAKPzOxInG7R1QDWy7Dk6mejs8++Aq8JvIdlthLErDhDlIKDXuxWRsvzO/KDzuZ00y8UJb06QL7h1hch9LZhgolU=
   on:
-    node_js: '7'
+    node_js: '6'
     branch: 'master'
