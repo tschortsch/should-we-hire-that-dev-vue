@@ -25,6 +25,7 @@
     "countup.js": "^1.9.3",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
+    "express-sslify": "^1.2.0",
     "jquery": "^3.3.1",
     "moment": "^2.21.0",
     "popper.js": "^1.14.1",
