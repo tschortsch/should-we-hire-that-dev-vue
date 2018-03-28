@@ -1,10 +1,10 @@
 var express = require('express')
+var sslRedirect = require('heroku-ssl-redirect');
 var serveStatic = require('serve-static')
 const request = require('request')
-var enforce = require('express-sslify')
 app = express()
 app.use(serveStatic(__dirname + "/dist"))
-app.use(enforce.HTTPS({ trustProtoHeader: true }))
+app.use(sslRedirect())
 require('dotenv').config()
 var port = process.env.PORT || 5000
 var clientId = process.env.GH_CLIENT_ID || ''
