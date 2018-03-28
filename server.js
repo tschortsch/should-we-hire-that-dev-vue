@@ -9,9 +9,8 @@ require('dotenv').config()
 var port = process.env.PORT || 5000
 var clientId = process.env.GH_CLIENT_ID || ''
 var clientSecret = process.env.GH_CLIENT_SECRET || ''
-var router = express.Router()
 
-router.get('/auth', function(req, res) {
+app.get('/auth', function(req, res) {
   if (req.query.code) {
     var options = {
       url: 'https://github.com/login/oauth/access_token',
@@ -49,12 +48,10 @@ router.get('/auth', function(req, res) {
 })
 
 // Catch all routes and redirect to the index file
-router.get('*', function (req, res) {
+app.get('*', function (req, res) {
   res.sendFile(__dirname + '/dist/index.html')
 })
 
-// Register the router
-app.use('/', router)
 // Start the server
 app.listen(port, function () {
   console.log('Server listening on port ' + port)
