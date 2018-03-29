@@ -10,7 +10,7 @@
           The Authorization only grants this website to request data which is already public anyway. So, no worries!
         </p>
         <user-info :userdata="userdata" :isLoading="isLoading" />
-        <statistics v-if="(userdata && commitsTotalCount) || isLoading" :userdata="userdata" :commits-total-count="commitsTotalCount" />
+        <statistics v-if="(userdata && commitsTotalCount !== null) || isLoading" :userdata="userdata" :commits-total-count="commitsTotalCount" />
       </div>
     </div>
   </div>
@@ -61,6 +61,7 @@ export default {
       const query = `
       query {
         user(login: "${username}") {
+          login,
           name,
           location,
           avatarUrl,
@@ -137,7 +138,7 @@ export default {
             return
           }
           this.userdata = userResponse.data.user
-          console.log(this.userdata)
+          console.log('Userdata', this.userdata)
 
           // TODO replace with graphql query
           let fetchCommitsPromise = new Promise((resolve, reject) => {
@@ -146,6 +147,7 @@ export default {
                 reject(new Error(this.getRateLimitReason(commitsResponseRaw.headers)))
               }
               commitsResponseRaw.json().then(commitsResponse => {
+                console.log('Commits response', commitsResponse)
                 this.commitsTotalCount = commitsResponse.total_count
                 resolve()
               })

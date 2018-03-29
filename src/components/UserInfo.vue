@@ -3,11 +3,11 @@
     <div id="loading-container" v-bind:class="{ loading: isLoading }"></div>
     <template v-if="userdata && !isLoading">
       <div id="avatar-wrapper">
-        <img :src="userdata.avatarUrl" :alt="userdata.name" />
+        <img :src="userdata.avatarUrl" :alt="name" />
       </div>
-      <h2><a :href="userdata.url" id="url">{{ userdata.name }}</a></h2>
-      <p class="text-muted"><font-awesome-icon :icon="iconMapMarkerAlt" /> {{ userdata.location }}</p>
-      <p>{{ userdata.bio }}</p>
+      <h2><a :href="userdata.url" id="url">{{ name }}</a></h2>
+      <p v-if="userdata.location" class="text-muted"><font-awesome-icon :icon="iconMapMarkerAlt" /> {{ userdata.location }}</p>
+      <p v-if="userdata.bio">{{ userdata.bio }}</p>
       <organizations :organizations="userdata.organizations.edges" />
     </template>
   </div>
@@ -31,6 +31,9 @@ export default {
   computed: {
     iconMapMarkerAlt () {
       return faMapMarkerAlt
+    },
+    name () {
+      return this.userdata && this.userdata.name ? this.userdata.name : this.userdata.login
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <ul id="organizations" class="list-inline">
+  <ul v-if="organizations.length > 0" id="organizations" class="list-inline">
     <li v-for="organization in organizations" v-bind:key="organization.node.id" class="list-inline-item">
       <a :href="organization.node.url"><img :src="organization.node.avatarUrl" :alt="organization.node.name" /></a>
     </li>

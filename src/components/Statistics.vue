@@ -146,7 +146,7 @@ export default {
   computed: {
     statisticsValues () {
       let statisticsValues = []
-      if (this.userdata && this.commitsTotalCount) {
+      if (this.userdata && this.commitsTotalCount !== null) {
         const createdAt = new Date(this.userdata.createdAt)
         const createdAtMoment = moment(createdAt)
         const createdAtTimestamp = createdAtMoment.unix()
