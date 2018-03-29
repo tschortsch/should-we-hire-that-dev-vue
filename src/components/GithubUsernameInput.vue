@@ -34,7 +34,11 @@ export default {
   components: {
     FontAwesomeIcon
   },
-  props: ['username', 'accessToken', 'isLoading'],
+  props: {
+    username: String,
+    accessToken: String,
+    isLoading: Boolean
+  },
   data () {
     return {
       placeholder: 'that dev',
@@ -143,7 +147,6 @@ export default {
         const nextCharacter = text.charAt(0)
         const remainingText = text.substr(1, textLength)
         this.placeholder = this.placeholder + nextCharacter
-        this.clearPlaceholderTimeout()
         this.placeholderTimeout = setTimeout(() => {
           this.type(remainingText, resolve)
         }, speed)
@@ -156,7 +159,6 @@ export default {
       const currentPlaceholderText = this.placeholder
       this.placeholder = currentPlaceholderText.substr(0, currentPlaceholderText.length - 1)
       if (this.placeholder.length > 0) {
-        this.clearPlaceholderTimeout()
         this.placeholderTimeout = setTimeout(() => {
           this.erase(resolve)
         }, speed)

@@ -17,7 +17,20 @@ export default {
   components: {
     ICountUp
   },
-  props: ['title', 'value', 'maxRanking'],
+  props: {
+    title: {
+      type: String,
+      required: true
+    },
+    value: {
+      type: Number,
+      required: true
+    },
+    maxRanking: {
+      type: Number,
+      required: true
+    }
+  },
   computed: {
     ranking () {
       if (this.value && this.maxRanking) {

@@ -1,6 +1,6 @@
 <template>
   <ul id="organizations" class="list-inline">
-    <li v-for="organization in organizations.edges" v-bind:key="organization.node.id" class="list-inline-item">
+    <li v-for="organization in organizations" v-bind:key="organization.node.id" class="list-inline-item">
       <a :href="organization.node.url"><img :src="organization.node.avatarUrl" :alt="organization.node.name" /></a>
     </li>
   </ul>
@@ -9,7 +9,10 @@
 <script>
 export default {
   name: 'organizations',
-  props: ['organizations']
+  props: {
+    organizations: Array,
+    required: true
+  }
 }
 </script>
 

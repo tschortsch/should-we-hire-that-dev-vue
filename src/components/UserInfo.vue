@@ -8,7 +8,7 @@
       <h2><a :href="userdata.url" id="url">{{ userdata.name }}</a></h2>
       <p class="text-muted"><font-awesome-icon :icon="iconMapMarkerAlt" /> {{ userdata.location }}</p>
       <p>{{ userdata.bio }}</p>
-      <organizations :organizations="userdata.organizations" />
+      <organizations :organizations="userdata.organizations.edges" />
     </template>
   </div>
 </template>
@@ -21,12 +21,8 @@ import Organizations from './Organizations'
 export default {
   name: 'user-info',
   props: {
-    isLoading: {
-      type: Boolean
-    },
-    userdata: {
-      type: Object
-    }
+    isLoading: Boolean,
+    userdata: Object
   },
   components: {
     Organizations,

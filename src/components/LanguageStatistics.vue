@@ -13,7 +13,9 @@ export default {
   components: {
     LanguagePieChart
   },
-  props: [ 'repositoriesContributedTo' ],
+  props: {
+    repositoriesContributedTo: Array
+  },
   data () {
     return {
       chartOptions: {

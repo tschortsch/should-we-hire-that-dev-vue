@@ -31,7 +31,9 @@ export default {
     Statistics,
     UserInfo
   },
-  props: ['username'],
+  props: {
+    username: String
+  },
   data () {
     return {
       accessToken: window.localStorage.getItem('swhtd-gh-access-token'),

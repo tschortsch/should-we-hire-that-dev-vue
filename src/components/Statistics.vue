@@ -31,24 +31,17 @@ export default {
   },
   name: 'statistics',
   props: {
-    userdata: {
-      type: Object
-    },
-    commitsTotalCount: {
-      type: Number
-    }
+    userdata: Object,
+    commitsTotalCount: Number
   },
   created: function () {
-    this.getStatisticsTitles = (name) => {
-      const statisticsTitles = {
-        createdAt: 'User since',
-        stars: 'Stars',
-        followers: 'Followers',
-        commits: 'Total commits',
-        repos: 'Public repos',
-        pullRequests: 'Pull requests'
-      }
-      return statisticsTitles[name]
+    this.statisticsTitles = {
+      createdAt: 'User since',
+      stars: 'Stars',
+      followers: 'Followers',
+      commits: 'Total commits',
+      repos: 'Public repos',
+      pullRequests: 'Pull requests'
     }
 
     this.judgementLimits = {
@@ -124,6 +117,10 @@ export default {
         [20, 10],
         [10, 5]
       ])
+    }
+
+    this.getStatisticsTitles = (name) => {
+      return this.statisticsTitles[name]
     }
 
     this.getOverallRankingValue = (statisticsValues) => {

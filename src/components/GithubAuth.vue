@@ -15,7 +15,9 @@ export default {
   components: {
     FontAwesomeIcon
   },
-  props: ['accessToken'],
+  props: {
+    accessToken: String
+  },
   methods: {
     handleAuth: function (e) {
       e.preventDefault()

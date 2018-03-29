@@ -28,12 +28,23 @@ export default {
   components: {
     ICountUp
   },
-  props: [
-    'title',
-    'value',
-    'additionalValue',
-    'ranking'
-  ],
+  props: {
+    title: {
+      type: String,
+      required: true
+    },
+    value: {
+      type: [String, Number],
+      required: true
+    },
+    additionalValue: {
+      type: String
+    },
+    ranking: {
+      type: Number,
+      required: true
+    }
+  },
   computed: {
     rankingClass () {
       return this.ranking > 0 ? 'rank-' + this.ranking : ''
