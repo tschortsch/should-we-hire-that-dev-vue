@@ -3,7 +3,6 @@ var sslRedirect = require('heroku-ssl-redirect');
 var serveStatic = require('serve-static')
 const request = require('request')
 app = express()
-app.use(serveStatic(__dirname + "/dist"))
 app.use(sslRedirect())
 require('dotenv').config()
 var port = process.env.PORT || 5000
@@ -46,6 +45,8 @@ app.get('/auth', function(req, res) {
     res.redirect('/')
   }
 })
+
+app.use(serveStatic(__dirname + "/dist"))
 
 // Catch all routes and redirect to the index file
 app.get('*', function (req, res) {

@@ -1,8 +1,12 @@
-# should-we-hire-that-dev-vue
+# Should we hire that dev? (Vue.js)
 
-> A Vue.js project
+[![Build Status](https://travis-ci.org/tschortsch/should-we-hire-that-dev-vue.svg?branch=master)](https://travis-ci.org/tschortsch/should-we-hire-that-dev-vue)
 
-## Build Setup
+Gathers statistics of a given GitHub user.
+
+Try it out: https://shouldwehirethatdev.herokuapp.com
+
+## Development
 
 ``` bash
 # install dependencies
@@ -26,5 +30,3 @@ npm run e2e
 # run all tests
 npm test
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
