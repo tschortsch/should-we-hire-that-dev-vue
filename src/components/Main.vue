@@ -9,8 +9,10 @@
           Since GitHub doesn't allow to do <a href="https://developer.github.com/v4/">GraphQL queries</a> without authorization please sign in with your GitHub account first.
           The Authorization only grants this website to request data which is already public anyway. So, no worries!
         </p>
-        <user-info :userdata="userdata" :isLoading="isLoading" />
-        <statistics v-if="(userdata && commitsTotalCount !== null) || isLoading" :userdata="userdata" :commits-total-count="commitsTotalCount" />
+        <template v-if="(userdata && commitsTotalCount !== null) || isLoading">
+          <user-info  :userdata="userdata" :isLoading="isLoading" />
+          <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
+        </template>
       </div>
     </div>
   </div>
