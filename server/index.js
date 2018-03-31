@@ -3,6 +3,7 @@ const sslRedirect = require('heroku-ssl-redirect')
 const serveStatic = require('serve-static')
 const request = require('request')
 const path = require('path')
+const history = require('connect-history-api-fallback')
 
 // Configuration
 require('dotenv').config()
@@ -13,9 +14,6 @@ const distPath = path.join(__dirname, '/../dist')
 
 // initialize server
 let app = express()
-
-// enforce https
-app.use(sslRedirect())
 
 // Enable hot middleware on dev environment
 if (process.env.NODE_ENV === 'development') {
@@ -33,6 +31,9 @@ if (process.env.NODE_ENV === 'development') {
 
   app.use(require('webpack-hot-middleware')(compiler))
 }
+
+// enforce https
+app.use(sslRedirect())
 
 app.get('/auth', function (req, res) {
   if (req.query.code) {
@@ -74,12 +75,10 @@ app.get('/auth', function (req, res) {
   }
 })
 
-app.use(serveStatic(distPath))
+// History API fallback
+app.use(history())
 
-// Catch all routes and redirect to the index file
-app.get('*', function (req, res) {
-  res.sendFile(path.join(distPath, '/index.html'))
-})
+app.use(serveStatic(distPath))
 
 // Start the server
 app.listen(port, function () {

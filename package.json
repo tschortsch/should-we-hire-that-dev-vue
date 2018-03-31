@@ -20,6 +20,7 @@
     "@fortawesome/vue-fontawesome": "^0.0.22",
     "bootstrap": "^4.0.0",
     "chart.js": "^2.7.2",
+    "connect-history-api-fallback": "^1.5.0",
     "countup.js": "^1.9.3",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
