@@ -14,11 +14,11 @@ function getRenderedText (Component, propsData, querySelector) {
 
 describe('GithubAuth.vue', () => {
   it('should render logout button if accessToken is passed', () => {
-    const renderedText = getRenderedText(GithubAuth, { accessToken: '1234' }, 'button')
+    const renderedText = getRenderedText(GithubAuth, { accessToken: '1234' })
     expect(renderedText).toEqual(expect.stringContaining('Logout'))
   })
   it('should render authorize button if accessToken is missing', () => {
-    const renderedText = getRenderedText(GithubAuth, { accessToken: null }, 'button')
+    const renderedText = getRenderedText(GithubAuth, { accessToken: null })
     expect(renderedText).toEqual(expect.stringContaining('Authorize'))
   })
 })
