@@ -7,11 +7,11 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start-vue": "npm run dev",
-    "start": "node server.js",
+    "start": "node server/index.js",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit",
-    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
+    "lint": "eslint --ext .js,.vue src server test/unit test/e2e/specs",
     "build": "node build/build.js",
     "postinstall": "npm run build"
   },

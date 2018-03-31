@@ -1,17 +1,22 @@
-var express = require('express')
-var sslRedirect = require('heroku-ssl-redirect');
-var serveStatic = require('serve-static')
+const express = require('express')
+const sslRedirect = require('heroku-ssl-redirect')
+const serveStatic = require('serve-static')
 const request = require('request')
-app = express()
-app.use(sslRedirect())
+const path = require('path')
 require('dotenv').config()
-var port = process.env.PORT || 5000
-var clientId = process.env.GH_CLIENT_ID || ''
-var clientSecret = process.env.GH_CLIENT_SECRET || ''
+const port = process.env.PORT || 5000
+const clientId = process.env.GH_CLIENT_ID || ''
+const clientSecret = process.env.GH_CLIENT_SECRET || ''
 
-app.get('/auth', function(req, res) {
+// initialize server
+let app = express()
+
+// enforce https
+app.use(sslRedirect())
+
+app.get('/auth', function (req, res) {
   if (req.query.code) {
-    var options = {
+    const options = {
       url: 'https://github.com/login/oauth/access_token',
       method: 'POST',
       headers: {
@@ -26,7 +31,10 @@ app.get('/auth', function(req, res) {
     }
     new Promise((resolve, reject) => {
       request(options, function (err, res, body) {
-        let json = JSON.parse(body);
+        if (err) {
+          reject(err)
+        }
+        let json = JSON.parse(body)
         if (json.error) {
           reject(json.error)
         }
@@ -46,14 +54,14 @@ app.get('/auth', function(req, res) {
   }
 })
 
-app.use(serveStatic(__dirname + "/dist"))
+app.use(serveStatic(path.join(__dirname, '/../dist')))
 
 // Catch all routes and redirect to the index file
 app.get('*', function (req, res) {
-  res.sendFile(__dirname + '/dist/index.html')
+  res.sendFile(path.join(__dirname, '/../dist/index.html'))
 })
 
 // Start the server
 app.listen(port, function () {
   console.log('Server listening on port ' + port)
-});
+})
