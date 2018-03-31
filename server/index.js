@@ -15,23 +15,6 @@ const distPath = path.join(__dirname, '/../dist')
 // initialize server
 let app = express()
 
-// Enable hot middleware on dev environment
-if (process.env.NODE_ENV === 'development') {
-  const webpack = require('webpack')
-  const webpackConfig = require('../build/webpack.dev.conf')
-  const compiler = webpack(webpackConfig)
-
-  app.use(require('webpack-dev-middleware')(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    hot: true,
-    stats: {
-      colors: true
-    }
-  }))
-
-  app.use(require('webpack-hot-middleware')(compiler))
-}
-
 // enforce https
 app.use(sslRedirect())
 
@@ -77,6 +60,23 @@ app.get('/auth', function (req, res) {
 
 // History API fallback
 app.use(history())
+
+// Enable hot middleware on dev environment
+if (process.env.NODE_ENV === 'development') {
+  const webpack = require('webpack')
+  const webpackConfig = require('../build/webpack.dev.conf')
+  const compiler = webpack(webpackConfig)
+
+  app.use(require('webpack-dev-middleware')(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+    hot: true,
+    stats: {
+      colors: true
+    }
+  }))
+
+  app.use(require('webpack-hot-middleware')(compiler))
+}
 
 app.use(serveStatic(distPath))
 
