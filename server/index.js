@@ -81,6 +81,14 @@ if (process.env.NODE_ENV === 'development') {
 app.use(serveStatic(distPath))
 
 // Start the server
-app.listen(port, function () {
+let server = app.listen(port, function () {
   console.log('Server listening on port ' + port)
+}).on('error', (e) => {
+  if (e.code === 'EADDRINUSE') {
+    console.log('Error: Port ' + port + ' already in use!')
+  } else {
+    console.log('Error: ' + e)
+  }
+  server.close()
+  process.exit()
 })
