@@ -1,7 +1,7 @@
 <template>
   <ul v-if="organizations.length > 0" id="organizations" class="list-inline">
     <li v-for="organization in organizations" v-bind:key="organization.node.id" class="list-inline-item">
-      <a :href="organization.node.url"><img :src="organization.node.avatarUrl" :alt="organization.node.name" :title="organization.node.name" /></a>
+      <a :href="organization.node.url"><img class="organization-avatar" :src="organization.node.avatarUrl" :alt="organization.node.name" :title="organization.node.name" /></a>
     </li>
   </ul>
 </template>
@@ -17,7 +17,7 @@ export default {
 </script>
 
 <style lang="scss">
-  #organizations img {
+  .organization-avatar {
     width: 35px;
     height: 35px;
     border-radius: 3px;
