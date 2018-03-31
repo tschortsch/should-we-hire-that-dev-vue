@@ -1,8 +1,6 @@
 <template>
-  <div class="col-12 text-right">
-    <button v-if="!accessToken" class="btn btn-primary btn-sm" v-on:click="handleAuth">Authorize with GitHub <font-awesome-icon :icon="iconGithub" /></button>
-    <button v-else class="btn btn-link btn-sm" v-on:click="handleLogout">Logout from GitHub <font-awesome-icon :icon="iconSignOutAlt" /></button>
-  </div>
+  <button v-if="!accessToken" class="btn btn-primary btn-sm" v-on:click="handleAuth">Authorize with GitHub <font-awesome-icon :icon="iconGithub" /></button>
+  <button v-else class="btn btn-link btn-sm logout-btn" v-on:click="handleLogout">Logout from GitHub <font-awesome-icon :icon="iconSignOutAlt" /></button>
 </template>
 
 <script>
@@ -49,5 +47,8 @@ export default {
   // bootstrap overwrites
   .btn-primary {
     color: #fff;
+  }
+  .logout-btn {
+    padding-right: 0;
   }
 </style>

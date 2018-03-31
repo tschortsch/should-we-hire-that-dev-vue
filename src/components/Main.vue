@@ -1,18 +1,22 @@
 <template>
-  <div class="container my-5">
+  <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
-      <github-auth :accessToken="accessToken" />
-      <github-username-input :username="username" :accessToken="accessToken" :isLoading="isLoading" />
-      <div class="col-xl-8 col-lg-10 text-center">
-        <div v-if="errorMessage !== ''" class="text-danger">{{ errorMessage }}</div>
-        <p v-if="!accessToken">
-          Since GitHub doesn't allow to do <a href="https://developer.github.com/v4/">GraphQL queries</a> without authorization please sign in with your GitHub account first.
-          The Authorization only grants this website to request data which is already public anyway. So, no worries!
-        </p>
-        <template v-if="(userdata && commitsTotalCount !== null) || isLoading">
-          <user-info  :userdata="userdata" :isLoading="isLoading" />
-          <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
-        </template>
+      <div class="col-12 text-right mb-3">
+        <github-auth :accessToken="accessToken" />
+      </div>
+      <div class="col-xl-8 col-lg-10 col-12">
+        <github-username-input :username="username" :accessToken="accessToken" :isLoading="isLoading" />
+        <div class="text-center">
+          <div v-if="errorMessage !== ''" class="text-danger">{{ errorMessage }}</div>
+          <p v-if="!accessToken">
+            Since GitHub doesn't allow to do <a href="https://developer.github.com/v4/">GraphQL queries</a> without authorization please sign in with your GitHub account first.
+            The Authorization only grants this website to request data which is already public anyway. So, no worries!
+          </p>
+          <template v-if="(userdata && commitsTotalCount !== null) || isLoading">
+            <user-info  :userdata="userdata" :isLoading="isLoading" />
+            <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
+          </template>
+        </div>
       </div>
     </div>
   </div>
@@ -223,54 +227,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~bootstrap/scss/functions";
-@import "../variables";
-@import "~bootstrap/scss/mixins";
 
-.question {
-  font-size: $h1-font-size;
-  flex: 1;
-
-  @include media-breakpoint-up(md) {
-    display: flex;
-  }
-
-  > .flex-item {
-    @include media-breakpoint-up(md) {
-      flex: 1;
-    }
-  }
-
-  .label {
-    margin-right: 0.7rem;
-
-    @include media-breakpoint-up(md) {
-      text-align: right;
-    }
-  }
-
-  .username-input-wrapper {
-    display: flex;
-    align-items: baseline;
-
-    .questionmark {
-      margin-left: 0.7rem;
-    }
-  }
-
-  .form-text {
-    font-size: $font-size-sm;
-  }
-
-  #username {
-    border: none;
-    border-bottom: solid $body-color 3px;
-    border-radius: 0;
-    font-size: $h1-font-size;
-    padding: 0;
-    line-height: $line-height-base;
-    color: $body-color;
-    width: 100%;
-  }
-}
 </style>
