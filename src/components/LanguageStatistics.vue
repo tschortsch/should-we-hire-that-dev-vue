@@ -84,21 +84,21 @@ export default {
             {
               data: [],
               backgroundColor: [
-                '#FF6384',
-                '#36A2EB',
-                '#FFCE56',
                 '#96db89',
-                '#ff80b3',
+                '#FFCE56',
+                '#ff8668',
+                '#FF6384',
                 '#9992ff',
+                '#36A2EB',
                 '#a7e7ff'
               ],
               hoverBackgroundColor: [
-                '#FF6384',
-                '#36A2EB',
-                '#FFCE56',
                 '#96db89',
-                '#ff80b3',
+                '#FFCE56',
+                '#ff8668',
+                '#FF6384',
                 '#9992ff',
+                '#36A2EB',
                 '#a7e7ff'
               ]
             }]
