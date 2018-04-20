@@ -9,7 +9,7 @@
         {{ value }}
       </template>
     </p>
-    <p v-if="additionalValue !== ''">{{ additionalValue }}</p>
+    <p class="additional-value" v-if="additionalValue">{{ additionalValue }}</p>
     <div class="row justify-content-center">
       <div class="col-6">
         <div class="progress">
