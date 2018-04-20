@@ -7534,7 +7534,7 @@ vue-analytics@^5.10.2:
   version "5.10.2"
   resolved "https://registry.yarnpkg.com/vue-analytics/-/vue-analytics-5.10.2.tgz#0536bbb6fafe3dc111683143fc5d3347506c151f"
 
-vue-chartjs@^3.2.1:
+vue-chartjs@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-3.3.1.tgz#fb08dc244da316e385910401daf16874f52ac1fc"
 
