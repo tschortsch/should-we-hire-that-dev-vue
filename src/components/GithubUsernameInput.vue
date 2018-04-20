@@ -1,5 +1,5 @@
 <template>
-  <form v-if="accessToken" class="mb-3" v-on:submit="submitUsernameForm">
+  <form class="mb-3" v-on:submit="submitUsernameForm">
     <div class="question d-md-flex">
       <div class="label flex-item">Should we hire</div>
       <div class="flex-item">
@@ -18,7 +18,6 @@
       </div>
     </div>
   </form>
-  <h1 v-else class="text-center">Should we hire that dev?</h1>
 </template>
 
 <script>
@@ -32,7 +31,6 @@ export default {
   },
   props: {
     username: String,
-    accessToken: String,
     isLoading: Boolean
   },
   data () {

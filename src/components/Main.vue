@@ -5,7 +5,8 @@
         <github-auth :accessToken="accessToken" />
       </div>
       <div class="col-xl-8 col-lg-10 col-12">
-        <github-username-input :username="username" :accessToken="accessToken" :isLoading="isLoading" />
+        <github-username-input v-if="accessToken" :username="username" :isLoading="isLoading" />
+        <h1 v-else class="text-center">Should we hire that dev?</h1>
         <div class="text-center">
           <div v-if="errorMessage !== ''" class="text-danger">{{ errorMessage }}</div>
           <p v-if="!accessToken">
