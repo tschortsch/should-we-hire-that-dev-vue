@@ -5,7 +5,7 @@
     <div class="progress">
       <div class="progress-bar" role="progressbar" v-bind:style="{ width: rankingPercent }" v-bind:aria-valuenow="ranking"
       aria-valuemin="0" aria-valuemax="100"></div>
-  </div>
+    </div>
   </div>
 </template>
 
