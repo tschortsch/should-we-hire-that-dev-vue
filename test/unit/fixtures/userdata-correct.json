@@ -1,0 +1,708 @@
+{
+  "data": {
+    "user": {
+      "login": "tschortsch",
+      "name": "Jürg Hunziker",
+      "location": "Winterthur, Switzerland",
+      "avatarUrl": "https://avatars3.githubusercontent.com/u/1061850?v=4",
+      "bio": "Developing the web / Frontend / WordPress",
+      "createdAt": "2011-09-19T11:47:13Z",
+      "url": "https://github.com/tschortsch",
+      "followers": {
+        "totalCount": 20
+      },
+      "organizations": {
+        "totalCount": 8,
+        "edges": [
+          {
+            "node": {
+              "id": "MDEyOk9yZ2FuaXphdGlvbjE2NjEwMg==",
+              "name": "Liip",
+              "url": "https://github.com/liip",
+              "avatarUrl": "https://avatars0.githubusercontent.com/u/166102?v=4"
+            }
+          },
+          {
+            "node": {
+              "id": "MDEyOk9yZ2FuaXphdGlvbjMyODc5NjM=",
+              "name": "Kort",
+              "url": "https://github.com/kort",
+              "avatarUrl": "https://avatars0.githubusercontent.com/u/3287963?v=4"
+            }
+          },
+          {
+            "node": {
+              "id": "MDEyOk9yZ2FuaXphdGlvbjUzNjYwNDM=",
+              "name": "OGD Switzerland",
+              "url": "https://github.com/ogdch",
+              "avatarUrl": "https://avatars1.githubusercontent.com/u/5366043?v=4"
+            }
+          },
+          {
+            "node": {
+              "id": "MDEyOk9yZ2FuaXphdGlvbjc3MDQ5MjE=",
+              "name": "github-beta",
+              "url": "https://github.com/github-beta",
+              "avatarUrl": "https://avatars3.githubusercontent.com/u/7704921?v=4"
+            }
+          },
+          {
+            "node": {
+              "id": "MDEyOk9yZ2FuaXphdGlvbjg1Njc4MDI=",
+              "name": "Open Research Data",
+              "url": "https://github.com/openresearchdata",
+              "avatarUrl": "https://avatars2.githubusercontent.com/u/8567802?v=4"
+            }
+          },
+          {
+            "node": {
+              "id": "MDEyOk9yZ2FuaXphdGlvbjg1Nzc1MTM=",
+              "name": "Liip for Open Data Zurich",
+              "url": "https://github.com/opendatazurich",
+              "avatarUrl": "https://avatars0.githubusercontent.com/u/8577513?v=4"
+            }
+          },
+          {
+            "node": {
+              "id": "MDEyOk9yZ2FuaXphdGlvbjE2MDk3MzUz",
+              "name": "opendata.swiss",
+              "url": "https://github.com/opendata-swiss",
+              "avatarUrl": "https://avatars0.githubusercontent.com/u/16097353?v=4"
+            }
+          },
+          {
+            "node": {
+              "id": "MDEyOk9yZ2FuaXphdGlvbjMwMjg4MTgy",
+              "name": "Repair Café",
+              "url": "https://github.com/repair-cafe",
+              "avatarUrl": "https://avatars1.githubusercontent.com/u/30288182?v=4"
+            }
+          }
+        ]
+      },
+      "pullRequests": {
+        "totalCount": 243
+      },
+      "repositories": {
+        "totalCount": 30,
+        "nodes": [
+          {
+            "stargazers": {
+              "totalCount": 1
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 1
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 1
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 11
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 7
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 18
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 37
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 2
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 1
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 8
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 1
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          },
+          {
+            "stargazers": {
+              "totalCount": 0
+            }
+          }
+        ]
+      },
+      "repositoriesContributedTo": {
+        "totalCount": 20,
+        "nodes": [
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 1355460,
+                  "node": {
+                    "name": "PHP"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 320938,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 13145,
+                  "node": {
+                    "name": "CSS"
+                  }
+                },
+                {
+                  "size": 255691,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                },
+                {
+                  "size": 2487,
+                  "node": {
+                    "name": "Shell"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 39777,
+                  "node": {
+                    "name": "Python"
+                  }
+                },
+                {
+                  "size": 5858,
+                  "node": {
+                    "name": "CSS"
+                  }
+                },
+                {
+                  "size": 47145,
+                  "node": {
+                    "name": "HTML"
+                  }
+                },
+                {
+                  "size": 2738,
+                  "node": {
+                    "name": "Shell"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 39400,
+                  "node": {
+                    "name": "Python"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 89597,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 11260,
+                  "node": {
+                    "name": "HTML"
+                  }
+                },
+                {
+                  "size": 8098,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 2836,
+                  "node": {
+                    "name": "Shell"
+                  }
+                },
+                {
+                  "size": 121133,
+                  "node": {
+                    "name": "Python"
+                  }
+                },
+                {
+                  "size": 70388,
+                  "node": {
+                    "name": "HTML"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": []
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 3411,
+                  "node": {
+                    "name": "Shell"
+                  }
+                },
+                {
+                  "size": 74772,
+                  "node": {
+                    "name": "Python"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 31733,
+                  "node": {
+                    "name": "PHP"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 165430,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 1433,
+                  "node": {
+                    "name": "HTML"
+                  }
+                },
+                {
+                  "size": 1345,
+                  "node": {
+                    "name": "Shell"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 4403,
+                  "node": {
+                    "name": "CSS"
+                  }
+                },
+                {
+                  "size": 3506,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                },
+                {
+                  "size": 1279,
+                  "node": {
+                    "name": "Shell"
+                  }
+                },
+                {
+                  "size": 252240,
+                  "node": {
+                    "name": "PHP"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 57532,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 18207,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                },
+                {
+                  "size": 51274,
+                  "node": {
+                    "name": "CSS"
+                  }
+                },
+                {
+                  "size": 1371,
+                  "node": {
+                    "name": "Shell"
+                  }
+                },
+                {
+                  "size": 9766,
+                  "node": {
+                    "name": "HTML"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 1476,
+                  "node": {
+                    "name": "HTML"
+                  }
+                },
+                {
+                  "size": 30605,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                },
+                {
+                  "size": 751,
+                  "node": {
+                    "name": "CSS"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 12833,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                },
+                {
+                  "size": 133563,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 3639,
+                  "node": {
+                    "name": "CSS"
+                  }
+                },
+                {
+                  "size": 16109,
+                  "node": {
+                    "name": "Shell"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 343141,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 3672,
+                  "node": {
+                    "name": "HTML"
+                  }
+                },
+                {
+                  "size": 1220,
+                  "node": {
+                    "name": "Shell"
+                  }
+                },
+                {
+                  "size": 208,
+                  "node": {
+                    "name": "CSS"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 377730,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 46660,
+                  "node": {
+                    "name": "CSS"
+                  }
+                },
+                {
+                  "size": 9962,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                },
+                {
+                  "size": 90582,
+                  "node": {
+                    "name": "HTML"
+                  }
+                },
+                {
+                  "size": 694,
+                  "node": {
+                    "name": "Shell"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 86538,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 11260,
+                  "node": {
+                    "name": "HTML"
+                  }
+                },
+                {
+                  "size": 8098,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 1654,
+                  "node": {
+                    "name": "ApacheConf"
+                  }
+                },
+                {
+                  "size": 244112,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 1637,
+                  "node": {
+                    "name": "HTML"
+                  }
+                },
+                {
+                  "size": 1216,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                },
+                {
+                  "size": 84,
+                  "node": {
+                    "name": "CSS"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": [
+                {
+                  "size": 8745,
+                  "node": {
+                    "name": "PHP"
+                  }
+                },
+                {
+                  "size": 4337,
+                  "node": {
+                    "name": "JavaScript"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "languages": {
+              "edges": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}
