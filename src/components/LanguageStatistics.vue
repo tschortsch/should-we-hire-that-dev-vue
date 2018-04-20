@@ -14,7 +14,10 @@ export default {
     LanguagePieChart
   },
   props: {
-    repositoriesContributedTo: Array
+    repositoriesContributedTo: {
+      type: Array,
+      required: true
+    }
   },
   data () {
     return {
@@ -36,7 +39,6 @@ export default {
   computed: {
     chartData () {
       if (this.repositoriesContributedTo.length > 0) {
-        console.log(this.repositoriesContributedTo)
         let totalLanguages = 0
         const languageStatistics = this.repositoriesContributedTo.reduce((accumulator, repository) => {
           repository.languages.edges.forEach(language => {
@@ -51,7 +53,6 @@ export default {
           })
           return accumulator
         }, new Map())
-        console.log(languageStatistics)
 
         const languageStatisticsPercentage = [...languageStatistics.entries()].reduce((accumulator, language) => {
           const languagePercentage = this.getPercentage(language[1], totalLanguages)
@@ -64,7 +65,6 @@ export default {
           }
           return accumulator
         }, new Map([['Other', 0]]))
-        console.log(languageStatisticsPercentage)
 
         const languageStatisticsSorted = new Map([...languageStatisticsPercentage.entries()].sort((a, b) => {
           if (a[1] < b[1]) {
@@ -75,8 +75,6 @@ export default {
           }
           return 0
         }))
-        console.log(languageStatisticsSorted)
-        console.log(totalLanguages)
 
         let languageStatisticsPieChartData = {
           labels: [],
