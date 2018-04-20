@@ -1,12 +1,10 @@
-import Vue from 'vue'
+import { mount } from '@vue/test-utils'
 import Main from '@/components/Main'
 
 describe('Main.vue', () => {
   it('should render correct contents', () => {
-    const Constructor = Vue.extend(Main)
-    const vm = new Constructor().$mount()
-    expect(vm.$el.querySelector('h1').textContent)
-      .toEqual('Should we hire that dev?')
+    const wrapper = mount(Main)
+    expect(wrapper.find('h1').text()).toEqual('Should we hire that dev?')
   })
 
   it('sets the correct default data', () => {

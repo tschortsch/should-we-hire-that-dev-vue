@@ -1,7 +1,7 @@
 {
   "name": "should-we-hire-that-dev-vue",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "Gathers statistics of a given GitHub user",
   "author": "Juerg Hunziker <juerg.hunziker@gmail.com>",
   "private": true,
   "scripts": {
@@ -36,6 +36,7 @@
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.14",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",
