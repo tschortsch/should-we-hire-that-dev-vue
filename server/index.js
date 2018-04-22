@@ -16,7 +16,7 @@ const distPath = path.join(__dirname, '/../dist')
 let app = express()
 
 // enforce https
-app.use(sslRedirect())
+// app.use(sslRedirect())
 
 app.get('/auth', function (req, res) {
   if (req.query.code) {
