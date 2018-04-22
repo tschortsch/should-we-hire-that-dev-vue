@@ -1,4 +1,5 @@
 import { shallow } from '@vue/test-utils'
+import moment from 'moment'
 import Statistics from '@/components/Statistics'
 import userdataCorrectFixture from '../fixtures/userdata-correct'
 
@@ -46,16 +47,19 @@ describe('Statistics.vue', () => {
 
   it('should compute correct values', () => {
     const userdata = userdataCorrectFixture.data.user
+    // overwrite createdAt date to fix calculated value
+    const twoYearsAgo = moment().subtract(2, 'years')
+    userdata.createdAt = twoYearsAgo.format('YYYY-MM-DD')
     const commitsTotalCount = 100
     const wrapper = shallow(Statistics, {
       propsData: { userdata: userdata, commitsTotalCount: commitsTotalCount }
     })
     const statisticsValues = [
       {
-        'additionalValue': '(19.09.2011)',
+        'additionalValue': '(' + twoYearsAgo.format('DD.MM.YYYY') + ')',
         'name': 'createdAt',
-        'ranking': 100,
-        'value': '7 years ago'
+        'ranking': 30,
+        'value': '2 years ago'
       },
       {
         'name': 'stars',
@@ -85,7 +89,7 @@ describe('Statistics.vue', () => {
     ]
     expect(wrapper.vm.statisticsValues).toEqual(statisticsValues)
     expect(wrapper.vm.repositoriesContributedTo).toEqual(userdata.repositoriesContributedTo.nodes)
-    expect(wrapper.vm.overallRankingValue).toEqual(300)
+    expect(wrapper.vm.overallRankingValue).toEqual(230)
     expect(wrapper.vm.maxRanking).toEqual(statisticsValues.length * 100)
   })
 
