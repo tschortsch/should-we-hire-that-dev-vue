@@ -1,5 +1,4 @@
 const express = require('express')
-const sslRedirect = require('heroku-ssl-redirect')
 const serveStatic = require('serve-static')
 const request = require('request')
 const path = require('path')
@@ -14,9 +13,6 @@ const distPath = path.join(__dirname, '/../dist')
 
 // initialize server
 let app = express()
-
-// enforce https
-// app.use(sslRedirect())
 
 app.get('/auth', function (req, res) {
   if (req.query.code) {
