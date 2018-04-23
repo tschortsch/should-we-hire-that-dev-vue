@@ -222,6 +222,7 @@ export default {
     padding: 0;
     line-height: $line-height-base;
     color: $body-color;
+    width: 99%; // workaround for edge browsers (flexbox takes care of width anyway)
 
     &:focus {
       box-shadow: none;
@@ -229,7 +230,7 @@ export default {
   }
 
   .clear-button {
-    flex: 0;
+    flex: 0 0 auto;
     color: $gray-600;
     font-size: $h2-font-size;
     line-height: $line-height-base;
