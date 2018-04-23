@@ -27,7 +27,7 @@ Try it out: https://shouldwehi.re
    or
    $ npm run start
    ```
-1. Open browser with [http://localhost:5000]() (or defined port)
+1. Open browser with [http://localhost:5000](http://localhost:5000) (or defined port)
 
 ### Further npm commands
 
