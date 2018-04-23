@@ -1,34 +1,52 @@
-# Should we hire that dev? (Vue.js)
+# Should we hire that dev?
 
 [![Build Status](https://travis-ci.org/tschortsch/should-we-hire-that-dev-vue.svg?branch=master)](https://travis-ci.org/tschortsch/should-we-hire-that-dev-vue)
 [![dependencies Status](https://david-dm.org/tschortsch/should-we-hire-that-dev-vue/status.svg)](https://david-dm.org/tschortsch/should-we-hire-that-dev-vue)
 [![devDependencies Status](https://david-dm.org/tschortsch/should-we-hire-that-dev-vue/dev-status.svg)](https://david-dm.org/tschortsch/should-we-hire-that-dev-vue?type=dev)
 
-Gathers statistics of a given GitHub user.
+Gathers public information of a given GitHub user and generates statistics about it.
+It also shows the most used programming languages.
 
-Try it out: https://shouldwehirethatdev.herokuapp.com
+Try it out: https://shouldwehi.re
 
 ## Development
 
-``` bash
-# install dependencies
-npm install
+1. Install dependencies
+   ``` bash
+   $ yarn install
+   or
+   $ npm install
+   ```
+1. Copy & configure environment variables
+   ``` bash
+   $ cp .env.dist .env
+   ```
+1. Run development server with hot reload
+   ``` bash
+   $ yarn start
+   or
+   $ npm run start
+   ```
+1. Open browser with [http://localhost:5000]() (or defined port)
 
-# serve with hot reload at localhost:8080
-npm run dev
+### Further npm commands
+
+``` bash
+# serve with hot reload at localhost:5000
+yarn start
 
 # build for production with minification
-npm run build
+yarn build
 
 # build for production and view the bundle analyzer report
-npm run build --report
+yarn build --report
 
 # run unit tests
-npm run unit
+yarn unit
 
 # run e2e tests
-npm run e2e
+yarn e2e
 
 # run all tests
-npm test
+yarn test
 ```
