@@ -59,11 +59,11 @@ export default {
   methods: {
     submitUsernameForm: function (e) {
       e.preventDefault()
-      // remove focus to username input field
-      this.$refs.usernameInput.blur()
       if (this.usernameInputValue === '') {
         this.$router.push({ name: 'Main' })
       } else {
+        // remove focus to username input field
+        this.$refs.usernameInput.blur()
         this.$router.push({ name: 'Main', params: { username: this.usernameInputValue } })
       }
     },
