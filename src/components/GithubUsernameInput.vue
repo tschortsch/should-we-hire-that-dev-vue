@@ -15,7 +15,7 @@
                    v-on:blur="handleUsernameBlur"
             />
             <button type="submit" class="submitt-button sr-only" tabindex="-1">Submit user search</button>
-            <button class="clear-button" v-if="usernameInputValue" v-on:click="handleClearButtonClick">
+            <button class="clear-button" v-visible="usernameInputValue" v-on:click="handleClearButtonClick">
               <span aria-label="Clear username">×</span>
             </button>
           </div>
