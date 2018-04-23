@@ -5,19 +5,20 @@
         <github-auth :accessToken="accessToken" />
       </div>
       <div class="col-xl-8 col-lg-10 col-12">
-        <github-username-input v-if="accessToken" :username="username" :isLoading="isLoading" />
-        <h1 v-else class="text-center">Should we hire that dev?</h1>
-        <div class="text-center">
-          <div v-if="errorMessage !== ''" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
-          <p v-if="!accessToken">
-            Since GitHub doesn't allow to do <a href="https://developer.github.com/v4/">GraphQL queries</a> without authorization please sign in with your GitHub account first.
-            The Authorization only grants this website to request data which is already public anyway. So, no worries!
-          </p>
-          <template v-if="(userdata && commitsTotalCount !== null) || isLoading">
-            <user-info  :userdata="userdata" :isLoading="isLoading" />
-            <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
-          </template>
-        </div>
+        <template v-if="accessToken">
+          <h1 class="sr-only">Should we hire that dev?</h1>
+          <github-username-input v-if="accessToken" :username="username" :isLoading="isLoading" />
+          <div class="text-center">
+            <div v-if="errorMessage !== ''" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+            <template v-if="(userdata && commitsTotalCount !== null) || isLoading">
+              <user-info  :userdata="userdata" :isLoading="isLoading" />
+              <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
+            </template>
+          </div>
+        </template>
+        <template v-else>
+          <intro />
+        </template>
       </div>
     </div>
   </div>
@@ -29,10 +30,12 @@ import UserInfo from './UserInfo'
 import Statistics from './Statistics'
 import GithubAuth from './GithubAuth'
 import GithubUsernameInput from './GithubUsernameInput'
+import Intro from './Intro'
 
 export default {
   name: 'Main',
   components: {
+    Intro,
     GithubUsernameInput,
     GithubAuth,
     Statistics,

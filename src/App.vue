@@ -14,4 +14,8 @@ export default {
 @import '~bootstrap/scss/functions';
 @import 'variables';
 @import 'bootstrap';
+
+h1, .h1 {
+  margin-bottom: $spacer * 1.5;
+}
 </style>
