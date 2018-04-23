@@ -8,7 +8,7 @@
         <github-username-input v-if="accessToken" :username="username" :isLoading="isLoading" />
         <h1 v-else class="text-center">Should we hire that dev?</h1>
         <div class="text-center">
-          <div v-if="errorMessage !== ''" class="text-danger">{{ errorMessage }}</div>
+          <div v-if="errorMessage !== ''" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
           <p v-if="!accessToken">
             Since GitHub doesn't allow to do <a href="https://developer.github.com/v4/">GraphQL queries</a> without authorization please sign in with your GitHub account first.
             The Authorization only grants this website to request data which is already public anyway. So, no worries!
