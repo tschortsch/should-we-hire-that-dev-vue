@@ -5,7 +5,7 @@
       <div id="avatar-wrapper">
         <img :src="userdata.avatarUrl" :alt="name" />
       </div>
-      <h2><a :href="userdata.url" id="url">{{ name }}</a></h2>
+      <h2><a :href="userdata.url">{{ name }}</a></h2>
       <p v-if="userdata.location" class="text-muted"><font-awesome-icon :icon="iconMapMarkerAlt" /> {{ userdata.location }}</p>
       <p v-if="userdata.bio">{{ userdata.bio }}</p>
       <organizations :organizations="userdata.organizations.edges" />
