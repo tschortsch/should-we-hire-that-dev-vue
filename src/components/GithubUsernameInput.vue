@@ -161,7 +161,10 @@ export default {
       }
     }
 
-    this.startUsernameAnimation()
+    // start username animation if input field is empty
+    if (!this.usernameInputValue || this.usernameInputValue === '') {
+      this.startUsernameAnimation()
+    }
   }
 }
 </script>
