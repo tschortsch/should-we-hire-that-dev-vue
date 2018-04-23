@@ -216,12 +216,15 @@ export default {
 
   #username {
     border: none;
-    border-radius: 0;
     font-size: $h1-font-size;
     padding: 0;
     line-height: $line-height-base;
     color: $body-color;
     width: 100%;
+
+    &:focus {
+      box-shadow: none;
+    }
   }
 
   .clear-button {
