@@ -215,13 +215,13 @@ export default {
   }
 
   #username {
+    flex: 1;
     border: none;
     border-radius: 0;
     font-size: $h1-font-size;
     padding: 0;
     line-height: $line-height-base;
     color: $body-color;
-    width: 100%;
 
     &:focus {
       box-shadow: none;
@@ -229,6 +229,7 @@ export default {
   }
 
   .clear-button {
+    flex: 0;
     color: $gray-600;
     font-size: $h2-font-size;
     line-height: $line-height-base;
