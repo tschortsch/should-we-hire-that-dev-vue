@@ -61,7 +61,7 @@ export default {
       e.preventDefault()
       if (this.usernameInputValue === '') {
         this.$router.push({ name: 'Main' })
-      } else {
+      } else if (this.usernameInputValue !== this.username) {
         // remove focus to username input field
         this.$refs.usernameInput.blur()
         this.$router.push({ name: 'Main', params: { username: this.usernameInputValue } })
