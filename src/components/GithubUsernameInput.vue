@@ -5,7 +5,7 @@
       <div class="flex-item">
         <div class="username-input-wrapper d-flex align-items-baseline">
           <label for="username" class="sr-only">Please enter GitHub username:</label>
-          <input type="search" name="username" id="username" class="form-control"
+          <input type="search" name="username" id="username" class="form-control" autocapitalize="none" autocorrect="off"
                  v-model="usernameInputValue"
                  :placeholder="placeholder"
                  :disabled="isLoading"
