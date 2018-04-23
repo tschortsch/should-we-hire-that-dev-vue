@@ -76,6 +76,7 @@ export default {
     handleClearButtonClick: function (e) {
       e.preventDefault()
       this.usernameInputValue = ''
+      this.startUsernameAnimation()
     }
   },
   computed: {
