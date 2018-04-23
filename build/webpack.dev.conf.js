@@ -10,6 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   entry: [
+    'whatwg-fetch',
     'webpack-hot-middleware/client',
     './src/main.js'
   ],
