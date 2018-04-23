@@ -17,5 +17,6 @@ export default {
 
 h1, .h1 {
   margin-bottom: $spacer * 1.5;
+  font-weight: 400;
 }
 </style>
