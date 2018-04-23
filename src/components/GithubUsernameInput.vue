@@ -229,6 +229,7 @@ export default {
     font-size: $h2-font-size;
     line-height: $line-height-base;
     height: $input-height-lg;
+    padding: 0 0.3rem;
     cursor: pointer;
     border: 0;
     background: transparent;
