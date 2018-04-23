@@ -7,6 +7,7 @@
           <div class="username-input-wrapper d-flex align-items-center">
             <label for="username" class="sr-only">Please enter GitHub username:</label>
             <input type="search" name="username" id="username" class="form-control" autocapitalize="none" autocorrect="off"
+                   ref="usernameInput"
                    v-model="usernameInputValue"
                    :placeholder="placeholder"
                    :disabled="isLoading"
@@ -76,7 +77,8 @@ export default {
     handleClearButtonClick: function (e) {
       e.preventDefault()
       this.usernameInputValue = ''
-      this.startUsernameAnimation()
+      // set focus to username input field
+      this.$refs.usernameInput.focus()
     }
   },
   computed: {
