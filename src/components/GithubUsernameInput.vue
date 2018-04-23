@@ -3,15 +3,21 @@
     <div class="question d-md-flex">
       <div class="label flex-item">Should we hire</div>
       <div class="flex-item">
-        <div class="username-input-wrapper d-flex align-items-baseline">
-          <label for="username" class="sr-only">Please enter GitHub username:</label>
-          <input type="search" name="username" id="username" class="form-control" autocapitalize="none" autocorrect="off"
-                 v-model="usernameInputValue"
-                 :placeholder="placeholder"
-                 :disabled="isLoading"
-                 v-on:focus="handleUsernameFocus"
-                 v-on:blur="handleUsernameBlur"
-          />
+        <div class="username-questionmark-wrapper d-flex align-items-baseline">
+          <div class="username-input-wrapper d-flex align-items-center">
+            <label for="username" class="sr-only">Please enter GitHub username:</label>
+            <input type="search" name="username" id="username" class="form-control" autocapitalize="none" autocorrect="off"
+                   v-model="usernameInputValue"
+                   :placeholder="placeholder"
+                   :disabled="isLoading"
+                   v-on:focus="handleUsernameFocus"
+                   v-on:blur="handleUsernameBlur"
+            />
+            <button type="submit" class="submitt-button sr-only" tabindex="-1">Submit user search</button>
+            <button class="clear-button" v-if="usernameInputValue" v-on:click="handleClearButtonClick">
+              <span aria-label="Clear username">×</span>
+            </button>
+          </div>
           <div class="questionmark">?</div>
         </div>
         <p class="form-text text-muted">Enter GitHub <font-awesome-icon :icon="iconGithub" /> username</p>
@@ -66,6 +72,10 @@ export default {
       if (e.target.value === '') {
         this.startUsernameAnimation()
       }
+    },
+    handleClearButtonClick: function (e) {
+      e.preventDefault()
+      this.usernameInputValue = ''
     }
   },
   computed: {
@@ -189,25 +199,36 @@ export default {
     }
   }
 
-  .username-input-wrapper {
-    .questionmark {
-      margin-left: 0.7rem;
-    }
+  .questionmark {
+    margin-left: 0.7rem;
   }
 
   .form-text {
     font-size: $font-size-sm;
   }
 
+  .username-input-wrapper {
+    border-bottom: solid $body-color 3px;
+  }
+
   #username {
     border: none;
-    border-bottom: solid $body-color 3px;
     border-radius: 0;
     font-size: $h1-font-size;
     padding: 0;
     line-height: $line-height-base;
     color: $body-color;
     width: 100%;
+  }
+
+  .clear-button {
+    color: $gray-600;
+    font-size: $h2-font-size;
+    line-height: $line-height-base;
+    height: $input-height-lg;
+    cursor: pointer;
+    border: 0;
+    background: transparent;
   }
 }
 </style>
