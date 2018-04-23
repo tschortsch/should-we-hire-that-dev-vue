@@ -127,7 +127,7 @@ export default {
       ).then(
         () => {
           return new Promise((resolve) => {
-            this.type('GitHub username', resolve)
+            this.type('GitHub user', resolve)
           })
         }
       ).then(
@@ -142,9 +142,7 @@ export default {
         () => this.sleep(1000)
       ).then(
         () => {
-          return new Promise((resolve) => {
-            this.type('that dev', resolve, 150)
-          })
+          this.placeholder = 'that dev'
         }
       )
     }
