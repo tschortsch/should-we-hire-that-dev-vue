@@ -1,6 +1,11 @@
 import { mount } from '@vue/test-utils'
 import GithubUsernameInput from '@/components/GithubUsernameInput'
 
+// import custom directive
+import Vue from 'vue'
+import VueVisible from 'vue-visible'
+Vue.use(VueVisible)
+
 describe('StatisticsBox.vue', () => {
   it('should handle empty values', () => {
     const username = ''
