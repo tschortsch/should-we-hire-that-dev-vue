@@ -191,13 +191,12 @@ export default {
   font-size: $h1-font-size;
 
   .flex-item {
-    flex: 1;
+    flex: 0 0 50%;
   }
 
   .label {
-    margin-right: 0.7rem;
-
     @include media-breakpoint-up(md) {
+      padding-right: 0.7rem;
       text-align: right;
     }
   }
@@ -222,7 +221,9 @@ export default {
     padding: 0;
     line-height: $line-height-base;
     color: $body-color;
-    width: 99%; // workaround for edge browsers (flexbox takes care of width anyway)
+    // allow input to shrink (see: https://stackoverflow.com/questions/42421361/input-button-elements-not-shrinking-in-a-flex-container)
+    width: 100%;
+    min-width: 0;
 
     &:focus {
       box-shadow: none;
