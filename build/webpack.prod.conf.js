@@ -17,6 +17,7 @@ const env = process.env.NODE_ENV === 'testing'
 
 const webpackConfig = merge(baseWebpackConfig, {
   entry: [
+    'promise-polyfill/src/polyfill',
     'whatwg-fetch',
     './src/main.js'
   ],
