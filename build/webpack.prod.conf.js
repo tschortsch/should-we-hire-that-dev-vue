@@ -19,6 +19,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   entry: [
     'promise-polyfill/src/polyfill',
     'whatwg-fetch',
+    './src/polyfills/isinteger.js',
     './src/main.js'
   ],
   module: {

@@ -5,8 +5,6 @@ import App from './App'
 import router from './router'
 import VueAnalytics from 'vue-analytics'
 import VueVisible from 'vue-visible'
-import 'whatwg-fetch'
-import 'promise-polyfill/src/polyfill'
 
 Vue.config.productionTip = false
 
