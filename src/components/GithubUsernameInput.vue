@@ -3,7 +3,7 @@
     <div class="question d-md-flex">
       <div class="label flex-item">Should we hire</div>
       <div class="flex-item">
-        <div class="username-questionmark-wrapper d-flex align-items-baseline">
+        <div class="username-questionmark-wrapper d-flex">
           <div class="username-input-wrapper d-flex align-items-center">
             <label for="username" class="sr-only">Please enter GitHub username:</label>
             <input type="search" name="username" id="username" class="form-control" autocapitalize="none" autocorrect="off"
@@ -201,16 +201,18 @@ export default {
     }
   }
 
-  .questionmark {
-    margin-left: 0.7rem;
-  }
-
   .form-text {
     font-size: $font-size-sm;
   }
 
   .username-input-wrapper {
+    flex: 1;
     border-bottom: solid $body-color 3px;
+  }
+
+  .questionmark {
+    flex: 0 0 auto;
+    margin-left: 0.7rem;
   }
 
   #username {
