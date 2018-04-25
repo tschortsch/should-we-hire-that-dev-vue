@@ -14,12 +14,17 @@ describe('Statistics.vue', () => {
         ranking: 0
       },
       {
+        name: 'followers',
+        value: 0,
+        ranking: 0
+      },
+      {
         name: 'stars',
         value: 0,
         ranking: 0
       },
       {
-        name: 'followers',
+        name: 'forks',
         value: 0,
         ranking: 0
       },
@@ -29,12 +34,12 @@ describe('Statistics.vue', () => {
         ranking: 0
       },
       {
-        name: 'repos',
+        name: 'pullRequests',
         value: 0,
         ranking: 0
       },
       {
-        name: 'pullRequests',
+        name: 'repos',
         value: 0,
         ranking: 0
       }
@@ -62,14 +67,19 @@ describe('Statistics.vue', () => {
         'value': '2 years ago'
       },
       {
+        'name': 'followers',
+        'ranking': 30,
+        'value': 21
+      },
+      {
         'name': 'stars',
         'ranking': 60,
         'value': 88
       },
       {
-        'name': 'followers',
-        'ranking': 30,
-        'value': 20
+        'name': 'forks',
+        'ranking': 40,
+        'value': 32
       },
       {
         'name': 'commits',
@@ -77,19 +87,19 @@ describe('Statistics.vue', () => {
         'value': 100
       },
       {
+        'name': 'pullRequests',
+        'ranking': 50,
+        'value': 244
+      },
+      {
         'name': 'repos',
         'ranking': 50,
         'value': 30
-      },
-      {
-        'name': 'pullRequests',
-        'ranking': 50,
-        'value': 243
       }
     ]
     expect(wrapper.vm.statisticsValues).toEqual(statisticsValues)
     expect(wrapper.vm.repositoriesContributedTo).toEqual(userdata.repositoriesContributedTo.nodes)
-    expect(wrapper.vm.overallRankingValue).toEqual(230)
+    expect(wrapper.vm.overallRankingValue).toEqual(270)
     expect(wrapper.vm.maxRanking).toEqual(statisticsValues.length * 100)
   })
 
