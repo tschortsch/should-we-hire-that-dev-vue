@@ -98,8 +98,15 @@ export default {
           repositories(first: 100) {
             totalCount,
             nodes {
+              name,
+              url,
+              description,
               stargazers {
                 totalCount
+              },
+              forkCount,
+              primaryLanguage {
+                name
               }
             }
           },

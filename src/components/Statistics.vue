@@ -1,19 +1,26 @@
 <template>
-  <div class="row statistics justify-content-center">
-    <statistics-box
-      v-for="statisticsValue in statisticsValues"
-      :key="statisticsValue.name"
-      :title="getStatisticsTitles(statisticsValue.name)"
-      :value="statisticsValue.value"
-      :additional-value="statisticsValue.additionalValue"
-      :ranking="statisticsValue.ranking "
-    />
-    <overall-ranking
-      title="Overall ranking"
-      :value="overallRankingValue"
-      :maxRanking="maxRanking"
-    />
-    <language-statistics :repositoriesContributedTo="repositoriesContributedTo" />
+  <div class="statistics">
+    <div class="row justify-content-center">
+      <statistics-box
+        v-for="statisticsValue in statisticsValues"
+        :key="statisticsValue.name"
+        :title="getStatisticsTitles(statisticsValue.name)"
+        :value="statisticsValue.value"
+        :additional-value="statisticsValue.additionalValue"
+        :ranking="statisticsValue.ranking "
+      />
+      <overall-ranking
+        title="Overall ranking"
+        :value="overallRankingValue"
+        :maxRanking="maxRanking"
+      />
+    </div>
+    <div class="row justify-content-center">
+      <language-statistics :repositoriesContributedTo="repositoriesContributedTo" />
+    </div>
+    <div class="row justify-content-center">
+      <most-famous-repository :repository="mostFamousRepository" />
+    </div>
   </div>
 </template>
 
@@ -22,9 +29,11 @@ import moment from 'moment'
 import StatisticsBox from './StatisticsBox'
 import OverallRanking from './OverallRanking'
 import LanguageStatistics from './LanguageStatistics'
+import MostFamousRepository from './MostFamousRepository'
 
 export default {
   components: {
+    MostFamousRepository,
     LanguageStatistics,
     OverallRanking,
     StatisticsBox
@@ -38,6 +47,7 @@ export default {
     this.statisticsTitles = {
       createdAt: 'User since',
       stars: 'Stars',
+      forks: 'Forks of own repos',
       followers: 'Followers',
       commits: 'Total commits',
       repos: 'Public repos',
@@ -82,6 +92,18 @@ export default {
         [10, 5]
       ]),
       stars: new Map([
+        [100, 250],
+        [90, 200],
+        [80, 150],
+        [70, 100],
+        [60, 70],
+        [50, 50],
+        [40, 30],
+        [30, 20],
+        [20, 10],
+        [10, 5]
+      ]),
+      forks: new Map([
         [100, 250],
         [90, 200],
         [80, 150],
@@ -158,6 +180,13 @@ export default {
           ranking: this.getJudgement('createdAt', currentTimestamp - createdAtTimestamp)
         })
 
+        const followersValue = this.userdata.followers.totalCount
+        statisticsValues.push({
+          name: 'followers',
+          value: followersValue,
+          ranking: this.getJudgement('followers', followersValue)
+        })
+
         const starsCount = this.userdata.repositories.nodes.reduce((starsCount, repo) => {
           return starsCount + repo.stargazers.totalCount
         }, 0)
@@ -167,11 +196,13 @@ export default {
           ranking: this.getJudgement('stars', starsCount)
         })
 
-        const followersValue = this.userdata.followers.totalCount
+        const forksCount = this.userdata.repositories.nodes.reduce((forksCount, repo) => {
+          return forksCount + repo.forkCount
+        }, 0)
         statisticsValues.push({
-          name: 'followers',
-          value: followersValue,
-          ranking: this.getJudgement('followers', followersValue)
+          name: 'forks',
+          value: forksCount,
+          ranking: this.getJudgement('forks', forksCount)
         })
 
         const commitsValue = this.commitsTotalCount
@@ -181,18 +212,18 @@ export default {
           ranking: this.getJudgement('commits', commitsValue)
         })
 
-        const reposValue = this.userdata.repositories.totalCount
-        statisticsValues.push({
-          name: 'repos',
-          value: reposValue,
-          ranking: this.getJudgement('repos', reposValue)
-        })
-
         const pullRequestsValue = this.userdata.pullRequests.totalCount
         statisticsValues.push({
           name: 'pullRequests',
           value: pullRequestsValue,
           ranking: this.getJudgement('pullRequests', pullRequestsValue)
+        })
+
+        const reposValue = this.userdata.repositories.totalCount
+        statisticsValues.push({
+          name: 'repos',
+          value: reposValue,
+          ranking: this.getJudgement('repos', reposValue)
         })
       } else {
         statisticsValues = [
@@ -203,12 +234,17 @@ export default {
             ranking: 0
           },
           {
+            name: 'followers',
+            value: 0,
+            ranking: 0
+          },
+          {
             name: 'stars',
             value: 0,
             ranking: 0
           },
           {
-            name: 'followers',
+            name: 'forks',
             value: 0,
             ranking: 0
           },
@@ -218,12 +254,12 @@ export default {
             ranking: 0
           },
           {
-            name: 'repos',
+            name: 'pullRequests',
             value: 0,
             ranking: 0
           },
           {
-            name: 'pullRequests',
+            name: 'repos',
             value: 0,
             ranking: 0
           }
@@ -234,6 +270,21 @@ export default {
     },
     repositoriesContributedTo () {
       return this.userdata ? this.userdata.repositoriesContributedTo.nodes : []
+    },
+    mostFamousRepository () {
+      if (!this.userdata) {
+        return null
+      }
+
+      return this.userdata.repositories.nodes.reduce((mostFamousRepo, repo) => {
+        const repoTotalCount = repo.stargazers.totalCount + repo.forkCount
+        let currentRepo = repo
+        currentRepo.totalCount = repoTotalCount
+        if (!mostFamousRepo || repoTotalCount > mostFamousRepo.totalCount) {
+          return currentRepo
+        }
+        return mostFamousRepo
+      }, null)
     },
     overallRankingValue () {
       return this.getOverallRankingValue(this.statisticsValues)

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.repositoriesContributedTo.length > 0" class="col-md-6 col-10">
+  <div v-if="this.repositoriesContributedTo.length > 0" class="col-md-6 col-10 mb-5">
     <h3>Languages</h3>
     <language-pie-chart :chartData="chartData" :options="chartOptions" />
   </div>
