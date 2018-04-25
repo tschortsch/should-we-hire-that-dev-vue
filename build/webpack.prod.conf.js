@@ -77,6 +77,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       templateParameters: {
         title: (process.env.NODE_ENV === 'testing' ? '[STAGE] Should we hire that dev?' : 'Should we hire that dev?'),
         siteUrl: (process.env.NODE_ENV === 'testing' ? 'https://stage.shouldwehi.re' : 'https://shouldwehi.re'),
+        robotsContent: (process.env.NODE_ENV === 'testing' ? 'noindex, nofollow' : 'index, follow')
       },
       minify: {
         removeComments: true,

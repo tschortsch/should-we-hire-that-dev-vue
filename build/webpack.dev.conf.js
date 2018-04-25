@@ -37,6 +37,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       templateParameters: {
         title: '[DEV] Should we hire that dev?',
         siteUrl: 'http://localhost:5000',
+        robotsContent: 'noindex, nofollow'
       }
     }),
     // copy custom static assets
