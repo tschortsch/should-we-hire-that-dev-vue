@@ -10,8 +10,8 @@
           <github-username-input v-if="accessToken" :username="username" :isLoading="isLoading" />
           <div class="text-center">
             <div v-if="errorMessage !== ''" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
-            <template v-if="(userdata && commitsTotalCount !== null) || isLoading">
-              <user-info  :userdata="userdata" :isLoading="isLoading" />
+            <template v-if="(userdata && commitsTotalCount && organizations) || isLoading">
+              <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
               <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
             </template>
           </div>
@@ -49,6 +49,7 @@ export default {
       accessToken: window.localStorage.getItem('swhtd-gh-access-token'),
       userdata: null,
       commitsTotalCount: null,
+      organizations: null,
       errorMessage: '',
       isLoading: false
     }
@@ -81,17 +82,6 @@ export default {
           followers {
             totalCount
           },
-          organizations(first: 100) {
-            totalCount
-            edges {
-              node {
-                id,
-                name,
-                url,
-                avatarUrl
-              }
-            }
-          }
           pullRequests(first: 1) {
             totalCount
           },
@@ -174,7 +164,23 @@ export default {
             this.errorMessage = reason
           })
 
-          fetchCommitsPromise.then(() => {
+          let fetchOrganizationsPromise = new Promise((resolve, reject) => {
+            this.fetchOrganizations(username).then(organizationsResponseRaw => {
+              if (this.rateLimitExceeded(organizationsResponseRaw.headers)) {
+                reject(new Error(this.getRateLimitReason(organizationsResponseRaw.headers)))
+              }
+              organizationsResponseRaw.json().then(organizationsResponse => {
+                console.log('Organizations response', organizationsResponse)
+                this.organizations = organizationsResponse
+                resolve()
+              })
+            })
+          }).catch(reason => {
+            this.resetState()
+            this.errorMessage = reason
+          })
+
+          Promise.all([fetchCommitsPromise, fetchOrganizationsPromise]).then(() => {
             this.isLoading = false
           })
         })
@@ -204,9 +210,18 @@ export default {
       })
     }
 
+    this.fetchOrganizations = (username) => {
+      let organizationsQueryUrl = 'https://api.github.com/users/' + username + '/orgs'
+      if (this.accessToken) {
+        organizationsQueryUrl += '?access_token=' + this.accessToken
+      }
+      return fetch(organizationsQueryUrl)
+    }
+
     this.resetState = () => {
       this.userdata = null
       this.commitsTotalCount = null
+      this.organizations = null
       this.errorMessage = ''
     }
 

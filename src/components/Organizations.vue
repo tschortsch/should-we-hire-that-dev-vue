@@ -1,7 +1,7 @@
 <template>
   <ul v-if="organizations.length > 0" class="list-inline">
-    <li v-for="organization in organizations" v-bind:key="organization.node.id" class="list-inline-item">
-      <a :href="organization.node.url"><img class="organization-avatar" :src="organization.node.avatarUrl" :alt="organization.node.name" :title="organization.node.name" /></a>
+    <li v-for="organization in organizations" v-bind:key="organization.id" class="list-inline-item">
+      <a :href="organization.url"><img class="organization-avatar" :src="organization.avatar_url" :alt="organization.login" :title="organization.login" /></a>
     </li>
   </ul>
 </template>
