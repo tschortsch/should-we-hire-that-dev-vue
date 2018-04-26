@@ -21,7 +21,7 @@ export default {
       e.preventDefault()
       const clientId = process.env.GH_CLIENT_ID || ''
       if (clientId !== '') {
-        window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + clientId + '&scope=read:org'
+        window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + clientId
       } else {
         console.log('GH_CLIENT_ID environment variable not set!')
       }
