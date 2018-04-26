@@ -44,9 +44,6 @@ yarn build --report
 # run unit tests
 yarn unit
 
-# run e2e tests
-yarn e2e
-
 # run all tests
 yarn test
 ```
