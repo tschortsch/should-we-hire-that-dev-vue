@@ -33,7 +33,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
-      inject: true
+      inject: true,
+      templateParameters: {
+        title: '[DEV] Should we hire that dev?',
+        siteUrl: 'http://localhost:5000',
+        robotsContent: 'noindex, nofollow'
+      }
     }),
     // copy custom static assets
     new CopyWebpackPlugin([

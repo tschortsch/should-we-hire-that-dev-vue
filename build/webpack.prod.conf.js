@@ -74,6 +74,11 @@ const webpackConfig = merge(baseWebpackConfig, {
         : config.build.index,
       template: 'index.html',
       inject: true,
+      templateParameters: {
+        title: (process.env.NODE_ENV === 'testing' ? '[STAGE] Should we hire that dev?' : 'Should we hire that dev?'),
+        siteUrl: (process.env.NODE_ENV === 'testing' ? 'https://stage.shouldwehi.re' : 'https://shouldwehi.re'),
+        robotsContent: (process.env.NODE_ENV === 'testing' ? 'noindex, nofollow' : 'index, follow')
+      },
       minify: {
         removeComments: true,
         collapseWhitespace: true,
