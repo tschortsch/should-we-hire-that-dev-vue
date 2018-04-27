@@ -41,6 +41,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       chunks: 'all',
       name: true,
       cacheGroups: {
+        // any required modules inside node_modules are extracted to vendor
         commons: { test: /[\\/]node_modules[\\/]/, name: 'vendors', chunks: 'all' }
       }
     }
