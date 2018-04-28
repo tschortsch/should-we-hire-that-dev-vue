@@ -9,12 +9,15 @@
         <github-username-input :username="username" :isLoading="isLoading" />
         <div class="text-center">
           <div v-if="errorMessage !== ''" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+          <div v-if="!accessToken && userdata" class="alert alert-warning" role="alert">Please authorize with GitHub to get full statistics</div>
+        </div>
+        <intro :accessToken="accessToken" :userdata="userdata" :isLoading="isLoading" />
+        <div class="text-center">
           <template v-if="errorMessage === '' && ((userdata && commitsTotalCount && organizations) || isLoading)">
             <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
             <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
           </template>
         </div>
-        <intro v-if="!accessToken && !userdata" />
       </div>
     </div>
   </div>
