@@ -43,7 +43,11 @@ app.get('/auth', function (req, res) {
         }
       })
     }).then((accessToken) => {
-      res.redirect('/token/' + accessToken)
+      let redirectPath = '/token/' + accessToken
+      if (req.query.state) {
+        redirectPath += '?state=' + req.query.state
+      }
+      res.redirect(redirectPath)
     }).catch((error) => {
       console.log('There was an error during the authorization. Error: ' + error)
       res.redirect('/')

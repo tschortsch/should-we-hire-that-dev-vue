@@ -7,12 +7,14 @@
         :title="getStatisticsTitles(statisticsValue.name)"
         :value="statisticsValue.value"
         :additional-value="statisticsValue.additionalValue"
-        :ranking="statisticsValue.ranking "
+        :ranking="statisticsValue.ranking"
+        :disabled="statisticsValue.disabled || false"
       />
       <overall-ranking
         title="Overall ranking"
         :value="overallRankingValue"
         :maxRanking="maxRanking"
+        :disabled="overallRankingValue === '???'"
       />
     </div>
     <div class="row justify-content-center">
@@ -187,23 +189,38 @@ export default {
           ranking: this.getJudgement('followers', followersValue)
         })
 
-        const starsCount = this.userdata.repositories.nodes.reduce((starsCount, repo) => {
-          return starsCount + repo.stargazers.totalCount
-        }, 0)
-        statisticsValues.push({
-          name: 'stars',
-          value: starsCount,
-          ranking: this.getJudgement('stars', starsCount)
-        })
+        if (this.userdata.repositories.nodes) {
+          const starsCount = this.userdata.repositories.nodes.reduce((starsCount, repo) => {
+            return starsCount + repo.stargazers.totalCount
+          }, 0)
+          statisticsValues.push({
+            name: 'stars',
+            value: starsCount,
+            ranking: this.getJudgement('stars', starsCount)
+          })
 
-        const forksCount = this.userdata.repositories.nodes.reduce((forksCount, repo) => {
-          return forksCount + repo.forkCount
-        }, 0)
-        statisticsValues.push({
-          name: 'forks',
-          value: forksCount,
-          ranking: this.getJudgement('forks', forksCount)
-        })
+          const forksCount = this.userdata.repositories.nodes.reduce((forksCount, repo) => {
+            return forksCount + repo.forkCount
+          }, 0)
+          statisticsValues.push({
+            name: 'forks',
+            value: forksCount,
+            ranking: this.getJudgement('forks', forksCount)
+          })
+        } else {
+          statisticsValues.push({
+            name: 'stars',
+            value: '???',
+            ranking: 0,
+            disabled: true
+          })
+          statisticsValues.push({
+            name: 'forks',
+            value: '???',
+            ranking: 0,
+            disabled: true
+          })
+        }
 
         const commitsValue = this.commitsTotalCount
         statisticsValues.push({
@@ -212,12 +229,21 @@ export default {
           ranking: this.getJudgement('commits', commitsValue)
         })
 
-        const pullRequestsValue = this.userdata.pullRequests.totalCount
-        statisticsValues.push({
-          name: 'pullRequests',
-          value: pullRequestsValue,
-          ranking: this.getJudgement('pullRequests', pullRequestsValue)
-        })
+        if (this.userdata.pullRequests) {
+          const pullRequestsValue = this.userdata.pullRequests.totalCount
+          statisticsValues.push({
+            name: 'pullRequests',
+            value: pullRequestsValue,
+            ranking: this.getJudgement('pullRequests', pullRequestsValue)
+          })
+        } else {
+          statisticsValues.push({
+            name: 'pullRequests',
+            value: '???',
+            ranking: 0,
+            disabled: true
+          })
+        }
 
         const reposValue = this.userdata.repositories.totalCount
         statisticsValues.push({
@@ -269,10 +295,10 @@ export default {
       return statisticsValues
     },
     repositoriesContributedTo () {
-      return this.userdata ? this.userdata.repositoriesContributedTo.nodes : []
+      return this.userdata && this.userdata.repositoriesContributedTo ? this.userdata.repositoriesContributedTo.nodes : []
     },
     mostFamousRepository () {
-      if (!this.userdata) {
+      if (!this.userdata || !this.userdata.repositories.nodes) {
         return null
       }
 
@@ -287,6 +313,9 @@ export default {
       }, null)
     },
     overallRankingValue () {
+      if (this.userdata && this.userdata.requestType === 'rest') {
+        return '???'
+      }
       return this.getOverallRankingValue(this.statisticsValues)
     },
     maxRanking () {

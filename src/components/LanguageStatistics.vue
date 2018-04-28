@@ -1,7 +1,8 @@
 <template>
-  <div v-if="this.repositoriesContributedTo.length > 0" class="col-md-6 col-10 mb-5">
+  <div class="col-md-6 col-10 mb-5" v-bind:class="{'text-muted': this.repositoriesContributedTo.length === 0}">
     <h3>Most used languages</h3>
-    <language-pie-chart :chartData="chartData" :options="chartOptions" />
+    <language-pie-chart v-if="this.repositoriesContributedTo.length > 0" :chartData="chartData" :options="chartOptions" />
+    <language-pie-chart v-else :chartData="chartDataDisabled" :options="chartOptions" />
   </div>
 </template>
 
@@ -33,6 +34,29 @@ export default {
         animation: {
           duration: 2000
         }
+      },
+      chartDataDisabled: {
+        labels: [
+          'Language X',
+          'Language Y',
+          'Language Z'
+        ],
+        datasets: [
+          {
+            data: [
+              20, 35, 45
+            ],
+            backgroundColor: [
+              '#b3b3b3',
+              '#8d8d8d',
+              '#494949'
+            ],
+            hoverBackgroundColor: [
+              '#b3b3b3',
+              '#8d8d8d',
+              '#494949'
+            ]
+          }]
       }
     }
   },

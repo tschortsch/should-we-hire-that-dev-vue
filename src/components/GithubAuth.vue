@@ -14,14 +14,19 @@ export default {
     FontAwesomeIcon
   },
   props: {
-    accessToken: String
+    accessToken: String,
+    username: String
   },
   methods: {
     handleAuth: function (e) {
       e.preventDefault()
       const clientId = process.env.GH_CLIENT_ID || ''
       if (clientId !== '') {
-        window.location.href = 'https://github.com/login/oauth/authorize?client_id=' + clientId
+        let redirectUri = 'https://github.com/login/oauth/authorize?client_id=' + clientId
+        if (this.username) {
+          redirectUri += '&state=' + encodeURI(this.username)
+        }
+        window.location.href = redirectUri
       } else {
         console.log('GH_CLIENT_ID environment variable not set!')
       }

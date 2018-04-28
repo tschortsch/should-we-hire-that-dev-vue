@@ -8,14 +8,16 @@ import VueVisible from 'vue-visible'
 
 Vue.config.productionTip = false
 
-const gaTrackingId = process.env.GA_TRACKING_ID || ''
-if (gaTrackingId !== '') {
-  // Enable analytics
-  Vue.use(VueAnalytics, {
-    id: gaTrackingId,
-    router
-  })
-}
+const gaTrackingId = process.env.GA_TRACKING_ID || 'UA-XXXXX-Y'
+// Enable analytics
+Vue.use(VueAnalytics, {
+  id: gaTrackingId,
+  router,
+  debug: {
+    // enable analytics only on production
+    sendHitTask: process.env.NODE_ENV === 'production'
+  }
+})
 
 // Enable visible directive
 Vue.use(VueVisible)

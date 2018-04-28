@@ -1,7 +1,14 @@
 <template>
-  <div class="col-md-8 col-10 mb-5" v-bind:class="rankingClass">
+  <div class="col-md-8 col-10 mb-5" v-bind:class="[{ 'text-muted': disabled }, rankingClass]">
     <h3>{{ title }}</h3>
-    <p class="value"><ICountUp :startVal=0 :endVal="value" :duration=2.5 /> / {{ maxRanking }}</p>
+    <p class="value">
+      <template v-if="Number.isInteger(value)">
+        <ICountUp :startVal=0 :endVal="value" :duration=2.5 /> / {{ maxRanking }}
+      </template>
+      <template v-else>
+        {{ value }} / {{ maxRanking }}
+      </template>
+    </p>
     <div class="progress">
       <div class="progress-bar" role="progressbar" v-bind:style="{ width: rankingPercent }" v-bind:aria-valuenow="ranking"
       aria-valuemin="0" aria-valuemax="100"></div>
@@ -23,12 +30,15 @@ export default {
       required: true
     },
     value: {
-      type: Number,
+      type: [String, Number],
       required: true
     },
     maxRanking: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean
     }
   },
   computed: {

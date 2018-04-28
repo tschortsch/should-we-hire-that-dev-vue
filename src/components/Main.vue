@@ -2,23 +2,22 @@
   <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
       <div class="col-12 text-right mb-3">
-        <github-auth :accessToken="accessToken" />
+        <github-auth :accessToken="accessToken" :username="username" />
       </div>
       <div class="col-xl-8 col-lg-10 col-12">
-        <template v-if="accessToken">
-          <h1 class="sr-only">Should we hire that dev?</h1>
-          <github-username-input v-if="accessToken" :username="username" :isLoading="isLoading" />
-          <div class="text-center">
-            <div v-if="errorMessage !== ''" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
-            <template v-if="(userdata && commitsTotalCount && organizations) || isLoading">
-              <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
-              <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
-            </template>
-          </div>
-        </template>
-        <template v-else>
-          <intro />
-        </template>
+        <h1 class="sr-only">Should we hire that dev?</h1>
+        <github-username-input :username="username" :isLoading="isLoading" />
+        <div class="text-center">
+          <div v-if="errorMessage !== ''" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+          <div v-if="!accessToken && userdata" class="alert alert-warning" role="alert">Please authorize with GitHub to get full statistics</div>
+        </div>
+        <intro :accessToken="accessToken" :userdata="userdata" :isLoading="isLoading" />
+        <div class="text-center">
+          <template v-if="errorMessage === '' && ((userdata && commitsTotalCount && organizations) || isLoading)">
+            <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
+            <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
+          </template>
+        </div>
       </div>
     </div>
   </div>
@@ -57,7 +56,11 @@ export default {
   watch: {
     username: function (newUsername, oldUsername) {
       if (newUsername) {
-        this.fetchUserInfo(this.username)
+        if (this.accessToken) {
+          this.fetchUserInfoAuthorized(this.username)
+        } else {
+          this.fetchUserInfoUnauthorized(this.username)
+        }
       } else {
         this.resetState()
         this.errorMessage = 'Please enter username.'
@@ -65,7 +68,7 @@ export default {
     }
   },
   created: function () {
-    this.fetchUserInfo = (username) => {
+    this.fetchUserInfoAuthorized = (username) => {
       this.isLoading = true
       this.resetState()
 
@@ -148,42 +151,70 @@ export default {
           console.log('Userdata', this.userdata)
 
           // TODO replace with graphql query
-          let fetchCommitsPromise = new Promise((resolve, reject) => {
-            this.fetchCommits(username).then(commitsResponseRaw => {
-              if (this.rateLimitExceeded(commitsResponseRaw.headers)) {
-                reject(new Error(this.getRateLimitReason(commitsResponseRaw.headers)))
-              }
-              commitsResponseRaw.json().then(commitsResponse => {
-                console.log('Commits response', commitsResponse)
-                this.commitsTotalCount = commitsResponse.total_count
-                resolve()
-              })
+          Promise.all([this.doFetchCommits(username), this.doFetchOrganizations(username)])
+            .then(([commitsTotalCount, organizations]) => {
+              this.commitsTotalCount = commitsTotalCount
+              this.organizations = organizations
+              this.isLoading = false
             })
-          }).catch(reason => {
-            this.resetState()
-            this.errorMessage = reason
-          })
-
-          let fetchOrganizationsPromise = new Promise((resolve, reject) => {
-            this.fetchOrganizations(username).then(organizationsResponseRaw => {
-              if (this.rateLimitExceeded(organizationsResponseRaw.headers)) {
-                reject(new Error(this.getRateLimitReason(organizationsResponseRaw.headers)))
-              }
-              organizationsResponseRaw.json().then(organizationsResponse => {
-                console.log('Organizations response', organizationsResponse)
-                this.organizations = organizationsResponse
-                resolve()
-              })
+            .catch(reason => {
+              this.resetState()
+              this.errorMessage = reason
             })
-          }).catch(reason => {
-            this.resetState()
-            this.errorMessage = reason
-          })
+        })
+      })
+    }
 
-          Promise.all([fetchCommitsPromise, fetchOrganizationsPromise]).then(() => {
+    this.fetchUserInfoUnauthorized = (username) => {
+      this.isLoading = true
+      this.resetState()
+
+      this.fetchUserInfo(username).then((userResponseRaw) => {
+        if (!userResponseRaw.ok) {
+          this.resetState()
+          if (userResponseRaw.status === 404) {
+            this.errorMessage = 'User not found. Try another username.'
+          } else if (this.rateLimitExceeded(userResponseRaw.headers)) {
+            this.errorMessage = this.getRateLimitReason(userResponseRaw.headers)
+          } else {
+            this.errorMessage = 'Something went wrong!'
+          }
+          this.isLoading = false
+          return
+        }
+        userResponseRaw.json().then((userResponse) => {
+          console.log('User response', userResponse)
+          this.userdata = {
+            requestType: 'rest',
+            login: userResponse.login,
+            name: userResponse.name,
+            location: userResponse.location,
+            avatarUrl: userResponse.avatar_url,
+            bio: userResponse.bio,
+            createdAt: userResponse.created_at,
+            url: userResponse.url,
+            followers: {
+              totalCount: userResponse.followers
+            },
+            pullRequests: null,
+            repositories: {
+              totalCount: userResponse.public_repos,
+              nodes: null
+            },
+            repositoriesContributedTo: null
+          }
+        })
+
+        Promise.all([this.doFetchCommits(username), this.doFetchOrganizations(username)])
+          .then(([commitsTotalCount, organizations]) => {
+            this.commitsTotalCount = commitsTotalCount
+            this.organizations = organizations
             this.isLoading = false
           })
-        })
+          .catch(reason => {
+            this.resetState()
+            this.errorMessage = reason
+          })
       })
     }
 
@@ -198,6 +229,14 @@ export default {
       })
     }
 
+    this.fetchUserInfo = (username) => {
+      let userQuery = 'https://api.github.com/users/' + username
+      if (this.accessToken) {
+        userQuery += '?access_token=' + this.accessToken
+      }
+      return fetch(userQuery)
+    }
+
     this.fetchCommits = (username) => {
       let commitQueryUrl = 'https://api.github.com/search/commits?q=author:' + username + '&sort=author-date&order=desc&per_page=1'
       if (this.accessToken) {
@@ -210,12 +249,40 @@ export default {
       })
     }
 
+    this.doFetchCommits = (username) => {
+      return new Promise((resolve, reject) => {
+        this.fetchCommits(username).then(commitsResponseRaw => {
+          if (this.rateLimitExceeded(commitsResponseRaw.headers)) {
+            reject(this.getRateLimitReason(commitsResponseRaw.headers))
+          }
+          commitsResponseRaw.json().then(commitsResponse => {
+            console.log('Commits response', commitsResponse)
+            resolve(commitsResponse.total_count)
+          })
+        })
+      })
+    }
+
     this.fetchOrganizations = (username) => {
       let organizationsQueryUrl = 'https://api.github.com/users/' + username + '/orgs'
       if (this.accessToken) {
         organizationsQueryUrl += '?access_token=' + this.accessToken
       }
       return fetch(organizationsQueryUrl)
+    }
+
+    this.doFetchOrganizations = (username) => {
+      return new Promise((resolve, reject) => {
+        this.fetchOrganizations(username).then(organizationsResponseRaw => {
+          if (this.rateLimitExceeded(organizationsResponseRaw.headers)) {
+            reject(this.getRateLimitReason(organizationsResponseRaw.headers))
+          }
+          organizationsResponseRaw.json().then(organizationsResponse => {
+            console.log('Organizations response', organizationsResponse)
+            resolve(organizationsResponse)
+          })
+        })
+      })
     }
 
     this.resetState = () => {
@@ -245,8 +312,12 @@ export default {
     }
 
     // fetch userinfo on load if username is passed in url
-    if (this.accessToken && this.username) {
-      this.fetchUserInfo(this.username)
+    if (this.username) {
+      if (this.accessToken) {
+        this.fetchUserInfoAuthorized(this.username)
+      } else {
+        this.fetchUserInfoUnauthorized(this.username)
+      }
     }
   }
 }
