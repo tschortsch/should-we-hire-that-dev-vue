@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-6 mb-5" v-bind:class="rankingClass">
+  <div class="col-md-6 mb-5" v-bind:class="[{ 'text-muted': disabled }, rankingClass]">
     <h3>{{ title }}</h3>
     <p class="value">
       <template v-if="Number.isInteger(value)">
@@ -43,6 +43,9 @@ export default {
     ranking: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean
     }
   },
   computed: {

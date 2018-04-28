@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12">
+  <div class="col-12" v-bind:class="{ 'text-muted': repository === null }">
     <h3>Most famous repository</h3>
     <p class="small text-muted">(repository with most stars and forks)</p>
     <template v-if="repository">

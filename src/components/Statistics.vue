@@ -7,12 +7,14 @@
         :title="getStatisticsTitles(statisticsValue.name)"
         :value="statisticsValue.value"
         :additional-value="statisticsValue.additionalValue"
-        :ranking="statisticsValue.ranking "
+        :ranking="statisticsValue.ranking"
+        :disabled="statisticsValue.disabled || false"
       />
       <overall-ranking
         title="Overall ranking"
         :value="overallRankingValue"
         :maxRanking="maxRanking"
+        :disabled="overallRankingValue === '???'"
       />
     </div>
     <div class="row justify-content-center">
@@ -209,12 +211,14 @@ export default {
           statisticsValues.push({
             name: 'stars',
             value: '???',
-            ranking: 0
+            ranking: 0,
+            disabled: true
           })
           statisticsValues.push({
             name: 'forks',
             value: '???',
-            ranking: 0
+            ranking: 0,
+            disabled: true
           })
         }
 
@@ -236,7 +240,8 @@ export default {
           statisticsValues.push({
             name: 'pullRequests',
             value: '???',
-            ranking: 0
+            ranking: 0,
+            disabled: true
           })
         }
 

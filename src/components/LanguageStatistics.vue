@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-6 col-10 mb-5">
+  <div class="col-md-6 col-10 mb-5" v-bind:class="{'text-muted': this.repositoriesContributedTo.length === 0}">
     <h3>Most used languages</h3>
     <language-pie-chart v-if="this.repositoriesContributedTo.length > 0" :chartData="chartData" :options="chartOptions" />
     <language-pie-chart v-else :chartData="chartDataDisabled" :options="chartOptions" />
