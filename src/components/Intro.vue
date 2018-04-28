@@ -1,5 +1,5 @@
 <template>
-  <ul v-if="(!isLoading && !userdata && !accessToken) || (userdata && !accessToken)" class="faq list-unstyled">
+  <ul v-if="(!isLoading && !userdata) || (userdata && !accessToken)" class="faq list-unstyled">
     <li v-if="!isLoading && !userdata">
       <h2 class="h5">What is this website for?</h2>
       <p>
