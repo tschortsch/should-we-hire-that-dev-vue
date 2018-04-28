@@ -19,7 +19,7 @@ export default new Router({
       path: '/token/:token',
       name: 'Token',
       component: Token,
-      props: true
+      props: (route) => ({ token: route.params.token, state: route.query.state })
     },
     { path: '*', component: NotFoundComponent }
   ]

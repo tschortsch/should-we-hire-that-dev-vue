@@ -2,7 +2,7 @@
   <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
       <div class="col-12 text-right mb-3">
-        <github-auth :accessToken="accessToken" />
+        <github-auth :accessToken="accessToken" :username="username" />
       </div>
       <div class="col-xl-8 col-lg-10 col-12">
         <h1 class="sr-only">Should we hire that dev?</h1>
