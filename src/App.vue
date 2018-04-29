@@ -1,17 +1,12 @@
 <template>
   <div id="app">
-    <sitelinks-searchbox />
     <router-view/>
   </div>
 </template>
 
 <script>
-import SitelinksSearchbox from './components/structured-data/SitelinksSearchbox'
 export default {
-  name: 'App',
-  components: {
-    SitelinksSearchbox
-  }
+  name: 'App'
 }
 </script>
 
