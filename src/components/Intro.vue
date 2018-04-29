@@ -1,9 +1,9 @@
 <template>
   <ul v-if="(!isLoading && !userdata) || (userdata && !accessToken)" class="faq list-unstyled">
     <li v-if="!isLoading && !userdata">
-      <h2 class="h5">What is this tool for?</h2>
+      <h2 class="h5">What does it do?</h2>
       <p>
-        This tool gathers public information of a given GitHub user and generates statistics about it.
+        This tool analyzes the GitHub profile of a given user and generates statistics about it.
         It also shows the most used programming languages.
       </p>
     </li>
