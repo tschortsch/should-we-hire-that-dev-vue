@@ -1,12 +1,12 @@
 <template>
   <button v-if="!accessToken" class="btn btn-primary btn-sm" v-on:click="handleAuth">Authorize with GitHub <font-awesome-icon :icon="iconGithub" /></button>
-  <button v-else class="btn btn-link btn-sm logout-btn" v-on:click="handleLogout">Logout from GitHub <font-awesome-icon :icon="iconSignOutAlt" /></button>
+  <button v-else class="btn btn-link btn-sm logout-btn" v-on:click="handleLogout">Logout from GitHub <font-awesome-icon :icon="iconSignOut" /></button>
 </template>
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faGithub } from '@fortawesome/fontawesome-free-brands'
-import { faSignOutAlt } from '@fortawesome/fontawesome-pro-regular'
+import { faSignOut } from '@fortawesome/fontawesome-pro-regular'
 
 export default {
   name: 'github-auth',
@@ -41,8 +41,8 @@ export default {
     iconGithub () {
       return faGithub
     },
-    iconSignOutAlt () {
-      return faSignOutAlt
+    iconSignOut () {
+      return faSignOut
     }
   }
 }
