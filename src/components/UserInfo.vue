@@ -15,7 +15,7 @@
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import { faMapMarkerAlt } from '@fortawesome/fontawesome-free-solid'
+import { faMapMarkerAlt } from '@fortawesome/fontawesome-pro-regular'
 import Organizations from './Organizations'
 
 export default {

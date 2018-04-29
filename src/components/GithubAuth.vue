@@ -6,7 +6,7 @@
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { faGithub } from '@fortawesome/fontawesome-free-brands'
-import { faSignOutAlt } from '@fortawesome/fontawesome-free-solid'
+import { faSignOutAlt } from '@fortawesome/fontawesome-pro-regular'
 
 export default {
   name: 'github-auth',

@@ -15,7 +15,7 @@
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.5",
     "@fortawesome/fontawesome-free-brands": "^5.0.10",
-    "@fortawesome/fontawesome-free-solid": "^5.0.10",
+    "@fortawesome/fontawesome-pro-regular": "^5.0.10",
     "@fortawesome/vue-fontawesome": "^0.0.22",
     "bootstrap": "^4.1.0",
     "chart.js": "^2.7.2",

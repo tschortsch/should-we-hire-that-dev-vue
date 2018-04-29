@@ -21,7 +21,7 @@
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import { faStar, faCodeBranch, faCode } from '@fortawesome/fontawesome-free-solid'
+import { faStar, faCodeBranch, faCode } from '@fortawesome/fontawesome-pro-regular'
 
 export default {
   name: 'MostFamousRepository',
