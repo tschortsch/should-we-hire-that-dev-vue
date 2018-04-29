@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4 mb-5">
+  <div class="container mt-4 mb-2">
     <div class="row justify-content-center">
       <div class="col-12 text-right mb-3">
         <github-auth :accessToken="accessToken" :username="username" />
@@ -19,6 +19,9 @@
           </template>
         </div>
       </div>
+      <div class="col-xl-8 col-lg-10 col-12 text-center">
+        <page-footer />
+      </div>
     </div>
   </div>
 </template>
@@ -30,10 +33,12 @@ import Statistics from './Statistics'
 import GithubAuth from './GithubAuth'
 import GithubUsernameInput from './GithubUsernameInput'
 import Intro from './Intro'
+import PageFooter from './PageFooter'
 
 export default {
   name: 'Main',
   components: {
+    PageFooter,
     Intro,
     GithubUsernameInput,
     GithubAuth,
