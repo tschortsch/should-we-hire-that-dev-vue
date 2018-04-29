@@ -29,7 +29,7 @@
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import { faGithub } from '@fortawesome/fontawesome-free-brands'
+import faGithub from '@fortawesome/fontawesome-free-brands/faGithub'
 
 export default {
   name: 'github-username-input',

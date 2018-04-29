@@ -6,7 +6,8 @@
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import { faHeart, faCode } from '@fortawesome/fontawesome-pro-regular'
+import faHeart from '@fortawesome/fontawesome-pro-regular/faHeart'
+import faCode from '@fortawesome/fontawesome-pro-regular/faCode'
 
 export default {
   name: 'PageFooter',

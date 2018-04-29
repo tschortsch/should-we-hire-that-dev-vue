@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import { faMapMarkerAlt } from '@fortawesome/fontawesome-pro-regular'
 import Organizations from './Organizations'
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import faMapMarkerAlt from '@fortawesome/fontawesome-pro-regular/faMapMarkerAlt'
 
 export default {
   name: 'user-info',
