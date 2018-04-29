@@ -29,7 +29,7 @@ Try it out: https://shouldwehi.re
    ```
 1. Open browser with [http://localhost:5000](http://localhost:5000) (or defined port)
 
-### Further npm commands
+### Further commands
 
 ``` bash
 # serve with hot reload at localhost:5000
@@ -39,7 +39,7 @@ yarn start
 yarn build
 
 # build for production and view the bundle analyzer report
-yarn build --report
+yarn build:report
 
 # run unit tests
 yarn unit
