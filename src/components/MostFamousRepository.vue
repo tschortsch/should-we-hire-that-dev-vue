@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12" v-bind:class="{ 'text-muted': repository === null }">
+  <div class="col-12 mb-5" v-bind:class="{ 'text-muted': repository === null }">
     <h3>Most famous repository</h3>
     <p class="small text-muted">(repository with most stars and forks)</p>
     <template v-if="repository">
@@ -21,7 +21,7 @@
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import { faStar, faCodeBranch, faCode } from '@fortawesome/fontawesome-free-solid'
+import { faStar, faCodeBranch, faCode } from '@fortawesome/fontawesome-pro-regular'
 
 export default {
   name: 'MostFamousRepository',

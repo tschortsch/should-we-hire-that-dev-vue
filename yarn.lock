@@ -102,9 +102,9 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.1.4"
 
-"@fortawesome/fontawesome-free-solid@^5.0.10":
+"@fortawesome/fontawesome-pro-regular@^5.0.10":
   version "5.0.10"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free-solid/-/fontawesome-free-solid-5.0.10.tgz#b54c87d3ce4ffd0546b60d12e898e87b59776c30"
+  resolved "https://npm.fontawesome.com/0374501C-F9E0-4723-8723-E061368C1B5D/@fortawesome/fontawesome-pro-regular/-/fontawesome-pro-regular-5.0.10.tgz#0d2d878d3082c6272d87ed06da79d6c193913809"
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.1.4"
 
