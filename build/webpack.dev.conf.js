@@ -7,7 +7,6 @@ const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { VueLoaderPlugin } = require('vue-loader')
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   entry: [
@@ -28,10 +27,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')
     }),
-    new VueLoaderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
-    new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -51,7 +47,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ])
-  ]
+  ],
+  optimization: {
+    namedModules: true,
+    noEmitOnErrors: true
+  },
 })
 
 module.exports = devWebpackConfig

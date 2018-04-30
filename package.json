@@ -10,6 +10,7 @@
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src server test/unit",
     "build": "node build/build.js",
+    "build:report": "cross-env npm_config_report=true node build/build.js",
     "postinstall": "npm run build"
   },
   "dependencies": {
@@ -50,6 +51,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "chalk": "^2.4.1",
     "copy-webpack-plugin": "^4.5.1",
+    "cross-env": "^5.1.4",
     "css-loader": "^0.28.11",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",

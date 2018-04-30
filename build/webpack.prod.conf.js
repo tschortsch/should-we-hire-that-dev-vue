@@ -10,7 +10,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const { VueLoaderPlugin } = require('vue-loader')
 
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
@@ -34,32 +33,13 @@ const webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {
     path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].[chunkhash].js')
-  },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      name: true,
-      cacheGroups: {
-        // any required modules inside node_modules are extracted to vendor
-        commons: { test: /[\\/]node_modules[\\/]/, name: 'vendors', chunks: 'all' }
-      }
-    }
+    filename: utils.assetsPath('js/[name].[chunkhash].js'),
+    chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env
-    }),
-    new VueLoaderPlugin(),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          warnings: false
-        }
-      },
-      sourceMap: config.build.productionSourceMap,
-      parallel: true
     }),
     // extract css into its own file
     new MiniCssExtractPlugin({
@@ -98,9 +78,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     // keep module.id stable when vendor modules does not change
     new webpack.HashedModuleIdsPlugin(),
-    // enable scope hoisting
-    new webpack.optimize.ModuleConcatenationPlugin(),
-
     // copy custom static assets
     new CopyWebpackPlugin([
       {
@@ -116,7 +93,39 @@ const webpackConfig = merge(baseWebpackConfig, {
     ]),
     // Ignore all locale files of moment.js
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-  ]
+  ],
+  optimization: {
+    concatenateModules: true,
+    splitChunks: {
+      chunks: 'async',
+      cacheGroups: {
+        vendor: {
+          name: 'vendor',
+          test: /[\\/]node_modules[\\/].*\.js$/,
+          chunks: 'initial',
+          priority: -10,
+        },
+        app: {
+          name: 'app',
+          minChunks: 3,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+    runtimeChunk: 'single',
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          compress: {
+            warnings: false
+          }
+        },
+        sourceMap: config.build.productionSourceMap,
+        parallel: true
+      }),
+    ],
+  },
 })
 
 if (config.build.productionGzip) {
