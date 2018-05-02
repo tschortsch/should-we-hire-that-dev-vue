@@ -9,7 +9,7 @@
       <ul class="list-inline">
         <li class="list-inline-item"><font-awesome-icon :icon="iconStar" /> {{ repository.stargazers.totalCount }}</li>
         <li class="list-inline-item"><font-awesome-icon :icon="iconCodeBranch" /> {{ repository.forkCount }}</li>
-        <li class="list-inline-item"><font-awesome-icon :icon="iconCode" /> {{ repository.primaryLanguage.name }}</li>
+        <li v-if="repository.primaryLanguage" class="list-inline-item"><font-awesome-icon :icon="iconCode" /> {{ repository.primaryLanguage.name }}</li>
       </ul>
       <p>{{ repository.description }}</p>
     </template>
