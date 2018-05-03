@@ -28,8 +28,8 @@
 
 <script>
 import moment from 'moment'
-import UserInfo from './UserInfo'
-import Statistics from './Statistics'
+import UserInfo from './userinfo/UserInfo'
+import Statistics from './statistics/Statistics'
 import GithubAuth from './GithubAuth'
 import GithubUsernameInput from './GithubUsernameInput'
 import Intro from './Intro'
@@ -111,7 +111,7 @@ export default {
           repositoriesContributedTo(first: 100) {
             totalCount,
             nodes {
-              languages(first: 10) {
+              languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
                 edges {
                   size,
                   node {
@@ -327,7 +327,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-</style>

@@ -327,7 +327,7 @@ export default {
 
 <style lang="scss">
 @import "~bootstrap/scss/functions";
-@import "../variables";
+@import "../../variables";
 @import "~bootstrap/scss/mixins";
 
 .statistics {
