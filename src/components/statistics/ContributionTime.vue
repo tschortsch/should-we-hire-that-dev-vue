@@ -9,9 +9,9 @@
       </ul>
       <h4 class="h2">{{ daytimeSentence }}</h4>
       <h5>Hours</h5>
-      <line-chart v-if="contributionTimesChartData" :chartData="contributionTimesChartData" :options="chartOptions" :width="100" :height="33" />
+      <line-chart v-if="contributionTimesChartData" :chartData="contributionTimesChartData" :options="chartOptions" :width="100" :height="40" />
       <h5>Days of week</h5>
-      <line-chart v-if="contributionDaysChartData" :chartData="contributionDaysChartData" :options="chartOptions" :width="100" :height="33" />
+      <line-chart v-if="contributionDaysChartData" :chartData="contributionDaysChartData" :options="chartOptions" :width="100" :height="40" />
     </template>
     <template v-else>
       <h4 class="h2">???</h4>
