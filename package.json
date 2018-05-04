@@ -14,7 +14,7 @@
     "postinstall": "npm run build"
   },
   "dependencies": {
-    "@fortawesome/fontawesome": "^1.1.6",
+    "@fortawesome/fontawesome": "^1.1.7",
     "@fortawesome/fontawesome-free-brands": "^5.0.12",
     "@fortawesome/fontawesome-pro-regular": "^5.0.12",
     "@fortawesome/vue-fontawesome": "^0.0.22",
