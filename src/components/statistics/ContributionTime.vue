@@ -33,7 +33,7 @@ export default {
     FontAwesomeIcon
   },
   props: {
-    commits: Object,
+    commits: Array,
     userlogin: {
       type: String,
       required: true
@@ -94,7 +94,7 @@ export default {
         for (let i = 0; i < 24; i++) {
           emptyHoursMap.set(i, 0)
         }
-        return this.commits.items.reduce((commitTimes, commit) => {
+        return this.commits.reduce((commitTimes, commit) => {
           const commitMoment = moment(commit.commit.author.date)
           const hour = parseInt(commitMoment.format('H'))
           const currentHourValue = commitTimes.get(hour) ? commitTimes.get(hour) : 0
@@ -146,7 +146,7 @@ export default {
           ['Saturday', 0],
           ['Sunday', 0]
         ])
-        return this.commits.items.reduce((commitDays, commit) => {
+        return this.commits.reduce((commitDays, commit) => {
           const commitMoment = moment(commit.commit.author.date)
           const dayOfWeek = commitMoment.format('dddd')
           const currentDayOfWeekValue = commitDays.get(dayOfWeek) ? commitDays.get(dayOfWeek) : 0
@@ -190,7 +190,7 @@ export default {
       return faCalendarAlt
     },
     commitsCount () {
-      return this.commits ? this.commits.items.length : 0
+      return this.commits ? this.commits.length : 0
     }
   }
 }

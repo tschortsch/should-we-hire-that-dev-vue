@@ -157,10 +157,10 @@ export default {
           console.log('Userdata', this.userdata)
 
           // TODO replace with graphql query
-          Promise.all([this.doFetchCommits(username), this.doFetchOrganizations(username)])
-            .then(([commits, organizations]) => {
-              this.commits = commits
-              this.commitsTotalCount = commits.total_count
+          Promise.all([this.doFetchCommits(username, 1), this.doFetchCommits(username, 2), this.doFetchOrganizations(username)])
+            .then(([commitsFirstPage, commitsSecondPage, organizations]) => {
+              this.commits = [...commitsFirstPage.items, ...commitsSecondPage.items]
+              this.commitsTotalCount = commitsFirstPage.total_count
               this.organizations = organizations
               this.isLoading = false
             })
@@ -215,10 +215,10 @@ export default {
           }
         })
 
-        Promise.all([this.doFetchCommits(username), this.doFetchOrganizations(username)])
-          .then(([commits, organizations]) => {
-            this.commits = commits
-            this.commitsTotalCount = commits.total_count
+        Promise.all([this.doFetchCommits(username, 1), this.doFetchCommits(username, 2), this.doFetchOrganizations(username)])
+          .then(([commitsFirstPage, commitsSecondPage, organizations]) => {
+            this.commits = [...commitsFirstPage.items, ...commitsSecondPage.items]
+            this.commitsTotalCount = commitsFirstPage.total_count
             this.organizations = organizations
             this.isLoading = false
           })
@@ -251,8 +251,8 @@ export default {
       return fetch(userQuery)
     }
 
-    this.fetchCommits = (username) => {
-      let commitQueryUrl = 'https://api.github.com/search/commits?q=author:' + username + '&sort=author-date&order=desc&per_page=100'
+    this.fetchCommits = (username, page) => {
+      let commitQueryUrl = `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&page=${page}&per_page=100`
       if (this.accessToken) {
         commitQueryUrl += '&access_token=' + this.accessToken
       }
@@ -263,9 +263,9 @@ export default {
       })
     }
 
-    this.doFetchCommits = (username) => {
+    this.doFetchCommits = (username, page) => {
       return new Promise((resolve, reject) => {
-        this.fetchCommits(username).then(commitsResponseRaw => {
+        this.fetchCommits(username, page).then(commitsResponseRaw => {
           if (this.rateLimitExceeded(commitsResponseRaw.headers)) {
             reject(this.getRateLimitReason(commitsResponseRaw.headers))
           }

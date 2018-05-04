@@ -48,7 +48,7 @@ export default {
   name: 'statistics',
   props: {
     userdata: Object,
-    commits: Object,
+    commits: Array,
     commitsTotalCount: Number
   },
   created: function () {
