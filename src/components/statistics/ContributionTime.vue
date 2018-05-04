@@ -1,7 +1,7 @@
 <template>
   <div class="col-12 mb-5" v-bind:class="{ 'text-muted': commits === null }">
     <h3>Contributions time</h3>
-    <p class="small text-muted">(calculated from the last 100 commits)</p>
+    <p class="small text-muted">(calculated from the last {{ commitsCount }} commits)</p>
     <template v-if="commits">
       <ul class="list-inline">
         <li class="list-inline-item"><font-awesome-icon :icon="iconClock" /> {{ contributionTimeSentence }}</li>
@@ -55,11 +55,11 @@ export default {
   created: function () {
     this.getDaytimeSentence = (time, username) => {
       const daytimes = [
-        [20, `${username} seems to like to do night shifts`],
-        [17, `${username} likes to work in the evening`],
+        [21, `${username} seems to love night shifts`],
+        [18, `${username} likes to work in the evening`],
         [8, `${username} works mostly during daytime`],
         [6, `${username} is a real early bird`],
-        [0, `${username} seems to like to do night shifts`]
+        [0, `${username} seems to love night shifts`]
       ]
       for (let [startTime, sentence] of daytimes) {
         if (time >= startTime) {
@@ -169,16 +169,16 @@ export default {
       return null
     },
     contributionTimeSentence () {
-      if (this.contributionTime) {
+      if (this.contributionTime !== null) {
         return 'around ' + (this.contributionTime === 0 ? 'midnight' : `${this.contributionTime}:00`)
       }
       return ''
     },
     contributionDaySentence () {
-      return this.contributionDay ? `works mostly on a ${this.contributionDay}` : ''
+      return this.contributionDay ? `works mostly on ${this.contributionDay}` : ''
     },
     daytimeSentence () {
-      if (this.contributionTime) {
+      if (this.contributionTime !== null) {
         return this.getDaytimeSentence(this.contributionTime, this.userlogin)
       }
       return ''
@@ -188,6 +188,9 @@ export default {
     },
     iconCalendarAlt () {
       return faCalendarAlt
+    },
+    commitsCount () {
+      return this.commits ? this.commits.items.length : 0
     }
   }
 }
