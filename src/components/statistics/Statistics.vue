@@ -23,6 +23,9 @@
     <div class="row justify-content-center">
       <most-famous-repository :repository="mostFamousRepository" />
     </div>
+    <div class="row justify-content-center">
+      <contribution-time :commits="commits" :userlogin="userlogin" />
+    </div>
   </div>
 </template>
 
@@ -32,9 +35,11 @@ import StatisticsBox from './StatisticsBox'
 import OverallRanking from './OverallRanking'
 import LanguageStatistics from './LanguageStatistics'
 import MostFamousRepository from './MostFamousRepository'
+import ContributionTime from './ContributionTime'
 
 export default {
   components: {
+    ContributionTime,
     MostFamousRepository,
     LanguageStatistics,
     OverallRanking,
@@ -43,6 +48,7 @@ export default {
   name: 'statistics',
   props: {
     userdata: Object,
+    commits: Object,
     commitsTotalCount: Number
   },
   created: function () {
@@ -293,6 +299,9 @@ export default {
       }
 
       return statisticsValues
+    },
+    userlogin () {
+      return this.userdata ? this.userdata.login : ''
     },
     repositoriesContributedTo () {
       return this.userdata && this.userdata.repositoriesContributedTo ? this.userdata.repositoriesContributedTo.nodes : []
