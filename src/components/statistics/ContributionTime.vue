@@ -7,15 +7,20 @@
         <li class="list-inline-item"><font-awesome-icon :icon="iconClock" /> {{ contributionTimeSentence }}</li>
         <li class="list-inline-item"><font-awesome-icon :icon="iconCalendarAlt" /> {{ contributionDaySentence }}</li>
       </ul>
-      <h4 class="h2 mb-1">{{ daytimeSentence }}</h4>
+      <h4 class="h2">{{ daytimeSentence }}</h4>
+      <h5>Hours</h5>
+      <line-chart v-if="contributionTimesChartData" :chartData="contributionTimesChartData" :options="chartOptions" :width="100" :height="33" />
+      <h5>Days of week</h5>
+      <line-chart v-if="contributionDaysChartData" :chartData="contributionDaysChartData" :options="chartOptions" :width="100" :height="33" />
     </template>
     <template v-else>
-      <h4 class="h2 mb-1">???</h4>
+      <h4 class="h2">???</h4>
     </template>
   </div>
 </template>
 
 <script>
+import LineChart from './LineChart'
 import moment from 'moment'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import faClock from '@fortawesome/fontawesome-pro-regular/faClock'
@@ -24,6 +29,7 @@ import faCalendarAlt from '@fortawesome/fontawesome-pro-regular/faCalendarAlt'
 export default {
   name: 'ContributionTime',
   components: {
+    LineChart,
     FontAwesomeIcon
   },
   props: {
@@ -31,6 +37,19 @@ export default {
     userlogin: {
       type: String,
       required: true
+    }
+  },
+  data () {
+    return {
+      chartOptions: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              suggestedMin: 0
+            }
+          }]
+        }
+      }
     }
   },
   created: function () {
@@ -50,16 +69,44 @@ export default {
     }
   },
   computed: {
-    contributionTime () {
+    contributionTimesChartData () {
+      if (this.contributionTimes) {
+        return {
+          labels: [...this.contributionTimes.keys()].map(hour => `${hour}:00`),
+          datasets: [
+            {
+              label: 'Commits',
+              data: [...this.contributionTimes.values()],
+              borderWidth: 1,
+              borderColor: '#fe9b40',
+              backgroundColor: '#fedfb9',
+              pointBorderColor: '#fe9b40',
+              pointBackgroundColor: '#fedfb9'
+            }
+          ]
+        }
+      }
+      return null
+    },
+    contributionTimes () {
       if (this.commits) {
-        const condensedContributionTimes = this.commits.items.reduce((commitTimes, commit) => {
+        let emptyHoursMap = new Map()
+        for (let i = 0; i < 24; i++) {
+          emptyHoursMap.set(i, 0)
+        }
+        return this.commits.items.reduce((commitTimes, commit) => {
           const commitMoment = moment(commit.commit.author.date)
           const hour = parseInt(commitMoment.format('H'))
           const currentHourValue = commitTimes.get(hour) ? commitTimes.get(hour) : 0
           commitTimes.set(hour, currentHourValue + 1)
           return commitTimes
-        }, new Map())
-        const highestContributionTime = Array.from(condensedContributionTimes).reduce((highestTime, time) => {
+        }, emptyHoursMap)
+      }
+      return null
+    },
+    contributionTime () {
+      if (this.contributionTimes) {
+        const highestContributionTime = Array.from(this.contributionTimes).reduce((highestTime, time) => {
           if (time[1] > highestTime[1]) {
             return time
           }
@@ -69,16 +116,49 @@ export default {
       }
       return null
     },
-    contributionDay () {
+    contributionDaysChartData () {
+      if (this.contributionDays) {
+        return {
+          labels: [...this.contributionDays.keys()],
+          datasets: [
+            {
+              label: 'Commits',
+              data: [...this.contributionDays.values()],
+              borderWidth: 1,
+              borderColor: '#03a7ff',
+              backgroundColor: '#a8d9ff',
+              pointBorderColor: '#03a7ff',
+              pointBackgroundColor: '#a8d9ff'
+            }
+          ]
+        }
+      }
+      return null
+    },
+    contributionDays () {
       if (this.commits) {
-        const condensedContributionDays = this.commits.items.reduce((commitDays, commit) => {
+        let emptyDaysMap = new Map([
+          ['Monday', 0],
+          ['Tuesday', 0],
+          ['Wednesday', 0],
+          ['Thursday', 0],
+          ['Friday', 0],
+          ['Saturday', 0],
+          ['Sunday', 0]
+        ])
+        return this.commits.items.reduce((commitDays, commit) => {
           const commitMoment = moment(commit.commit.author.date)
           const dayOfWeek = commitMoment.format('dddd')
           const currentDayOfWeekValue = commitDays.get(dayOfWeek) ? commitDays.get(dayOfWeek) : 0
           commitDays.set(dayOfWeek, currentDayOfWeekValue + 1)
           return commitDays
-        }, new Map())
-        const highestContributionDay = Array.from(condensedContributionDays).reduce((highestDay, day) => {
+        }, emptyDaysMap)
+      }
+      return null
+    },
+    contributionDay () {
+      if (this.contributionDays) {
+        const highestContributionDay = Array.from(this.contributionDays).reduce((highestDay, day) => {
           if (day[1] > highestDay[1]) {
             return day
           }
