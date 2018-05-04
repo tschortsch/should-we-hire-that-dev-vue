@@ -1,18 +1,18 @@
 <template>
   <div class="col-md-6 col-10 mb-5" v-bind:class="{'text-muted': this.repositoriesContributedTo.length === 0}">
     <h3>Most used languages</h3>
-    <language-pie-chart v-if="this.repositoriesContributedTo.length > 0" :chartData="chartData" :options="chartOptions" />
-    <language-pie-chart v-else :chartData="chartDataDisabled" :options="chartOptions" />
+    <pie-chart v-if="this.repositoriesContributedTo.length > 0" :chartData="chartData" :options="chartOptions" />
+    <pie-chart v-else :chartData="chartDataDisabled" :options="chartOptions" />
   </div>
 </template>
 
 <script>
-import LanguagePieChart from './LanguagePieChart'
+import PieChart from './PieChart'
 
 export default {
   name: 'language-statistics',
   components: {
-    LanguagePieChart
+    PieChart: PieChart
   },
   props: {
     repositoriesContributedTo: {
@@ -56,7 +56,8 @@ export default {
               '#8d8d8d',
               '#494949'
             ]
-          }]
+          }
+        ]
       }
     }
   },
