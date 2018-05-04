@@ -96,17 +96,21 @@
   version "0.1.5"
   resolved "https://npm.fontawesome.com/0374501C-F9E0-4723-8723-E061368C1B5D/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.1.5.tgz#d44485071f94ffac7f66ff6117b290eb7c908d58"
 
-"@fortawesome/fontawesome-free-brands@^5.0.11":
-  version "5.0.11"
-  resolved "https://npm.fontawesome.com/0374501C-F9E0-4723-8723-E061368C1B5D/@fortawesome/fontawesome-free-brands/-/fontawesome-free-brands-5.0.11.tgz#1e2eda34f2c6208facabe44a90a49972b37307e9"
-  dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.1.5"
+"@fortawesome/fontawesome-common-types@^0.1.6":
+  version "0.1.6"
+  resolved "https://npm.fontawesome.com/0374501C-F9E0-4723-8723-E061368C1B5D/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.1.6.tgz#3cefd6cd88a2256e1daa69b6fc9a6ab5e3c33e4a"
 
-"@fortawesome/fontawesome-pro-regular@^5.0.11":
-  version "5.0.11"
-  resolved "https://npm.fontawesome.com/0374501C-F9E0-4723-8723-E061368C1B5D/@fortawesome/fontawesome-pro-regular/-/fontawesome-pro-regular-5.0.11.tgz#ebb1ed1c61d74b33acb3e06993b7333658cd731e"
+"@fortawesome/fontawesome-free-brands@^5.0.12":
+  version "5.0.12"
+  resolved "https://npm.fontawesome.com/0374501C-F9E0-4723-8723-E061368C1B5D/@fortawesome/fontawesome-free-brands/-/fontawesome-free-brands-5.0.12.tgz#2e8dfc4d92d95a9ed7aa27f93bccec08317ddcaa"
   dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.1.5"
+    "@fortawesome/fontawesome-common-types" "^0.1.6"
+
+"@fortawesome/fontawesome-pro-regular@^5.0.12":
+  version "5.0.12"
+  resolved "https://npm.fontawesome.com/0374501C-F9E0-4723-8723-E061368C1B5D/@fortawesome/fontawesome-pro-regular/-/fontawesome-pro-regular-5.0.12.tgz#0ba67aaff5acc88df56198664cc8e862ed0c6d56"
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.1.6"
 
 "@fortawesome/fontawesome@^1.1.6":
   version "1.1.6"
@@ -7071,9 +7075,9 @@ vue-jest@^2.5.0:
     tsconfig "^7.0.0"
     vue-template-es2015-compiler "^1.5.3"
 
-vue-loader@^15.0.6:
-  version "15.0.6"
-  resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-15.0.6.tgz#cd1e1dacbe17200a3e88c782fc7e07a8ecc276f1"
+vue-loader@^15.0.7:
+  version "15.0.7"
+  resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-15.0.7.tgz#7ee279e7c760e1910e1e7bb0d7ad364c9e9b2954"
   dependencies:
     "@vue/component-compiler-utils" "^1.2.1"
     hash-sum "^1.0.2"
@@ -7208,9 +7212,9 @@ webpack-sources@^1.0.1, webpack-sources@^1.1.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@^4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.6.0.tgz#363eafa733710eb0ed28c512b2b9b9f5fb01e69b"
+webpack@^4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.7.0.tgz#a04f68dab86d5545fd0277d07ffc44e4078154c9"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^3.0.0"
