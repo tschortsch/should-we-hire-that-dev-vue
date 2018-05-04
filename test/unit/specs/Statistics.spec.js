@@ -1,6 +1,6 @@
 import { shallow } from '@vue/test-utils'
 import moment from 'moment'
-import Statistics from '@/components/Statistics'
+import Statistics from '@/components/statistics/Statistics'
 import userdataCorrectFixture from '../fixtures/userdata-correct'
 
 describe('Statistics.vue', () => {
