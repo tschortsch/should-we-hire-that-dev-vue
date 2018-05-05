@@ -86,14 +86,14 @@ export default {
         const languageStatisticsPercentage = [...languageStatistics.entries()].reduce((accumulator, language) => {
           const languagePercentage = this.getPercentage(language[1], totalLanguages)
           if (languagePercentage < 2) {
-            let otherCount = accumulator.get('Other')
+            let otherCount = accumulator.get('Other') ? accumulator.get('Other') : 0
             otherCount += languagePercentage
             accumulator.set('Other', otherCount)
           } else {
             accumulator.set(language[0], languagePercentage)
           }
           return accumulator
-        }, new Map([['Other', 0]]))
+        }, new Map())
 
         const languageStatisticsSorted = new Map([...languageStatisticsPercentage.entries()].sort((a, b) => {
           if (a[1] < b[1]) {
