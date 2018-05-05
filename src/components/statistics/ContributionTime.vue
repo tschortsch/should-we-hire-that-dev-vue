@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 mb-5" v-bind:class="{ 'text-muted': commits === null }">
-    <h3>Contributions time</h3>
+    <h3>Contribution time</h3>
     <p class="small text-muted">(calculated from the last {{ commitsCount }} commits)</p>
     <template v-if="commits">
       <ul class="list-inline">
@@ -9,9 +9,9 @@
       </ul>
       <h4 class="h2">{{ daytimeSentence }}</h4>
       <h5>Hours</h5>
-      <line-chart v-if="contributionTimesChartData" :chartData="contributionTimesChartData" :options="chartOptions" :width="100" :height="40" />
+      <line-chart v-if="contributionTimesChartData" class="contribution-chart" :chartData="contributionTimesChartData" :options="chartOptions" />
       <h5>Days of week</h5>
-      <line-chart v-if="contributionDaysChartData" :chartData="contributionDaysChartData" :options="chartOptions" :width="100" :height="40" />
+      <line-chart v-if="contributionDaysChartData" class="contribution-chart" :chartData="contributionDaysChartData" :options="chartOptions" />
     </template>
     <template v-else>
       <h4 class="h2">???</h4>
@@ -42,12 +42,17 @@ export default {
   data () {
     return {
       chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           yAxes: [{
             ticks: {
               suggestedMin: 0
             }
           }]
+        },
+        animation: {
+          duration: 2000
         }
       }
     }
@@ -195,3 +200,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .contribution-chart {
+    height: 300px;
+  }
+</style>
