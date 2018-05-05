@@ -253,6 +253,6 @@ export default {
   .icon {
     font-size: 100px;
     color: $gray-200;
-    line-height: 110px;
+    line-height: 1.2;
   }
 </style>
