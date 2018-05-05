@@ -7,7 +7,12 @@
         <li class="list-inline-item"><font-awesome-icon :icon="iconClock" /> {{ contributionTimeSentence }}</li>
         <li class="list-inline-item"><font-awesome-icon :icon="iconCalendarAlt" /> {{ contributionDaySentence }}</li>
       </ul>
-      <h4 class="h2">{{ daytimeSentence }}</h4>
+      <div class="daytime">
+        <div class="icon">
+          <font-awesome-icon :icon="daytimeIcon" />
+        </div>
+        <h4 class="h2 sentence">{{ daytimeSentence }}</h4>
+      </div>
       <h5>Hours</h5>
       <line-chart v-if="contributionTimesChartData" class="contribution-chart" :chartData="contributionTimesChartData" :options="chartOptions" />
       <h5>Days of week</h5>
@@ -25,6 +30,10 @@ import moment from 'moment'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import faClock from '@fortawesome/fontawesome-pro-regular/faClock'
 import faCalendarAlt from '@fortawesome/fontawesome-pro-regular/faCalendarAlt'
+import faMoon from '@fortawesome/fontawesome-pro-regular/faMoon'
+import faSun from '@fortawesome/fontawesome-pro-regular/faSun'
+import faCoffee from '@fortawesome/fontawesome-pro-regular/faCoffee'
+import faCouch from '@fortawesome/fontawesome-pro-regular/faCouch'
 
 export default {
   name: 'ContributionTime',
@@ -69,6 +78,20 @@ export default {
       for (let [startTime, sentence] of daytimes) {
         if (time >= startTime) {
           return sentence
+        }
+      }
+    }
+    this.getDaytimeIcon = (time) => {
+      const daytimes = [
+        [21, this.iconMoon],
+        [18, this.iconCouch],
+        [8, this.iconSun],
+        [6, this.iconCoffee],
+        [0, this.iconMoon]
+      ]
+      for (let [startTime, icon] of daytimes) {
+        if (time >= startTime) {
+          return icon
         }
       }
     }
@@ -188,21 +211,48 @@ export default {
       }
       return ''
     },
+    daytimeIcon () {
+      if (this.contributionTime !== null) {
+        return this.getDaytimeIcon(this.contributionTime)
+      }
+      return ''
+    },
+    commitsCount () {
+      return this.commits ? this.commits.length : 0
+    },
     iconClock () {
       return faClock
     },
     iconCalendarAlt () {
       return faCalendarAlt
     },
-    commitsCount () {
-      return this.commits ? this.commits.length : 0
+    iconMoon () {
+      return faMoon
+    },
+    iconSun () {
+      return faSun
+    },
+    iconCoffee () {
+      return faCoffee
+    },
+    iconCouch () {
+      return faCouch
     }
   }
 }
 </script>
 
 <style lang="scss">
+  @import "~bootstrap/scss/functions";
+  @import "../../variables";
+  @import "~bootstrap/scss/mixins";
+
   .contribution-chart {
     height: 300px;
+  }
+  .icon {
+    font-size: 100px;
+    color: $gray-200;
+    line-height: 110px;
   }
 </style>
