@@ -1,6 +1,6 @@
 <template>
   <div class="statistics">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center statistics-container">
       <statistics-box
         v-for="statisticsValue in statisticsValues"
         :key="statisticsValue.name"
@@ -21,6 +21,9 @@
       <language-statistics :repositoriesContributedTo="repositoriesContributedTo" />
     </div>
     <div class="row justify-content-center">
+      <contribution-time :commits="commits" :userlogin="userlogin" />
+    </div>
+    <div class="row justify-content-center">
       <most-famous-repository :repository="mostFamousRepository" />
     </div>
   </div>
@@ -32,9 +35,11 @@ import StatisticsBox from './StatisticsBox'
 import OverallRanking from './OverallRanking'
 import LanguageStatistics from './LanguageStatistics'
 import MostFamousRepository from './MostFamousRepository'
+import ContributionTime from './ContributionTime'
 
 export default {
   components: {
+    ContributionTime,
     MostFamousRepository,
     LanguageStatistics,
     OverallRanking,
@@ -43,6 +48,7 @@ export default {
   name: 'statistics',
   props: {
     userdata: Object,
+    commits: Array,
     commitsTotalCount: Number
   },
   created: function () {
@@ -294,6 +300,9 @@ export default {
 
       return statisticsValues
     },
+    userlogin () {
+      return this.userdata ? this.userdata.login : ''
+    },
     repositoriesContributedTo () {
       return this.userdata && this.userdata.repositoriesContributedTo ? this.userdata.repositoriesContributedTo.nodes : []
     },
@@ -327,7 +336,7 @@ export default {
 
 <style lang="scss">
 @import "~bootstrap/scss/functions";
-@import "../variables";
+@import "../../variables";
 @import "~bootstrap/scss/mixins";
 
 .statistics {
@@ -342,6 +351,12 @@ export default {
     font-size: $h1-font-size;
     margin-bottom: 0;
   }
+}
+
+.statistics-container {
+  padding-bottom: $spacer * 2;
+  margin-bottom: $spacer * 2;
+  border-bottom: 1px solid $border-color;
 }
 
 @function get-rank-color($rank) {

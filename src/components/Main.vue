@@ -13,9 +13,9 @@
         </div>
         <intro :accessToken="accessToken" :userdata="userdata" :isLoading="isLoading" />
         <div class="text-center">
-          <template v-if="errorMessage === '' && ((userdata && commitsTotalCount && organizations) || isLoading)">
+          <template v-if="errorMessage === '' && ((userdata && commits && commitsTotalCount && organizations) || isLoading)">
             <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
-            <statistics :userdata="userdata" :commits-total-count="commitsTotalCount" />
+            <statistics :userdata="userdata" :commits="commits" :commits-total-count="commitsTotalCount" />
           </template>
         </div>
       </div>
@@ -28,8 +28,8 @@
 
 <script>
 import moment from 'moment'
-import UserInfo from './UserInfo'
-import Statistics from './Statistics'
+import UserInfo from './userinfo/UserInfo'
+import Statistics from './statistics/Statistics'
 import GithubAuth from './GithubAuth'
 import GithubUsernameInput from './GithubUsernameInput'
 import Intro from './Intro'
@@ -52,6 +52,7 @@ export default {
     return {
       accessToken: window.localStorage.getItem('swhtd-gh-access-token'),
       userdata: null,
+      commits: null,
       commitsTotalCount: null,
       organizations: null,
       errorMessage: '',
@@ -111,7 +112,7 @@ export default {
           repositoriesContributedTo(first: 100) {
             totalCount,
             nodes {
-              languages(first: 10) {
+              languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
                 edges {
                   size,
                   node {
@@ -156,9 +157,10 @@ export default {
           console.log('Userdata', this.userdata)
 
           // TODO replace with graphql query
-          Promise.all([this.doFetchCommits(username), this.doFetchOrganizations(username)])
-            .then(([commitsTotalCount, organizations]) => {
-              this.commitsTotalCount = commitsTotalCount
+          Promise.all([this.doFetchCommits(username, 1), this.doFetchCommits(username, 2), this.doFetchOrganizations(username)])
+            .then(([commitsFirstPage, commitsSecondPage, organizations]) => {
+              this.commits = [...commitsFirstPage.items, ...commitsSecondPage.items]
+              this.commitsTotalCount = commitsFirstPage.total_count
               this.organizations = organizations
               this.isLoading = false
             })
@@ -167,6 +169,9 @@ export default {
               this.errorMessage = reason
             })
         })
+      }).catch(err => {
+        this.resetState()
+        this.errorMessage = 'Something went wrong! Error: ' + err
       })
     }
 
@@ -210,9 +215,10 @@ export default {
           }
         })
 
-        Promise.all([this.doFetchCommits(username), this.doFetchOrganizations(username)])
-          .then(([commitsTotalCount, organizations]) => {
-            this.commitsTotalCount = commitsTotalCount
+        Promise.all([this.doFetchCommits(username, 1), this.doFetchCommits(username, 2), this.doFetchOrganizations(username)])
+          .then(([commitsFirstPage, commitsSecondPage, organizations]) => {
+            this.commits = [...commitsFirstPage.items, ...commitsSecondPage.items]
+            this.commitsTotalCount = commitsFirstPage.total_count
             this.organizations = organizations
             this.isLoading = false
           })
@@ -220,6 +226,9 @@ export default {
             this.resetState()
             this.errorMessage = reason
           })
+      }).catch(err => {
+        this.resetState()
+        this.errorMessage = 'Something went wrong! Error: ' + err
       })
     }
 
@@ -242,8 +251,8 @@ export default {
       return fetch(userQuery)
     }
 
-    this.fetchCommits = (username) => {
-      let commitQueryUrl = 'https://api.github.com/search/commits?q=author:' + username + '&sort=author-date&order=desc&per_page=1'
+    this.fetchCommits = (username, page) => {
+      let commitQueryUrl = `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&page=${page}&per_page=100`
       if (this.accessToken) {
         commitQueryUrl += '&access_token=' + this.accessToken
       }
@@ -254,15 +263,15 @@ export default {
       })
     }
 
-    this.doFetchCommits = (username) => {
+    this.doFetchCommits = (username, page) => {
       return new Promise((resolve, reject) => {
-        this.fetchCommits(username).then(commitsResponseRaw => {
+        this.fetchCommits(username, page).then(commitsResponseRaw => {
           if (this.rateLimitExceeded(commitsResponseRaw.headers)) {
             reject(this.getRateLimitReason(commitsResponseRaw.headers))
           }
           commitsResponseRaw.json().then(commitsResponse => {
             console.log('Commits response', commitsResponse)
-            resolve(commitsResponse.total_count)
+            resolve(commitsResponse)
           })
         })
       })
@@ -292,6 +301,7 @@ export default {
 
     this.resetState = () => {
       this.userdata = null
+      this.commits = null
       this.commitsTotalCount = null
       this.organizations = null
       this.errorMessage = ''
@@ -327,7 +337,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-</style>

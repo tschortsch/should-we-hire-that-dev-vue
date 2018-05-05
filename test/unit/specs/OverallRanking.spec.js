@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import OverallRanking from '@/components/OverallRanking'
+import OverallRanking from '@/components/statistics/OverallRanking'
 
 describe('OverallRanking.vue', () => {
   it('should compute correct values', () => {

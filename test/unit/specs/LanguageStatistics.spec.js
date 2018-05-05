@@ -1,5 +1,5 @@
 import { shallow } from '@vue/test-utils'
-import LanguageStatistics from '@/components/LanguageStatistics'
+import LanguageStatistics from '@/components/statistics/LanguageStatistics'
 import userdataCorrectFixture from '../fixtures/userdata-correct'
 
 describe('Statistics.vue', () => {

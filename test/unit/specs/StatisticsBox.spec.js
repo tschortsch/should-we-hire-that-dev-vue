@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import StatisticsBox from '@/components/StatisticsBox'
+import StatisticsBox from '@/components/statistics/StatisticsBox'
 
 describe('StatisticsBox.vue', () => {
   it('should compute correct values', () => {
