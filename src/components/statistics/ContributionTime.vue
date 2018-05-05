@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12 mb-5" v-bind:class="{ 'text-muted': commits === null }">
+  <div class="col-12 statistics-container" v-bind:class="{ 'text-muted': commits === null }">
     <h3>Contribution time</h3>
     <p class="small text-muted">(calculated from the last {{ commitsCount }} commits)</p>
     <template v-if="commits">

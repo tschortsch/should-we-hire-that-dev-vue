@@ -1,8 +1,12 @@
 <template>
-  <div class="col-md-6 col-10 mb-5" v-bind:class="{'text-muted': this.repositoriesContributedTo.length === 0}">
-    <h3>Most used languages</h3>
-    <pie-chart v-if="this.repositoriesContributedTo.length > 0" :chartData="chartData" :options="chartOptions" />
-    <pie-chart v-else :chartData="chartDataDisabled" :options="chartOptions" />
+  <div class="col-12 statistics-container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-10" v-bind:class="{'text-muted': this.repositoriesContributedTo.length === 0}">
+        <h3>Most used languages</h3>
+        <pie-chart v-if="this.repositoriesContributedTo.length > 0" :chartData="chartData" :options="chartOptions" />
+        <pie-chart v-else :chartData="chartDataDisabled" :options="chartOptions" />
+      </div>
+    </div>
   </div>
 </template>
 

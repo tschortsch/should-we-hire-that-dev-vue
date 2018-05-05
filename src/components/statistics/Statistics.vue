@@ -1,6 +1,6 @@
 <template>
   <div class="statistics">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center statistics-container">
       <statistics-box
         v-for="statisticsValue in statisticsValues"
         :key="statisticsValue.name"
@@ -351,6 +351,12 @@ export default {
     font-size: $h1-font-size;
     margin-bottom: 0;
   }
+}
+
+.statistics-container {
+  padding-bottom: $spacer * 2;
+  margin-bottom: $spacer * 2;
+  border-bottom: 1px solid $border-color;
 }
 
 @function get-rank-color($rank) {
