@@ -21,10 +21,10 @@
       <language-statistics :repositoriesContributedTo="repositoriesContributedTo" />
     </div>
     <div class="row justify-content-center">
-      <most-famous-repository :repository="mostFamousRepository" />
+      <contribution-time :commits="commits" :userlogin="userlogin" />
     </div>
     <div class="row justify-content-center">
-      <contribution-time :commits="commits" :userlogin="userlogin" />
+      <most-famous-repository :repository="mostFamousRepository" />
     </div>
   </div>
 </template>
