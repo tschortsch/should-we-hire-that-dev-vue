@@ -3,16 +3,16 @@
     <h3>Contribution time</h3>
     <p class="small text-muted">(calculated from the last {{ commitsCount }} commits)</p>
     <template v-if="commits">
-      <ul class="list-inline">
-        <li class="list-inline-item"><font-awesome-icon :icon="iconClock" /> {{ contributionTimeSentence }}</li>
-        <li class="list-inline-item"><font-awesome-icon :icon="iconCalendarAlt" /> {{ contributionDaySentence }}</li>
-      </ul>
       <div class="daytime">
         <div class="icon">
           <font-awesome-icon :icon="daytimeIcon" />
         </div>
         <h4 class="h2 sentence">{{ daytimeSentence }}</h4>
       </div>
+      <ul class="list-inline">
+        <li class="list-inline-item"><font-awesome-icon :icon="iconClock" /> {{ contributionTimeSentence }}</li>
+        <li class="list-inline-item"><font-awesome-icon :icon="iconCalendarAlt" /> {{ contributionDaySentence }}</li>
+      </ul>
       <h5>Hours</h5>
       <line-chart v-if="contributionTimesChartData" class="contribution-chart" :chartData="contributionTimesChartData" :options="chartOptions" />
       <h5>Days of week</h5>
@@ -203,7 +203,7 @@ export default {
       return ''
     },
     contributionDaySentence () {
-      return this.contributionDay ? `works mostly on ${this.contributionDay}` : ''
+      return this.contributionDay ? `on ${this.contributionDay}` : ''
     },
     daytimeSentence () {
       if (this.contributionTime !== null) {
