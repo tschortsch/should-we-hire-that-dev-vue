@@ -14,6 +14,12 @@
       </p>
       <p>The Authorization only grants this tool to <strong>request data which is already public</strong> anyway. So, no worries!</p>
     </li>
+    <li v-if="!isLoading && !userdata">
+      <h2 class="h5">How is the scoring calculated?</h2>
+      <p>
+        I implemented the scoring algorithm according to my own sentiments. Improvements are very welcome! Just create an <a href="https://github.com/tschortsch/should-we-hire-that-dev-vue/issues">issue</a> or a <a href="https://github.com/tschortsch/should-we-hire-that-dev-vue/pulls">pull request</a> on GitHub.
+      </p>
+    </li>
   </ul>
 </template>
 
