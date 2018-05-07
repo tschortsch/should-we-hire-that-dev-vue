@@ -58,6 +58,7 @@ export default {
       forks: 'Forks of own repos',
       followers: 'Followers',
       commits: 'Total commits',
+      commitMessageWordCount: 'Commit message quality',
       repos: 'Public repos',
       pullRequests: 'Pull requests'
     }
@@ -74,6 +75,18 @@ export default {
         [30, 500],
         [20, 300],
         [10, 100]
+      ]),
+      commitMessageWordCount: new Map([
+        [100, 6],
+        [90, 5.5],
+        [80, 5],
+        [70, 4.5],
+        [60, 4],
+        [50, 3],
+        [40, 4],
+        [30, 2.5],
+        [20, 2],
+        [10, 1.5]
       ]),
       followers: new Map([
         [100, 1000],
@@ -176,7 +189,7 @@ export default {
   computed: {
     statisticsValues () {
       let statisticsValues = []
-      if (this.userdata && this.commitsTotalCount !== null) {
+      if (this.userdata && this.commitsTotalCount !== null && this.commits) {
         const createdAt = new Date(this.userdata.createdAt)
         const createdAtMoment = moment(createdAt)
         const createdAtTimestamp = createdAtMoment.unix()
@@ -235,6 +248,21 @@ export default {
           ranking: this.getJudgement('commits', commitsValue)
         })
 
+        const commitMessageTotalWordCount = this.commits.reduce((totalWords, commit) => {
+          const commitMessage = commit.commit.message
+          return totalWords + commitMessage.split(/\s+/).length
+        }, 0)
+        let commitMessageWordCountValue = 0
+        if (this.commits.length > 0) {
+          commitMessageWordCountValue = (commitMessageTotalWordCount / this.commits.length).toFixed(1)
+        }
+        statisticsValues.push({
+          name: 'commitMessageWordCount',
+          value: commitMessageWordCountValue,
+          additionalValue: '(average word count)',
+          ranking: this.getJudgement('commitMessageWordCount', commitMessageWordCountValue)
+        })
+
         if (this.userdata.pullRequests) {
           const pullRequestsValue = this.userdata.pullRequests.totalCount
           statisticsValues.push({
@@ -282,6 +310,11 @@ export default {
           },
           {
             name: 'commits',
+            value: 0,
+            ranking: 0
+          },
+          {
+            name: 'commitMessageWordCount',
             value: 0,
             ranking: 0
           },
