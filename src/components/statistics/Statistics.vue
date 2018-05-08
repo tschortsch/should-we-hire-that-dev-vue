@@ -63,104 +63,109 @@ export default {
       pullRequests: 'Pull requests'
     }
 
-    this.judgementLimits = {
-      commits: new Map([
-        [100, 10000],
-        [90, 8000],
-        [80, 6000],
-        [70, 4000],
-        [60, 2000],
-        [50, 1000],
-        [40, 700],
-        [30, 500],
-        [20, 300],
-        [10, 100]
-      ]),
-      commitMessageWordCount: new Map([
-        [100, 6],
-        [90, 5.5],
-        [80, 5],
-        [70, 4.5],
-        [60, 4],
-        [50, 3],
-        [40, 4],
-        [30, 2.5],
-        [20, 2],
-        [10, 1.5]
-      ]),
-      followers: new Map([
-        [100, 1000],
-        [90, 600],
-        [80, 300],
-        [70, 150],
-        [60, 90],
-        [50, 50],
-        [40, 30],
-        [30, 20],
-        [20, 10],
-        [10, 5]
-      ]),
-      repos: new Map([
-        [100, 100],
-        [90, 80],
-        [80, 60],
-        [70, 45],
-        [60, 35],
-        [50, 25],
-        [40, 20],
-        [30, 15],
-        [20, 10],
-        [10, 5]
-      ]),
-      stars: new Map([
-        [100, 250],
-        [90, 200],
-        [80, 150],
-        [70, 100],
-        [60, 70],
-        [50, 50],
-        [40, 30],
-        [30, 20],
-        [20, 10],
-        [10, 5]
-      ]),
-      forks: new Map([
-        [100, 250],
-        [90, 200],
-        [80, 150],
-        [70, 100],
-        [60, 70],
-        [50, 50],
-        [40, 30],
-        [30, 20],
-        [20, 10],
-        [10, 5]
-      ]),
-      createdAt: new Map([
-        [100, 6 * (365 * 24 * 60 * 60)], // 6 years
-        [90, 5 * (365 * 24 * 60 * 60)],
-        [80, 4.5 * (365 * 24 * 60 * 60)],
-        [70, 4 * (365 * 24 * 60 * 60)],
-        [60, 3.5 * (365 * 24 * 60 * 60)],
-        [50, 3 * (365 * 24 * 60 * 60)],
-        [40, 2.5 * (365 * 24 * 60 * 60)],
-        [30, 2 * (365 * 24 * 60 * 60)],
-        [20, 1.5 * (365 * 24 * 60 * 60)],
-        [10, (365 * 24 * 60 * 60)]
-      ]),
-      pullRequests: new Map([
-        [100, 1000],
-        [90, 800],
-        [80, 600],
-        [70, 450],
-        [60, 300],
-        [50, 200],
-        [40, 100],
-        [30, 50],
-        [20, 10],
-        [10, 5]
-      ])
-    }
+    this.commitsLimits = [
+      [100, 10000],
+      [90, 8000],
+      [80, 6000],
+      [70, 4000],
+      [60, 2000],
+      [50, 1000],
+      [40, 700],
+      [30, 500],
+      [20, 300],
+      [10, 100]
+    ]
+
+    this.commitMessageWordCountLimits = [
+      [100, 6],
+      [90, 5.5],
+      [80, 5],
+      [70, 4.5],
+      [60, 4],
+      [50, 3],
+      [40, 4],
+      [30, 2.5],
+      [20, 2],
+      [10, 1.5]
+    ]
+
+    this.followersLimits = [
+      [100, 1000],
+      [90, 600],
+      [80, 300],
+      [70, 150],
+      [60, 90],
+      [50, 50],
+      [40, 30],
+      [30, 20],
+      [20, 10],
+      [10, 5]
+    ]
+
+    this.reposLimits = [
+      [100, 100],
+      [90, 80],
+      [80, 60],
+      [70, 45],
+      [60, 35],
+      [50, 25],
+      [40, 20],
+      [30, 15],
+      [20, 10],
+      [10, 5]
+    ]
+
+    this.starsLimits = [
+      [100, 250],
+      [90, 200],
+      [80, 150],
+      [70, 100],
+      [60, 70],
+      [50, 50],
+      [40, 30],
+      [30, 20],
+      [20, 10],
+      [10, 5]
+    ]
+
+    this.forksLimits = [
+      [100, 250],
+      [90, 200],
+      [80, 150],
+      [70, 100],
+      [60, 70],
+      [50, 50],
+      [40, 30],
+      [30, 20],
+      [20, 10],
+      [10, 5]
+    ]
+
+    this.createdAtLimits = [
+      [100, 6 * (365 * 24 * 60 * 60)], // 6 years
+      [90, 5 * (365 * 24 * 60 * 60)],
+      [80, 4.5 * (365 * 24 * 60 * 60)],
+      [70, 4 * (365 * 24 * 60 * 60)],
+      [60, 3.5 * (365 * 24 * 60 * 60)],
+      [50, 3 * (365 * 24 * 60 * 60)],
+      [40, 2.5 * (365 * 24 * 60 * 60)],
+      [30, 2 * (365 * 24 * 60 * 60)],
+      [20, 1.5 * (365 * 24 * 60 * 60)],
+      [10, (365 * 24 * 60 * 60)]
+    ]
+
+    this.pullRequestsLimits = [
+      [100, 1000],
+      [90, 800],
+      [80, 600],
+      [70, 450],
+      [60, 300],
+      [50, 200],
+      [40, 100],
+      [30, 50],
+      [20, 10],
+      [10, 5]
+    ]
 
     this.getStatisticsTitles = (name) => {
       return this.statisticsTitles[name]
@@ -171,16 +176,15 @@ export default {
         return rankingAccumulator + statisticsValue.ranking
       }, 0)
     }
+
     this.getMaxRanking = (statisticsValues) => {
       return 100 * statisticsValues.length
     }
 
-    this.getJudgement = (type, value) => {
-      if (this.judgementLimits.hasOwnProperty(type)) {
-        for (let [rank, limit] of this.judgementLimits[type]) {
-          if (value >= limit) {
-            return rank
-          }
+    this.getRanking = (value, limits) => {
+      for (let [rank, limit] of limits) {
+        if (value >= limit) {
+          return rank
         }
       }
       return 0
@@ -198,14 +202,14 @@ export default {
           name: 'createdAt',
           value: createdAtMoment.fromNow(),
           additionalValue: createdAtMoment.format('(DD.MM.YYYY)'),
-          ranking: this.getJudgement('createdAt', currentTimestamp - createdAtTimestamp)
+          ranking: this.getRanking(currentTimestamp - createdAtTimestamp, this.createdAtLimits)
         })
 
         const followersValue = this.userdata.followers.totalCount
         statisticsValues.push({
           name: 'followers',
           value: followersValue,
-          ranking: this.getJudgement('followers', followersValue)
+          ranking: this.getRanking(followersValue, this.followersLimits)
         })
 
         if (this.userdata.repositories.nodes) {
@@ -215,7 +219,7 @@ export default {
           statisticsValues.push({
             name: 'stars',
             value: starsCount,
-            ranking: this.getJudgement('stars', starsCount)
+            ranking: this.getRanking(starsCount, this.starsLimits)
           })
 
           const forksCount = this.userdata.repositories.nodes.reduce((forksCount, repo) => {
@@ -224,7 +228,7 @@ export default {
           statisticsValues.push({
             name: 'forks',
             value: forksCount,
-            ranking: this.getJudgement('forks', forksCount)
+            ranking: this.getRanking(forksCount, this.forksLimits)
           })
         } else {
           statisticsValues.push({
@@ -245,7 +249,7 @@ export default {
         statisticsValues.push({
           name: 'commits',
           value: commitsValue,
-          ranking: this.getJudgement('commits', commitsValue)
+          ranking: this.getRanking(commitsValue, this.commitsLimits)
         })
 
         const commitMessageTotalWordCount = this.commits.reduce((totalWords, commit) => {
@@ -260,7 +264,7 @@ export default {
           name: 'commitMessageWordCount',
           value: commitMessageWordCountValue,
           additionalValue: '(average word count)',
-          ranking: this.getJudgement('commitMessageWordCount', commitMessageWordCountValue)
+          ranking: this.getRanking(commitMessageWordCountValue, this.commitMessageWordCountLimits)
         })
 
         if (this.userdata.pullRequests) {
@@ -268,7 +272,7 @@ export default {
           statisticsValues.push({
             name: 'pullRequests',
             value: pullRequestsValue,
-            ranking: this.getJudgement('pullRequests', pullRequestsValue)
+            ranking: this.getRanking(pullRequestsValue, this.pullRequestsLimits)
           })
         } else {
           statisticsValues.push({
@@ -283,7 +287,7 @@ export default {
         statisticsValues.push({
           name: 'repos',
           value: reposValue,
-          ranking: this.getJudgement('repos', reposValue)
+          ranking: this.getRanking(reposValue, this.reposLimits)
         })
       } else {
         statisticsValues = [
