@@ -192,66 +192,125 @@ export default {
   },
   computed: {
     statisticsValues () {
-      let statisticsValues = []
-      if (this.userdata && this.commitsTotalCount !== null && this.commits) {
+      return [
+        this.createdAtStatisticsValues,
+        this.followerStatisticsValues,
+        this.starsStatisticsValues,
+        this.forksStatisticsValues,
+        this.commitsStatisticsValues,
+        this.commitMessageWorkCountStatisticsValues,
+        this.pullRequestsStatisticsValues,
+        this.repoStatisticsValues
+      ]
+    },
+    createdAtStatisticsValues () {
+      if (this.userdata) {
         const createdAt = new Date(this.userdata.createdAt)
         const createdAtMoment = moment(createdAt)
         const createdAtTimestamp = createdAtMoment.unix()
         const currentTimestamp = moment().unix()
-        statisticsValues.push({
+        return {
           name: 'createdAt',
           value: createdAtMoment.fromNow(),
           additionalValue: createdAtMoment.format('(DD.MM.YYYY)'),
           ranking: this.getRanking(currentTimestamp - createdAtTimestamp, this.createdAtLimits)
-        })
-
+        }
+      } else {
+        return {
+          name: 'createdAt',
+          value: '-',
+          ranking: 0
+        }
+      }
+    },
+    followerStatisticsValues () {
+      if (this.userdata) {
         const followersValue = this.userdata.followers.totalCount
-        statisticsValues.push({
+        return {
           name: 'followers',
           value: followersValue,
           ranking: this.getRanking(followersValue, this.followersLimits)
-        })
-
+        }
+      } else {
+        return {
+          name: 'followers',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    starsStatisticsValues () {
+      if (this.userdata) {
         if (this.userdata.repositories.nodes) {
           const starsCount = this.userdata.repositories.nodes.reduce((starsCount, repo) => {
             return starsCount + repo.stargazers.totalCount
           }, 0)
-          statisticsValues.push({
+          return {
             name: 'stars',
             value: starsCount,
             ranking: this.getRanking(starsCount, this.starsLimits)
-          })
-
-          const forksCount = this.userdata.repositories.nodes.reduce((forksCount, repo) => {
-            return forksCount + repo.forkCount
-          }, 0)
-          statisticsValues.push({
-            name: 'forks',
-            value: forksCount,
-            ranking: this.getRanking(forksCount, this.forksLimits)
-          })
+          }
         } else {
-          statisticsValues.push({
+          return {
             name: 'stars',
             value: '???',
             ranking: 0,
             disabled: true
-          })
-          statisticsValues.push({
+          }
+        }
+      } else {
+        return {
+          name: 'stars',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    forksStatisticsValues () {
+      if (this.userdata) {
+        if (this.userdata.repositories.nodes) {
+          const forksCount = this.userdata.repositories.nodes.reduce((forksCount, repo) => {
+            return forksCount + repo.forkCount
+          }, 0)
+          return {
+            name: 'forks',
+            value: forksCount,
+            ranking: this.getRanking(forksCount, this.forksLimits)
+          }
+        } else {
+          return {
             name: 'forks',
             value: '???',
             ranking: 0,
             disabled: true
-          })
+          }
         }
-
+      } else {
+        return {
+          name: 'forks',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    commitsStatisticsValues () {
+      if (this.commitsTotalCount) {
         const commitsValue = this.commitsTotalCount
-        statisticsValues.push({
+        return {
           name: 'commits',
           value: commitsValue,
           ranking: this.getRanking(commitsValue, this.commitsLimits)
-        })
-
+        }
+      } else {
+        return {
+          name: 'commits',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    commitMessageWorkCountStatisticsValues () {
+      if (this.commits) {
         const commitMessageTotalWordCount = this.commits.reduce((totalWords, commit) => {
           const commitMessage = commit.commit.message
           return totalWords + commitMessage.split(/\s+/).length
@@ -260,82 +319,60 @@ export default {
         if (this.commits.length > 0) {
           commitMessageWordCountValue = (commitMessageTotalWordCount / this.commits.length).toFixed(1)
         }
-        statisticsValues.push({
+        return {
           name: 'commitMessageWordCount',
           value: commitMessageWordCountValue,
           additionalValue: '(average word count)',
           ranking: this.getRanking(commitMessageWordCountValue, this.commitMessageWordCountLimits)
-        })
-
+        }
+      } else {
+        return {
+          name: 'commitMessageWordCount',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    pullRequestsStatisticsValues () {
+      if (this.userdata) {
         if (this.userdata.pullRequests) {
           const pullRequestsValue = this.userdata.pullRequests.totalCount
-          statisticsValues.push({
+          return {
             name: 'pullRequests',
             value: pullRequestsValue,
             ranking: this.getRanking(pullRequestsValue, this.pullRequestsLimits)
-          })
+          }
         } else {
-          statisticsValues.push({
+          return {
             name: 'pullRequests',
             value: '???',
             ranking: 0,
             disabled: true
-          })
+          }
         }
-
+      } else {
+        return {
+          name: 'pullRequests',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    repoStatisticsValues () {
+      if (this.userdata) {
         const reposValue = this.userdata.repositories.totalCount
-        statisticsValues.push({
+        return {
           name: 'repos',
           value: reposValue,
           ranking: this.getRanking(reposValue, this.reposLimits)
-        })
+        }
       } else {
-        statisticsValues = [
-          {
-            name: 'createdAt',
-            value: '-',
-            additionalValue: '',
-            ranking: 0
-          },
-          {
-            name: 'followers',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'stars',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'forks',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'commits',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'commitMessageWordCount',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'pullRequests',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'repos',
-            value: 0,
-            ranking: 0
-          }
-        ]
+        return {
+          name: 'repos',
+          value: 0,
+          ranking: 0
+        }
       }
-
-      return statisticsValues
     },
     userlogin () {
       return this.userdata ? this.userdata.login : ''

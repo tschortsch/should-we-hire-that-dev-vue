@@ -45,7 +45,8 @@ export default {
       required: true
     },
     disabled: {
-      type: Boolean
+      type: Boolean,
+      default: false
     }
   },
   computed: {
