@@ -100,11 +100,11 @@ export default {
     contributionTimesChartData () {
       if (this.contributionTimes) {
         return {
-          labels: [...this.contributionTimes.keys()].map(hour => `${hour}:00`),
+          labels: [...this.contributionTimes.keys(), 0].map(hour => `${hour}:00`),
           datasets: [
             {
               label: 'Commits',
-              data: [...this.contributionTimes.values()],
+              data: [...this.contributionTimes.values(), this.contributionTimes.get(0)],
               borderWidth: 1,
               borderColor: '#fe9b40',
               backgroundColor: '#fedfb9',
