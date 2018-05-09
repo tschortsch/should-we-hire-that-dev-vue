@@ -172,9 +172,12 @@ export default {
     }
 
     this.getOverallRankingValue = (statisticsValues) => {
-      return statisticsValues.reduce((rankingAccumulator, statisticsValue) => {
-        return rankingAccumulator + statisticsValue.ranking
-      }, 0)
+      if (this.userdata && this.commitsTotalCount !== null && this.commits) {
+        return statisticsValues.reduce((rankingAccumulator, statisticsValue) => {
+          return rankingAccumulator + statisticsValue.ranking
+        }, 0)
+      }
+      return 0
     }
 
     this.getMaxRanking = (statisticsValues) => {
