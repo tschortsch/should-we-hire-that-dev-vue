@@ -167,11 +167,13 @@ export default {
             .catch(reason => {
               this.resetState()
               this.errorMessage = reason
+              this.isLoading = false
             })
         })
       }).catch(err => {
         this.resetState()
         this.errorMessage = 'Something went wrong! Error: ' + err
+        this.isLoading = false
       })
     }
 
@@ -225,10 +227,12 @@ export default {
           .catch(reason => {
             this.resetState()
             this.errorMessage = reason
+            this.isLoading = false
           })
       }).catch(err => {
         this.resetState()
         this.errorMessage = 'Something went wrong! Error: ' + err
+        this.isLoading = false
       })
     }
 
