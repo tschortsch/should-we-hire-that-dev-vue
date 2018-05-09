@@ -10,8 +10,10 @@
 export default {
   name: 'organizations',
   props: {
-    organizations: Array,
-    required: true
+    organizations: {
+      type: Array,
+      required: true
+    }
   }
 }
 </script>

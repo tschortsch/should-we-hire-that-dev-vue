@@ -58,96 +58,114 @@ export default {
       forks: 'Forks of own repos',
       followers: 'Followers',
       commits: 'Total commits',
+      commitMessageWordCount: 'Commit message quality',
       repos: 'Public repos',
       pullRequests: 'Pull requests'
     }
 
-    this.judgementLimits = {
-      commits: new Map([
-        [100, 10000],
-        [90, 8000],
-        [80, 6000],
-        [70, 4000],
-        [60, 2000],
-        [50, 1000],
-        [40, 700],
-        [30, 500],
-        [20, 300],
-        [10, 100]
-      ]),
-      followers: new Map([
-        [100, 1000],
-        [90, 600],
-        [80, 300],
-        [70, 150],
-        [60, 90],
-        [50, 50],
-        [40, 30],
-        [30, 20],
-        [20, 10],
-        [10, 5]
-      ]),
-      repos: new Map([
-        [100, 100],
-        [90, 80],
-        [80, 60],
-        [70, 45],
-        [60, 35],
-        [50, 25],
-        [40, 20],
-        [30, 15],
-        [20, 10],
-        [10, 5]
-      ]),
-      stars: new Map([
-        [100, 250],
-        [90, 200],
-        [80, 150],
-        [70, 100],
-        [60, 70],
-        [50, 50],
-        [40, 30],
-        [30, 20],
-        [20, 10],
-        [10, 5]
-      ]),
-      forks: new Map([
-        [100, 250],
-        [90, 200],
-        [80, 150],
-        [70, 100],
-        [60, 70],
-        [50, 50],
-        [40, 30],
-        [30, 20],
-        [20, 10],
-        [10, 5]
-      ]),
-      createdAt: new Map([
-        [100, 6 * (365 * 24 * 60 * 60)], // 6 years
-        [90, 5 * (365 * 24 * 60 * 60)],
-        [80, 4.5 * (365 * 24 * 60 * 60)],
-        [70, 4 * (365 * 24 * 60 * 60)],
-        [60, 3.5 * (365 * 24 * 60 * 60)],
-        [50, 3 * (365 * 24 * 60 * 60)],
-        [40, 2.5 * (365 * 24 * 60 * 60)],
-        [30, 2 * (365 * 24 * 60 * 60)],
-        [20, 1.5 * (365 * 24 * 60 * 60)],
-        [10, (365 * 24 * 60 * 60)]
-      ]),
-      pullRequests: new Map([
-        [100, 1000],
-        [90, 800],
-        [80, 600],
-        [70, 450],
-        [60, 300],
-        [50, 200],
-        [40, 100],
-        [30, 50],
-        [20, 10],
-        [10, 5]
-      ])
-    }
+    this.commitsLimits = [
+      [100, 10000],
+      [90, 8000],
+      [80, 6000],
+      [70, 4000],
+      [60, 2000],
+      [50, 1000],
+      [40, 700],
+      [30, 500],
+      [20, 300],
+      [10, 100]
+    ]
+
+    this.commitMessageWordCountLimits = [
+      [100, 6],
+      [90, 5.5],
+      [80, 5],
+      [70, 4.5],
+      [60, 4],
+      [50, 3],
+      [40, 4],
+      [30, 2.5],
+      [20, 2],
+      [10, 1.5]
+    ]
+
+    this.followersLimits = [
+      [100, 1000],
+      [90, 600],
+      [80, 300],
+      [70, 150],
+      [60, 90],
+      [50, 50],
+      [40, 30],
+      [30, 20],
+      [20, 10],
+      [10, 5]
+    ]
+
+    this.reposLimits = [
+      [100, 100],
+      [90, 80],
+      [80, 60],
+      [70, 45],
+      [60, 35],
+      [50, 25],
+      [40, 20],
+      [30, 15],
+      [20, 10],
+      [10, 5]
+    ]
+
+    this.starsLimits = [
+      [100, 250],
+      [90, 200],
+      [80, 150],
+      [70, 100],
+      [60, 70],
+      [50, 50],
+      [40, 30],
+      [30, 20],
+      [20, 10],
+      [10, 5]
+    ]
+
+    this.forksLimits = [
+      [100, 250],
+      [90, 200],
+      [80, 150],
+      [70, 100],
+      [60, 70],
+      [50, 50],
+      [40, 30],
+      [30, 20],
+      [20, 10],
+      [10, 5]
+    ]
+
+    this.createdAtLimits = [
+      [100, 6 * (365 * 24 * 60 * 60)], // 6 years
+      [90, 5 * (365 * 24 * 60 * 60)],
+      [80, 4.5 * (365 * 24 * 60 * 60)],
+      [70, 4 * (365 * 24 * 60 * 60)],
+      [60, 3.5 * (365 * 24 * 60 * 60)],
+      [50, 3 * (365 * 24 * 60 * 60)],
+      [40, 2.5 * (365 * 24 * 60 * 60)],
+      [30, 2 * (365 * 24 * 60 * 60)],
+      [20, 1.5 * (365 * 24 * 60 * 60)],
+      [10, (365 * 24 * 60 * 60)]
+    ]
+
+    this.pullRequestsLimits = [
+      [100, 1000],
+      [90, 800],
+      [80, 600],
+      [70, 450],
+      [60, 300],
+      [50, 200],
+      [40, 100],
+      [30, 50],
+      [20, 10],
+      [10, 5]
+    ]
 
     this.getStatisticsTitles = (name) => {
       return this.statisticsTitles[name]
@@ -158,16 +176,15 @@ export default {
         return rankingAccumulator + statisticsValue.ranking
       }, 0)
     }
+
     this.getMaxRanking = (statisticsValues) => {
       return 100 * statisticsValues.length
     }
 
-    this.getJudgement = (type, value) => {
-      if (this.judgementLimits.hasOwnProperty(type)) {
-        for (let [rank, limit] of this.judgementLimits[type]) {
-          if (value >= limit) {
-            return rank
-          }
+    this.getRanking = (value, limits) => {
+      for (let [rank, limit] of limits) {
+        if (value >= limit) {
+          return rank
         }
       }
       return 0
@@ -175,130 +192,187 @@ export default {
   },
   computed: {
     statisticsValues () {
-      let statisticsValues = []
-      if (this.userdata && this.commitsTotalCount !== null) {
+      return [
+        this.createdAtStatisticsValues,
+        this.followerStatisticsValues,
+        this.starsStatisticsValues,
+        this.forksStatisticsValues,
+        this.commitsStatisticsValues,
+        this.commitMessageWorkCountStatisticsValues,
+        this.pullRequestsStatisticsValues,
+        this.repoStatisticsValues
+      ]
+    },
+    createdAtStatisticsValues () {
+      if (this.userdata) {
         const createdAt = new Date(this.userdata.createdAt)
         const createdAtMoment = moment(createdAt)
         const createdAtTimestamp = createdAtMoment.unix()
         const currentTimestamp = moment().unix()
-        statisticsValues.push({
+        return {
           name: 'createdAt',
           value: createdAtMoment.fromNow(),
           additionalValue: createdAtMoment.format('(DD.MM.YYYY)'),
-          ranking: this.getJudgement('createdAt', currentTimestamp - createdAtTimestamp)
-        })
-
+          ranking: this.getRanking(currentTimestamp - createdAtTimestamp, this.createdAtLimits)
+        }
+      } else {
+        return {
+          name: 'createdAt',
+          value: '-',
+          ranking: 0
+        }
+      }
+    },
+    followerStatisticsValues () {
+      if (this.userdata) {
         const followersValue = this.userdata.followers.totalCount
-        statisticsValues.push({
+        return {
           name: 'followers',
           value: followersValue,
-          ranking: this.getJudgement('followers', followersValue)
-        })
-
+          ranking: this.getRanking(followersValue, this.followersLimits)
+        }
+      } else {
+        return {
+          name: 'followers',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    starsStatisticsValues () {
+      if (this.userdata) {
         if (this.userdata.repositories.nodes) {
           const starsCount = this.userdata.repositories.nodes.reduce((starsCount, repo) => {
             return starsCount + repo.stargazers.totalCount
           }, 0)
-          statisticsValues.push({
+          return {
             name: 'stars',
             value: starsCount,
-            ranking: this.getJudgement('stars', starsCount)
-          })
-
+            ranking: this.getRanking(starsCount, this.starsLimits)
+          }
+        } else {
+          return {
+            name: 'stars',
+            value: '???',
+            ranking: 0,
+            disabled: true
+          }
+        }
+      } else {
+        return {
+          name: 'stars',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    forksStatisticsValues () {
+      if (this.userdata) {
+        if (this.userdata.repositories.nodes) {
           const forksCount = this.userdata.repositories.nodes.reduce((forksCount, repo) => {
             return forksCount + repo.forkCount
           }, 0)
-          statisticsValues.push({
+          return {
             name: 'forks',
             value: forksCount,
-            ranking: this.getJudgement('forks', forksCount)
-          })
+            ranking: this.getRanking(forksCount, this.forksLimits)
+          }
         } else {
-          statisticsValues.push({
-            name: 'stars',
-            value: '???',
-            ranking: 0,
-            disabled: true
-          })
-          statisticsValues.push({
+          return {
             name: 'forks',
             value: '???',
             ranking: 0,
             disabled: true
-          })
+          }
         }
-
+      } else {
+        return {
+          name: 'forks',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    commitsStatisticsValues () {
+      if (this.commitsTotalCount) {
         const commitsValue = this.commitsTotalCount
-        statisticsValues.push({
+        return {
           name: 'commits',
           value: commitsValue,
-          ranking: this.getJudgement('commits', commitsValue)
-        })
-
+          ranking: this.getRanking(commitsValue, this.commitsLimits)
+        }
+      } else {
+        return {
+          name: 'commits',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    commitMessageWorkCountStatisticsValues () {
+      if (this.commits) {
+        const commitMessageTotalWordCount = this.commits.reduce((totalWords, commit) => {
+          const commitMessage = commit.commit.message
+          return totalWords + commitMessage.split(/\s+/).length
+        }, 0)
+        let commitMessageWordCountValue = 0
+        if (this.commits.length > 0) {
+          commitMessageWordCountValue = (commitMessageTotalWordCount / this.commits.length).toFixed(1)
+        }
+        return {
+          name: 'commitMessageWordCount',
+          value: commitMessageWordCountValue,
+          additionalValue: '(average word count)',
+          ranking: this.getRanking(commitMessageWordCountValue, this.commitMessageWordCountLimits)
+        }
+      } else {
+        return {
+          name: 'commitMessageWordCount',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    pullRequestsStatisticsValues () {
+      if (this.userdata) {
         if (this.userdata.pullRequests) {
           const pullRequestsValue = this.userdata.pullRequests.totalCount
-          statisticsValues.push({
+          return {
             name: 'pullRequests',
             value: pullRequestsValue,
-            ranking: this.getJudgement('pullRequests', pullRequestsValue)
-          })
+            ranking: this.getRanking(pullRequestsValue, this.pullRequestsLimits)
+          }
         } else {
-          statisticsValues.push({
+          return {
             name: 'pullRequests',
             value: '???',
             ranking: 0,
             disabled: true
-          })
+          }
         }
-
+      } else {
+        return {
+          name: 'pullRequests',
+          value: 0,
+          ranking: 0
+        }
+      }
+    },
+    repoStatisticsValues () {
+      if (this.userdata) {
         const reposValue = this.userdata.repositories.totalCount
-        statisticsValues.push({
+        return {
           name: 'repos',
           value: reposValue,
-          ranking: this.getJudgement('repos', reposValue)
-        })
+          ranking: this.getRanking(reposValue, this.reposLimits)
+        }
       } else {
-        statisticsValues = [
-          {
-            name: 'createdAt',
-            value: '-',
-            additionalValue: '',
-            ranking: 0
-          },
-          {
-            name: 'followers',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'stars',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'forks',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'commits',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'pullRequests',
-            value: 0,
-            ranking: 0
-          },
-          {
-            name: 'repos',
-            value: 0,
-            ranking: 0
-          }
-        ]
+        return {
+          name: 'repos',
+          value: 0,
+          ranking: 0
+        }
       }
-
-      return statisticsValues
     },
     userlogin () {
       return this.userdata ? this.userdata.login : ''
