@@ -15,7 +15,14 @@
         <div class="text-center">
           <template v-if="errorMessage === '' && ((userdata && commits && commitsTotalCount && organizations) || isLoading)">
             <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
-            <statistics :userdata="userdata" :commits="commits" :commits-total-count="commitsTotalCount" :repositories="repositories" :repositoriesContributedTo="repositoriesContributedTo" />
+            <statistics
+              :userdata="userdata"
+              :commits="commits"
+              :commits-total-count="commitsTotalCount"
+              :repositories="repositories"
+              :repositoriesContributedTo="repositoriesContributedTo"
+              :isAuthorized="isAuthorized"
+            />
           </template>
         </div>
       </div>
@@ -73,6 +80,11 @@ export default {
         this.resetState()
         this.errorMessage = 'Please enter username.'
       }
+    }
+  },
+  computed: {
+    isAuthorized () {
+      return this.accessToken && this.accessToken !== ''
     }
   },
   created: function () {
@@ -165,7 +177,6 @@ export default {
         .then((userResponse) => {
           console.log('User response', userResponse)
           this.userdata = {
-            requestType: 'rest',
             login: userResponse.login,
             name: userResponse.name,
             location: userResponse.location,
@@ -176,7 +187,6 @@ export default {
             followers: {
               totalCount: userResponse.followers
             },
-            pullRequests: null,
             repositories: {
               totalCount: userResponse.public_repos
             }

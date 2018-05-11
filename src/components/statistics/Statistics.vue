@@ -51,7 +51,8 @@ export default {
     commits: Array,
     commitsTotalCount: Number,
     repositories: Array,
-    repositoriesContributedTo: Array
+    repositoriesContributedTo: Array,
+    isAuthorized: Boolean
   },
   created: function () {
     this.statisticsTitles = {
@@ -245,7 +246,7 @@ export default {
       }
     },
     starsStatisticsValues () {
-      if (this.userdata) {
+      if (this.isAuthorized) {
         if (this.repositories) {
           const starsCount = this.repositories.reduce((starsCount, repo) => {
             return starsCount + repo.stargazers.totalCount
@@ -258,21 +259,21 @@ export default {
         } else {
           return {
             name: 'stars',
-            value: '???',
-            ranking: 0,
-            disabled: true
+            value: 0,
+            ranking: 0
           }
         }
       } else {
         return {
           name: 'stars',
-          value: 0,
-          ranking: 0
+          value: '???',
+          ranking: 0,
+          disabled: true
         }
       }
     },
     forksStatisticsValues () {
-      if (this.userdata) {
+      if (this.isAuthorized) {
         if (this.repositories) {
           const forksCount = this.repositories.reduce((forksCount, repo) => {
             return forksCount + repo.forkCount
@@ -285,16 +286,16 @@ export default {
         } else {
           return {
             name: 'forks',
-            value: '???',
-            ranking: 0,
-            disabled: true
+            value: 0,
+            ranking: 0
           }
         }
       } else {
         return {
           name: 'forks',
-          value: 0,
-          ranking: 0
+          value: '???',
+          ranking: 0,
+          disabled: true
         }
       }
     },
@@ -339,8 +340,8 @@ export default {
       }
     },
     pullRequestsStatisticsValues () {
-      if (this.userdata) {
-        if (this.userdata.pullRequests) {
+      if (this.isAuthorized) {
+        if (this.userdata) {
           const pullRequestsValue = this.userdata.pullRequests.totalCount
           return {
             name: 'pullRequests',
@@ -350,16 +351,16 @@ export default {
         } else {
           return {
             name: 'pullRequests',
-            value: '???',
-            ranking: 0,
-            disabled: true
+            value: 0,
+            ranking: 0
           }
         }
       } else {
         return {
           name: 'pullRequests',
-          value: 0,
-          ranking: 0
+          value: '???',
+          ranking: 0,
+          disabled: true
         }
       }
     },
@@ -398,10 +399,10 @@ export default {
       }, null)
     },
     overallRankingValue () {
-      if (this.userdata && this.userdata.requestType === 'rest') {
-        return '???'
+      if (this.isAuthorized) {
+        return this.getOverallRankingValue(this.statisticsValues)
       }
-      return this.getOverallRankingValue(this.statisticsValues)
+      return '???'
     },
     maxRanking () {
       return this.getMaxRanking(this.statisticsValues)
