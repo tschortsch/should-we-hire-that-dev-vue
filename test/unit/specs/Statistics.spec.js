@@ -1,4 +1,4 @@
-import { shallow } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import moment from 'moment'
 import Statistics from '@/components/statistics/Statistics'
 import userdataCorrectFixture from '../fixtures/userdata-correct'
@@ -6,7 +6,7 @@ import commitsCorrectFixture from '../fixtures/commits-correct'
 
 describe('Statistics.vue', () => {
   it('should handle empty props', () => {
-    const wrapper = shallow(Statistics)
+    const wrapper = shallowMount(Statistics)
     const defaultStatisticsValues = [
       {
         name: 'createdAt',
@@ -61,7 +61,7 @@ describe('Statistics.vue', () => {
     userdata.createdAt = twoYearsAgo.format('YYYY-MM-DD')
     const commits = commitsCorrectFixture.items
     const commitsTotalCount = 100
-    const wrapper = shallow(Statistics, {
+    const wrapper = shallowMount(Statistics, {
       propsData: {
         userdata: userdata,
         commitsTotalCount: commitsTotalCount,

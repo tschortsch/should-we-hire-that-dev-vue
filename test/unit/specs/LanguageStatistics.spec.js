@@ -1,11 +1,11 @@
-import { shallow } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import LanguageStatistics from '@/components/statistics/LanguageStatistics'
 import userdataCorrectFixture from '../fixtures/userdata-correct'
 
 describe('Statistics.vue', () => {
   it('should handle empty props', () => {
     const repositoriesContributedTo = []
-    const wrapper = shallow(LanguageStatistics, {
+    const wrapper = shallowMount(LanguageStatistics, {
       propsData: { repositoriesContributedTo: repositoriesContributedTo }
     })
     const defaultChartData = {
@@ -18,7 +18,7 @@ describe('Statistics.vue', () => {
   it('should compute correct values', () => {
     const userdata = userdataCorrectFixture.data.user
     const repositoriesContributedTo = userdata.repositoriesContributedTo.nodes
-    const wrapper = shallow(LanguageStatistics, {
+    const wrapper = shallowMount(LanguageStatistics, {
       propsData: { repositoriesContributedTo: repositoriesContributedTo }
     })
     const chartData = {

@@ -1,9 +1,9 @@
-import { shallow } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import Main from '@/components/Main'
 
 describe('Main.vue', () => {
   it('should render correct contents', () => {
-    const wrapper = shallow(Main)
+    const wrapper = shallowMount(Main)
     expect(wrapper.find('h1').text()).toEqual('Should we hire that dev?')
   })
 
