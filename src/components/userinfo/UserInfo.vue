@@ -1,15 +1,15 @@
 <template>
   <div id="avatar-container" class="mb-4">
     <div id="loading-container" v-bind:class="{ loading: isLoading }"></div>
-    <template v-if="userdata && !isLoading">
+    <template v-if="userdata">
       <div id="avatar-wrapper">
         <img :src="userdata.avatarUrl" :alt="name" />
       </div>
       <h2><a :href="userdata.url">{{ name }}</a></h2>
-      <p v-if="userdata.location" class="text-muted"><font-awesome-icon :icon="iconMapMarkerAlt" /> {{ userdata.location }}</p>
+      <p v-if="userdata.location" class="text-muted mb-2"><font-awesome-icon :icon="iconMapMarkerAlt" /> {{ userdata.location }}</p>
       <p v-if="userdata.bio">{{ userdata.bio }}</p>
     </template>
-    <organizations v-if="organizations && !isLoading" :organizations="organizations" />
+    <organizations v-if="organizations" :organizations="organizations" />
   </div>
 </template>
 

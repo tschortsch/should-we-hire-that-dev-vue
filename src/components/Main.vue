@@ -15,7 +15,7 @@
         <div class="text-center">
           <template v-if="errorMessage === '' && ((userdata && commits && commitsTotalCount && organizations) || isLoading)">
             <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
-            <statistics :userdata="userdata" :commits="commits" :commits-total-count="commitsTotalCount" />
+            <statistics :userdata="userdata" :commits="commits" :commits-total-count="commitsTotalCount" :repositories="repositories" :repositoriesContributedTo="repositoriesContributedTo" />
           </template>
         </div>
       </div>
@@ -52,6 +52,8 @@ export default {
     return {
       accessToken: window.localStorage.getItem('swhtd-gh-access-token'),
       userdata: null,
+      repositories: null,
+      repositoriesContributedTo: null,
       commits: null,
       commitsTotalCount: null,
       organizations: null,
@@ -63,7 +65,7 @@ export default {
     username: function (newUsername, oldUsername) {
       if (newUsername) {
         if (this.accessToken) {
-          this.fetchUserInfoAuthorized(this.username)
+          this.fetchUserInfoAuthorized(this.username, this.accessToken)
         } else {
           this.fetchUserInfoUnauthorized(this.username)
         }
@@ -74,11 +76,145 @@ export default {
     }
   },
   created: function () {
-    this.fetchUserInfoAuthorized = (username) => {
+    this.fetchUserInfoAuthorized = (username, accessToken) => {
       this.isLoading = true
       this.resetState()
 
-      const query = `
+      this.doGraphQlQuery(this.getUserQuery(username), accessToken)
+        .then((userResponse) => {
+          let userinfo = userResponse.data.user
+          this.userdata = userinfo
+          console.log('Userdata', this.userdata)
+
+          const repositoriesPromise = new Promise((resolve, reject) => {
+            if (userinfo.repositories.pageInfo.hasNextPage) {
+              this.fetchFurtherRepositories(username, userinfo.repositories.pageInfo.endCursor, 2, accessToken)
+                .then(repositories => {
+                  resolve([...userinfo.repositories.nodes, ...repositories])
+                })
+                .catch(err => {
+                  reject(err)
+                })
+            } else {
+              resolve(userinfo.repositories.nodes)
+            }
+          }).then((repositories) => {
+            this.repositories = repositories
+          })
+
+          const repositoriesContributedToPromise = new Promise((resolve, reject) => {
+            if (userinfo.repositoriesContributedTo.pageInfo.hasNextPage) {
+              this.fetchFurtherRepositoriesContributedTo(username, userinfo.repositoriesContributedTo.pageInfo.endCursor, 2, accessToken)
+                .then(repositoriesContributedTo => {
+                  resolve([...userinfo.repositoriesContributedTo.nodes, ...repositoriesContributedTo])
+                })
+                .catch(err => {
+                  reject(err)
+                })
+            } else {
+              resolve(userinfo.repositoriesContributedTo.nodes)
+            }
+          }).then((repositoriesContributedTo) => {
+            this.repositoriesContributedTo = repositoriesContributedTo
+          })
+
+          const commitsFirstPagePromise = this.fetchCommits(username, 1, accessToken)
+          const commitsSecondPagePromise = this.fetchCommits(username, 2, accessToken)
+          Promise.all([commitsFirstPagePromise, commitsSecondPagePromise])
+            .then(([commitsFirstPage, commitsSecondPage]) => {
+              console.log('Commits 1. Page', commitsFirstPage)
+              console.log('Commits 2. Page', commitsSecondPage)
+              this.commits = [...commitsFirstPage.items, ...commitsSecondPage.items]
+              this.commitsTotalCount = commitsFirstPage.total_count
+            })
+
+          const organizationsPromise = this.fetchOrganizations(username, accessToken)
+            .then(organizations => {
+              console.log('Organizations', organizations)
+              this.organizations = organizations
+            })
+
+          Promise.all([
+            repositoriesPromise,
+            repositoriesContributedToPromise,
+            commitsFirstPagePromise,
+            commitsSecondPagePromise,
+            organizationsPromise
+          ])
+            .then(() => {
+              this.isLoading = false
+            })
+            .catch(err => {
+              this.resetState()
+              this.errorMessage = err.message
+              this.isLoading = false
+            })
+        })
+        .catch(err => {
+          this.resetState()
+          this.errorMessage = err.message
+          this.isLoading = false
+        })
+    }
+
+    this.fetchUserInfoUnauthorized = (username) => {
+      this.isLoading = true
+      this.resetState()
+
+      this.fetchUserInfo(username)
+        .then((userResponse) => {
+          console.log('User response', userResponse)
+          this.userdata = {
+            requestType: 'rest',
+            login: userResponse.login,
+            name: userResponse.name,
+            location: userResponse.location,
+            avatarUrl: userResponse.avatar_url,
+            bio: userResponse.bio,
+            createdAt: userResponse.created_at,
+            url: userResponse.url,
+            followers: {
+              totalCount: userResponse.followers
+            },
+            pullRequests: null,
+            repositories: {
+              totalCount: userResponse.public_repos
+            }
+          }
+
+          const commitsFirstPagePromise = this.fetchCommits(username, 1)
+          const commitsSecondPagePromise = this.fetchCommits(username, 2)
+          Promise.all([commitsFirstPagePromise, commitsSecondPagePromise])
+            .then(([commitsFirstPage, commitsSecondPage]) => {
+              console.log('Commits 1. Page', commitsFirstPage)
+              console.log('Commits 2. Page', commitsSecondPage)
+              this.commits = [...commitsFirstPage.items, ...commitsSecondPage.items]
+              this.commitsTotalCount = commitsFirstPage.total_count
+            })
+
+          const organizationsPromise = this.fetchOrganizations(username)
+            .then(organizations => {
+              console.log('Organizations', organizations)
+              this.organizations = organizations
+            })
+
+          Promise.all([commitsFirstPagePromise, commitsSecondPagePromise, organizationsPromise])
+            .then(() => {
+              this.isLoading = false
+            })
+            .catch(err => {
+              this.resetState()
+              this.errorMessage = err.message
+              this.isLoading = false
+            })
+        }).catch(err => {
+          this.resetState()
+          this.errorMessage = err.message
+          this.isLoading = false
+        })
+    }
+
+    this.getUserQuery = (username) => (`
       query {
         user(login: "${username}") {
           login,
@@ -95,6 +231,10 @@ export default {
             totalCount
           },
           repositories(first: 100) {
+            pageInfo {
+              hasNextPage,
+              endCursor
+            },
             totalCount,
             nodes {
               name,
@@ -110,6 +250,10 @@ export default {
             }
           },
           repositoriesContributedTo(first: 100) {
+            pageInfo {
+              hasNextPage,
+              endCursor
+            },
             totalCount,
             nodes {
               languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
@@ -121,182 +265,149 @@ export default {
                 },
               }
             }
-          },
+          }
         }
-      }`
-      let userCheckPromise = this.doGraphQlQuery(query)
+      }`)
 
-      userCheckPromise.then((responseRaw) => {
-        if (!responseRaw.ok) {
-          this.resetState()
-          if (responseRaw.status === 401) {
-            if (this.accessToken) {
-              this.errorMessage = 'Something is wrong with your access_token. Please login again.'
-              this.removeAccessTokenFromLocalStorage()
-            } else {
-              this.errorMessage = 'Please authorize with GitHub before searching for a user.'
+    this.getFurtherRepositoriesQuery = (username, cursor) => {
+      return `
+        query {
+          user(login: "${username}") {
+            repositories(first: 100, after: "${cursor}") {
+              pageInfo {
+                hasNextPage,
+                endCursor
+              },
+              totalCount,
+              nodes {
+                name,
+                url,
+                description,
+                stargazers {
+                  totalCount
+                },
+                forkCount,
+                primaryLanguage {
+                  name
+                }
+              }
             }
-          } else if (responseRaw.status === 404) {
-            this.errorMessage = 'User not found. Try another username.'
-          } else if (this.rateLimitExceeded(responseRaw.headers)) {
-            this.errorMessage = this.getRateLimitReason(responseRaw.headers)
-          } else {
-            this.errorMessage = 'Something went wrong!'
           }
-          this.isLoading = false
-          return
-        }
-        responseRaw.json().then((userResponse) => {
-          if (userResponse.errors) {
-            this.resetState()
-            this.errorMessage = userResponse.errors[0].message
-            this.isLoading = false
-            return
-          }
-          this.userdata = userResponse.data.user
-          console.log('Userdata', this.userdata)
-
-          // TODO replace with graphql query
-          Promise.all([this.doFetchCommits(username, 1), this.doFetchCommits(username, 2), this.doFetchOrganizations(username)])
-            .then(([commitsFirstPage, commitsSecondPage, organizations]) => {
-              this.commits = [...commitsFirstPage.items, ...commitsSecondPage.items]
-              this.commitsTotalCount = commitsFirstPage.total_count
-              this.organizations = organizations
-              this.isLoading = false
-            })
-            .catch(reason => {
-              this.resetState()
-              this.errorMessage = reason
-            })
-        })
-      }).catch(err => {
-        this.resetState()
-        this.errorMessage = 'Something went wrong! Error: ' + err
-      })
+        }`
     }
 
-    this.fetchUserInfoUnauthorized = (username) => {
-      this.isLoading = true
-      this.resetState()
-
-      this.fetchUserInfo(username).then((userResponseRaw) => {
-        if (!userResponseRaw.ok) {
-          this.resetState()
-          if (userResponseRaw.status === 404) {
-            this.errorMessage = 'User not found. Try another username.'
-          } else if (this.rateLimitExceeded(userResponseRaw.headers)) {
-            this.errorMessage = this.getRateLimitReason(userResponseRaw.headers)
-          } else {
-            this.errorMessage = 'Something went wrong!'
+    this.fetchFurtherRepositories = (username, cursor, currentPage, accessToken, furtherRepositories = []) => {
+      const maxPages = 5
+      return this.doGraphQlQuery(this.getFurtherRepositoriesQuery(username, cursor), accessToken)
+        .then(repositoriesResponse => {
+          const repositories = repositoriesResponse.data.user.repositories.nodes
+          furtherRepositories.push(...repositories)
+          const pageInfo = repositoriesResponse.data.user.repositories.pageInfo
+          if (currentPage < maxPages && pageInfo.hasNextPage) {
+            return this.fetchFurtherRepositories(username, pageInfo.endCursor, currentPage + 1, accessToken, furtherRepositories)
           }
-          this.isLoading = false
-          return
-        }
-        userResponseRaw.json().then((userResponse) => {
-          console.log('User response', userResponse)
-          this.userdata = {
-            requestType: 'rest',
-            login: userResponse.login,
-            name: userResponse.name,
-            location: userResponse.location,
-            avatarUrl: userResponse.avatar_url,
-            bio: userResponse.bio,
-            createdAt: userResponse.created_at,
-            url: userResponse.url,
-            followers: {
-              totalCount: userResponse.followers
-            },
-            pullRequests: null,
-            repositories: {
-              totalCount: userResponse.public_repos,
-              nodes: null
-            },
-            repositoriesContributedTo: null
-          }
+          return furtherRepositories
         })
-
-        Promise.all([this.doFetchCommits(username, 1), this.doFetchCommits(username, 2), this.doFetchOrganizations(username)])
-          .then(([commitsFirstPage, commitsSecondPage, organizations]) => {
-            this.commits = [...commitsFirstPage.items, ...commitsSecondPage.items]
-            this.commitsTotalCount = commitsFirstPage.total_count
-            this.organizations = organizations
-            this.isLoading = false
-          })
-          .catch(reason => {
-            this.resetState()
-            this.errorMessage = reason
-          })
-      }).catch(err => {
-        this.resetState()
-        this.errorMessage = 'Something went wrong! Error: ' + err
-      })
     }
 
-    this.doGraphQlQuery = (query) => {
+    this.getFurtherRepositoriesContributedToQuery = (username, cursor) => {
+      return `
+        query {
+          user(login: "${username}") {
+            repositoriesContributedTo(first: 100, after: "${cursor}") {
+              pageInfo {
+                hasNextPage,
+                endCursor
+              },
+              totalCount,
+              nodes {
+                languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+                  edges {
+                    size,
+                    node {
+                      name
+                    }
+                  },
+                }
+              }
+            }
+          }
+        }`
+    }
+
+    this.fetchFurtherRepositoriesContributedTo = (username, cursor, currentPage, accessToken, furtherRepositorieContributedTo = []) => {
+      const maxPages = 5
+      return this.doGraphQlQuery(this.getFurtherRepositoriesContributedToQuery(username, cursor), accessToken)
+        .then(repositoriesContributedToResponse => {
+          const repositoriesContributedto = repositoriesContributedToResponse.data.user.repositoriesContributedTo.nodes
+          furtherRepositorieContributedTo.push(...repositoriesContributedto)
+          const pageInfo = repositoriesContributedToResponse.data.user.repositoriesContributedTo.pageInfo
+          if (currentPage < maxPages && pageInfo.hasNextPage) {
+            return this.fetchFurtherRepositoriesContributedTo(username, pageInfo.endCursor, currentPage + 1, accessToken, furtherRepositorieContributedTo)
+          }
+          return furtherRepositorieContributedTo
+        })
+    }
+
+    this.doGraphQlQuery = (query, accessToken) => {
       const ghGraphQlEndpointUrl = 'https://api.github.com/graphql'
       return fetch(ghGraphQlEndpointUrl, {
         method: 'POST',
         body: JSON.stringify({query}),
         headers: new Headers({
-          'Authorization': 'bearer ' + this.accessToken
+          'Authorization': 'bearer ' + accessToken
         })
-      })
-    }
-
-    this.fetchUserInfo = (username) => {
-      let userQuery = 'https://api.github.com/users/' + username
-      if (this.accessToken) {
-        userQuery += '?access_token=' + this.accessToken
-      }
-      return fetch(userQuery)
-    }
-
-    this.fetchCommits = (username, page) => {
-      let commitQueryUrl = `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&page=${page}&per_page=100`
-      if (this.accessToken) {
-        commitQueryUrl += '&access_token=' + this.accessToken
-      }
-      return fetch(commitQueryUrl, {
-        headers: {
-          'Accept': 'application/vnd.github.cloak-preview'
+      }).then(responseRaw => {
+        if (!responseRaw.ok) {
+          const errorMessage = this.handleResponseError(responseRaw, accessToken)
+          throw new Error(errorMessage)
         }
+        return responseRaw.json()
+      }).then(response => {
+        const responseError = this.checkGraphQLResponseError(response)
+        if (responseError !== '') {
+          throw new Error(responseError)
+        }
+        return response
       })
     }
 
-    this.doFetchCommits = (username, page) => {
-      return new Promise((resolve, reject) => {
-        this.fetchCommits(username, page).then(commitsResponseRaw => {
-          if (this.rateLimitExceeded(commitsResponseRaw.headers)) {
-            reject(this.getRateLimitReason(commitsResponseRaw.headers))
-          }
-          commitsResponseRaw.json().then(commitsResponse => {
-            console.log('Commits response', commitsResponse)
-            resolve(commitsResponse)
-          })
-        })
+    this.doRestQuery = (endpointUrl, options = {}, accessToken = '') => {
+      return fetch(endpointUrl, options).then(responseRaw => {
+        if (!responseRaw.ok) {
+          const errorMessage = this.handleResponseError(responseRaw, accessToken)
+          throw new Error(errorMessage)
+        }
+        return responseRaw.json()
       })
     }
 
-    this.fetchOrganizations = (username) => {
-      let organizationsQueryUrl = 'https://api.github.com/users/' + username + '/orgs'
-      if (this.accessToken) {
-        organizationsQueryUrl += '?access_token=' + this.accessToken
+    this.fetchUserInfo = (username, accessToken = '') => {
+      let userQuery = `https://api.github.com/users/${username}`
+      if (accessToken !== '') {
+        userQuery += `?access_token=${accessToken}`
       }
-      return fetch(organizationsQueryUrl)
+      return this.doRestQuery(userQuery)
     }
 
-    this.doFetchOrganizations = (username) => {
-      return new Promise((resolve, reject) => {
-        this.fetchOrganizations(username).then(organizationsResponseRaw => {
-          if (this.rateLimitExceeded(organizationsResponseRaw.headers)) {
-            reject(this.getRateLimitReason(organizationsResponseRaw.headers))
-          }
-          organizationsResponseRaw.json().then(organizationsResponse => {
-            console.log('Organizations response', organizationsResponse)
-            resolve(organizationsResponse)
-          })
+    this.fetchCommits = (username, page, accessToken = '') => {
+      let commitQueryUrl = `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&page=${page}&per_page=100`
+      if (accessToken !== '') {
+        commitQueryUrl += `&access_token=${accessToken}`
+      }
+      return this.doRestQuery(commitQueryUrl, {
+        headers: new Headers({
+          'Accept': 'application/vnd.github.cloak-preview'
         })
       })
+    }
+
+    this.fetchOrganizations = (username, accessToken = '') => {
+      let organizationsQueryUrl = `https://api.github.com/users/${username}/orgs`
+      if (accessToken !== '') {
+        organizationsQueryUrl += `?access_token=${accessToken}`
+      }
+      return this.doRestQuery(organizationsQueryUrl)
     }
 
     this.resetState = () => {
@@ -304,7 +415,33 @@ export default {
       this.commits = null
       this.commitsTotalCount = null
       this.organizations = null
+      this.repositories = null
+      this.repositoriesContributedTo = null
       this.errorMessage = ''
+    }
+
+    this.handleResponseError = (response, accessToken = '') => {
+      console.log(response)
+      if (response.status === 401) {
+        if (accessToken !== '') {
+          this.removeAccessTokenFromLocalStorage()
+          return 'Something is wrong with your access_token. Please login again.'
+        } else {
+          return 'Please authorize with GitHub before searching for a user.'
+        }
+      } else if (response.status === 404) {
+        return 'User not found. Try another username.'
+      } else if (this.rateLimitExceeded(response.headers)) {
+        return this.getRateLimitReason(response.headers)
+      }
+      return 'Something went wrong!'
+    }
+
+    this.checkGraphQLResponseError = (response) => {
+      if (response.errors) {
+        return response.errors[0].message
+      }
+      return ''
     }
 
     this.rateLimitExceeded = (headers) => {
@@ -329,7 +466,7 @@ export default {
     // fetch userinfo on load if username is passed in url
     if (this.username) {
       if (this.accessToken) {
-        this.fetchUserInfoAuthorized(this.username)
+        this.fetchUserInfoAuthorized(this.username, this.accessToken)
       } else {
         this.fetchUserInfoUnauthorized(this.username)
       }

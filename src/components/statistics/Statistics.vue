@@ -18,7 +18,7 @@
       />
     </div>
     <div class="row justify-content-center">
-      <language-statistics :repositoriesContributedTo="repositoriesContributedTo" />
+      <language-statistics :repositoriesContributedTo="repositoriesContributedTo || []" />
     </div>
     <div class="row justify-content-center">
       <contribution-time :commits="commits" :userlogin="userlogin" />
@@ -49,7 +49,9 @@ export default {
   props: {
     userdata: Object,
     commits: Array,
-    commitsTotalCount: Number
+    commitsTotalCount: Number,
+    repositories: Array,
+    repositoriesContributedTo: Array
   },
   created: function () {
     this.statisticsTitles = {
@@ -172,9 +174,12 @@ export default {
     }
 
     this.getOverallRankingValue = (statisticsValues) => {
-      return statisticsValues.reduce((rankingAccumulator, statisticsValue) => {
-        return rankingAccumulator + statisticsValue.ranking
-      }, 0)
+      if (this.userdata && this.commitsTotalCount !== null && this.commits) {
+        return statisticsValues.reduce((rankingAccumulator, statisticsValue) => {
+          return rankingAccumulator + statisticsValue.ranking
+        }, 0)
+      }
+      return 0
     }
 
     this.getMaxRanking = (statisticsValues) => {
@@ -241,8 +246,8 @@ export default {
     },
     starsStatisticsValues () {
       if (this.userdata) {
-        if (this.userdata.repositories.nodes) {
-          const starsCount = this.userdata.repositories.nodes.reduce((starsCount, repo) => {
+        if (this.repositories) {
+          const starsCount = this.repositories.reduce((starsCount, repo) => {
             return starsCount + repo.stargazers.totalCount
           }, 0)
           return {
@@ -268,8 +273,8 @@ export default {
     },
     forksStatisticsValues () {
       if (this.userdata) {
-        if (this.userdata.repositories.nodes) {
-          const forksCount = this.userdata.repositories.nodes.reduce((forksCount, repo) => {
+        if (this.repositories) {
+          const forksCount = this.repositories.reduce((forksCount, repo) => {
             return forksCount + repo.forkCount
           }, 0)
           return {
@@ -377,15 +382,12 @@ export default {
     userlogin () {
       return this.userdata ? this.userdata.login : ''
     },
-    repositoriesContributedTo () {
-      return this.userdata && this.userdata.repositoriesContributedTo ? this.userdata.repositoriesContributedTo.nodes : []
-    },
     mostFamousRepository () {
-      if (!this.userdata || !this.userdata.repositories.nodes) {
+      if (!this.repositories) {
         return null
       }
 
-      return this.userdata.repositories.nodes.reduce((mostFamousRepo, repo) => {
+      return this.repositories.reduce((mostFamousRepo, repo) => {
         const repoTotalCount = repo.stargazers.totalCount + repo.forkCount
         let currentRepo = repo
         currentRepo.totalCount = repoTotalCount
