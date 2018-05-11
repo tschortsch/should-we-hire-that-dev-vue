@@ -15,7 +15,7 @@
         <div class="text-center">
           <template v-if="errorMessage === '' && ((userdata && commits && commitsTotalCount && organizations) || isLoading)">
             <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
-            <statistics :userdata="userdata" :commits="commits" :commits-total-count="commitsTotalCount" />
+            <statistics :userdata="userdata" :commits="commits" :commits-total-count="commitsTotalCount" :repositories="repositories" :repositoriesContributedTo="repositoriesContributedTo" />
           </template>
         </div>
       </div>
@@ -52,6 +52,8 @@ export default {
     return {
       accessToken: window.localStorage.getItem('swhtd-gh-access-token'),
       userdata: null,
+      repositories: null,
+      repositoriesContributedTo: null,
       commits: null,
       commitsTotalCount: null,
       organizations: null,
@@ -78,53 +80,7 @@ export default {
       this.isLoading = true
       this.resetState()
 
-      const query = `
-      query {
-        user(login: "${username}") {
-          login,
-          name,
-          location,
-          avatarUrl,
-          bio,
-          createdAt,
-          url,
-          followers {
-            totalCount
-          },
-          pullRequests(first: 1) {
-            totalCount
-          },
-          repositories(first: 100) {
-            totalCount,
-            nodes {
-              name,
-              url,
-              description,
-              stargazers {
-                totalCount
-              },
-              forkCount,
-              primaryLanguage {
-                name
-              }
-            }
-          },
-          repositoriesContributedTo(first: 100) {
-            totalCount,
-            nodes {
-              languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
-                edges {
-                  size,
-                  node {
-                    name
-                  }
-                },
-              }
-            }
-          },
-        }
-      }`
-      let userCheckPromise = this.doGraphQlQuery(query)
+      let userCheckPromise = this.doGraphQlQuery(this.getUserQuery(username))
 
       userCheckPromise.then((responseRaw) => {
         if (!responseRaw.ok) {
@@ -153,8 +109,27 @@ export default {
             this.isLoading = false
             return
           }
-          this.userdata = userResponse.data.user
+
+          let userinfo = userResponse.data.user
+          this.userdata = userinfo
           console.log('Userdata', this.userdata)
+
+          if (userinfo.repositories.pageInfo.hasNextPage) {
+            this.fetchFurtherRepositories(username, userinfo.repositories.pageInfo.endCursor, 2)
+              .then(repositories => {
+                this.repositories = [...userinfo.repositories.nodes, ...repositories]
+              })
+          } else {
+            this.repositories = userinfo.repositories.nodes
+          }
+          if (userinfo.repositoriesContributedTo.pageInfo.hasNextPage) {
+            this.fetchFurtherRepositoriesContributedTo(username, userinfo.repositoriesContributedTo.pageInfo.endCursor, 2)
+              .then(repositoriesContributedTo => {
+                this.repositoriesContributedTo = [...userinfo.repositoriesContributedTo.nodes, ...repositoriesContributedTo]
+              })
+          } else {
+            this.repositoriesContributedTo = userinfo.repositoriesContributedTo.nodes
+          }
 
           // TODO replace with graphql query
           Promise.all([this.doFetchCommits(username, 1), this.doFetchCommits(username, 2), this.doFetchOrganizations(username)])
@@ -210,10 +185,8 @@ export default {
             },
             pullRequests: null,
             repositories: {
-              totalCount: userResponse.public_repos,
-              nodes: null
-            },
-            repositoriesContributedTo: null
+              totalCount: userResponse.public_repos
+            }
           }
         })
 
@@ -234,6 +207,143 @@ export default {
         this.errorMessage = 'Something went wrong! Error: ' + err
         this.isLoading = false
       })
+    }
+
+    this.getUserQuery = (username) => (`
+      query {
+        user(login: "${username}") {
+          login,
+          name,
+          location,
+          avatarUrl,
+          bio,
+          createdAt,
+          url,
+          followers {
+            totalCount
+          },
+          pullRequests(first: 1) {
+            totalCount
+          },
+          repositories(first: 100) {
+            pageInfo {
+              hasNextPage,
+              endCursor
+            },
+            totalCount,
+            nodes {
+              name,
+              url,
+              description,
+              stargazers {
+                totalCount
+              },
+              forkCount,
+              primaryLanguage {
+                name
+              }
+            }
+          },
+          repositoriesContributedTo(first: 100) {
+            pageInfo {
+              hasNextPage,
+              endCursor
+            },
+            totalCount,
+            nodes {
+              languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+                edges {
+                  size,
+                  node {
+                    name
+                  }
+                },
+              }
+            }
+          }
+        }
+      }`)
+
+    this.getFurtherRepositoriesQuery = (username, cursor) => {
+      return `
+        query {
+          user(login: "${username}") {
+            repositories(first: 100, after: "${cursor}") {
+              pageInfo {
+                hasNextPage,
+                endCursor
+              },
+              totalCount,
+              nodes {
+                name,
+                url,
+                description,
+                stargazers {
+                  totalCount
+                },
+                forkCount,
+                primaryLanguage {
+                  name
+                }
+              }
+            }
+          }
+        }`
+    }
+
+    this.fetchFurtherRepositories = (username, cursor, currentPage, furtherRepositories = []) => {
+      const maxPages = 5
+      return this.doGraphQlQuery(this.getFurtherRepositoriesQuery(username, cursor))
+        .then(repositoriesResponseRaw => repositoriesResponseRaw.json())
+        .then(repositoriesResponse => {
+          const repositories = repositoriesResponse.data.user.repositories.nodes
+          furtherRepositories.push(...repositories)
+          const pageInfo = repositoriesResponse.data.user.repositories.pageInfo
+          if (currentPage < maxPages && pageInfo.hasNextPage) {
+            return this.fetchFurtherRepositories(username, pageInfo.endCursor, currentPage + 1, furtherRepositories)
+          }
+          return furtherRepositories
+        })
+    }
+
+    this.getFurtherRepositoriesContributedToQuery = (username, cursor) => {
+      return `
+        query {
+          user(login: "${username}") {
+            repositoriesContributedTo(first: 100, after: "${cursor}") {
+              pageInfo {
+                hasNextPage,
+                endCursor
+              },
+              totalCount,
+              nodes {
+                languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+                  edges {
+                    size,
+                    node {
+                      name
+                    }
+                  },
+                }
+              }
+            }
+          }
+        }`
+    }
+
+    this.fetchFurtherRepositoriesContributedTo = (username, cursor, currentPage, furtherRepositorieContributedTo = []) => {
+      const maxPages = 5
+      return this.doGraphQlQuery(this.getFurtherRepositoriesContributedToQuery(username, cursor))
+        .then(repositoriesContributedToResponseRaw => repositoriesContributedToResponseRaw.json())
+        .then(repositoriesContributedToResponse => {
+          const repositoriesContributedto = repositoriesContributedToResponse.data.user.repositoriesContributedTo.nodes
+          furtherRepositorieContributedTo.push(...repositoriesContributedto)
+          const pageInfo = repositoriesContributedToResponse.data.user.repositoriesContributedTo.pageInfo
+          if (currentPage < maxPages && pageInfo.hasNextPage) {
+            return this.fetchFurtherRepositoriesContributedTo(username, pageInfo.endCursor, currentPage + 1, furtherRepositorieContributedTo)
+          }
+          return furtherRepositorieContributedTo
+        })
     }
 
     this.doGraphQlQuery = (query) => {
@@ -308,6 +418,8 @@ export default {
       this.commits = null
       this.commitsTotalCount = null
       this.organizations = null
+      this.repositories = null
+      this.repositoriesContributedTo = null
       this.errorMessage = ''
     }
 
