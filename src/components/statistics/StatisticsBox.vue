@@ -2,7 +2,7 @@
   <div class="col-md-6 mb-5" v-bind:class="[{ 'text-muted': disabled }, rankingClass]">
     <h3>{{ title }}</h3>
     <p class="value">
-      <template v-if="Number.isInteger(value)">
+      <template v-if="typeof value === 'number'">
         <ICountUp :startVal=0 :endVal="value" :duration=2.5 />
       </template>
       <template v-else>

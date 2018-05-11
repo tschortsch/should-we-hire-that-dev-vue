@@ -2,7 +2,7 @@
   <div class="col-md-8 col-10" v-bind:class="[{ 'text-muted': disabled }, rankingClass]">
     <h3>{{ title }}</h3>
     <p class="value">
-      <template v-if="Number.isInteger(value)">
+      <template v-if="typeof value === 'number'">
         <ICountUp :startVal=0 :endVal="value" :duration=2.5 /> / {{ maxRanking }}
       </template>
       <template v-else>
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     ranking () {
-      if (this.value && this.maxRanking) {
+      if (typeof this.value === 'number' && this.maxRanking > 0) {
         return this.value * 100 / this.maxRanking
       }
       return 0
