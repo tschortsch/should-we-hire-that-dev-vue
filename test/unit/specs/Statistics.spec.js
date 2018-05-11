@@ -50,7 +50,6 @@ describe('Statistics.vue', () => {
       }
     ]
     expect(wrapper.vm.statisticsValues).toEqual(defaultStatisticsValues)
-    expect(wrapper.vm.repositoriesContributedTo).toEqual([])
     expect(wrapper.vm.overallRankingValue).toEqual(0)
     expect(wrapper.vm.maxRanking).toEqual(defaultStatisticsValues.length * 100)
   })
@@ -63,7 +62,13 @@ describe('Statistics.vue', () => {
     const commits = commitsCorrectFixture.items
     const commitsTotalCount = 100
     const wrapper = shallow(Statistics, {
-      propsData: { userdata: userdata, commitsTotalCount: commitsTotalCount, commits: commits }
+      propsData: {
+        userdata: userdata,
+        commitsTotalCount: commitsTotalCount,
+        commits: commits,
+        repositories: userdata.repositories.nodes,
+        repositoriesContributedTo: userdata.repositoriesContributedTo.nodes
+      }
     })
     const statisticsValues = [
       {
