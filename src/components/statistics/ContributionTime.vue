@@ -14,9 +14,9 @@
         <li class="list-inline-item"><font-awesome-icon :icon="iconCalendarAlt" /> {{ contributionDaySentence }}</li>
       </ul>
       <h5>Time of the day</h5>
-      <line-chart v-if="contributionTimesChartData" class="contribution-chart" :chartData="contributionTimesChartData" :options="chartOptions" />
+      <line-chart v-if="contributionTimesChartData" class="contribution-chart" chartId="contributionTimes" :chartData="contributionTimesChartData" :options="chartOptions" />
       <h5>Days of the week</h5>
-      <line-chart v-if="contributionDaysChartData" class="contribution-chart" :chartData="contributionDaysChartData" :options="chartOptions" />
+      <line-chart v-if="contributionDaysChartData" class="contribution-chart" chartId="contributionDays"  :chartData="contributionDaysChartData" :options="chartOptions" />
     </template>
     <template v-else>
       <h4 class="h2">???</h4>
