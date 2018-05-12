@@ -145,16 +145,16 @@ export default {
     ]
 
     this.createdAtLimits = [
-      [100, 6 * (365 * 24 * 60 * 60)], // 6 years
-      [90, 5 * (365 * 24 * 60 * 60)],
-      [80, 4.5 * (365 * 24 * 60 * 60)],
-      [70, 4 * (365 * 24 * 60 * 60)],
-      [60, 3.5 * (365 * 24 * 60 * 60)],
-      [50, 3 * (365 * 24 * 60 * 60)],
-      [40, 2.5 * (365 * 24 * 60 * 60)],
-      [30, 2 * (365 * 24 * 60 * 60)],
-      [20, 1.5 * (365 * 24 * 60 * 60)],
-      [10, (365 * 24 * 60 * 60)]
+      [100, 6], // 6 years
+      [90, 5],
+      [80, 4.5],
+      [70, 4],
+      [60, 3.5],
+      [50, 3],
+      [40, 2.5],
+      [30, 2],
+      [20, 1.5],
+      [10, 1]
     ]
 
     this.pullRequestsLimits = [
@@ -213,13 +213,12 @@ export default {
       if (this.userdata) {
         const createdAt = new Date(this.userdata.createdAt)
         const createdAtMoment = moment(createdAt)
-        const createdAtTimestamp = createdAtMoment.unix()
-        const currentTimestamp = moment().unix()
+        const yearsDifference = moment().diff(createdAtMoment, 'years', true)
         return {
           name: 'createdAt',
           value: createdAtMoment.fromNow(),
           additionalValue: createdAtMoment.format('(DD.MM.YYYY)'),
-          ranking: this.getRanking(currentTimestamp - createdAtTimestamp, this.createdAtLimits)
+          ranking: this.getRanking(yearsDifference, this.createdAtLimits)
         }
       } else {
         return {
