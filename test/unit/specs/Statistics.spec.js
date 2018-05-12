@@ -19,13 +19,15 @@ describe('Statistics.vue', () => {
         ranking: 0
       },
       {
+        disabled: true,
         name: 'stars',
-        value: 0,
+        value: '???',
         ranking: 0
       },
       {
+        disabled: true,
         name: 'forks',
-        value: 0,
+        value: '???',
         ranking: 0
       },
       {
@@ -39,8 +41,9 @@ describe('Statistics.vue', () => {
         value: 0
       },
       {
+        disabled: true,
         name: 'pullRequests',
-        value: 0,
+        value: '???',
         ranking: 0
       },
       {
@@ -50,7 +53,7 @@ describe('Statistics.vue', () => {
       }
     ]
     expect(wrapper.vm.statisticsValues).toEqual(defaultStatisticsValues)
-    expect(wrapper.vm.overallRankingValue).toEqual(0)
+    expect(wrapper.vm.overallRankingValue).toEqual('???')
     expect(wrapper.vm.maxRanking).toEqual(defaultStatisticsValues.length * 100)
   })
 
@@ -67,7 +70,8 @@ describe('Statistics.vue', () => {
         commitsTotalCount: commitsTotalCount,
         commits: commits,
         repositories: userdata.repositories.nodes,
-        repositoriesContributedTo: userdata.repositoriesContributedTo.nodes
+        repositoriesContributedTo: userdata.repositoriesContributedTo.nodes,
+        isAuthorized: true
       }
     })
     const statisticsValues = [
