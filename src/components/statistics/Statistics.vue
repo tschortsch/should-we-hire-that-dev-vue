@@ -4,7 +4,7 @@
       <statistics-box
         v-for="statisticsValue in statisticsValues"
         :key="statisticsValue.name"
-        :title="getStatisticsTitles(statisticsValue.name)"
+        :title="statisticsValue.title"
         :value="statisticsValue.value"
         :additional-value="statisticsValue.additionalValue"
         :ranking="statisticsValue.ranking"
@@ -51,20 +51,10 @@ export default {
     commits: Array,
     commitsTotalCount: Number,
     repositories: Array,
-    repositoriesContributedTo: Array
+    repositoriesContributedTo: Array,
+    isAuthorized: Boolean
   },
   created: function () {
-    this.statisticsTitles = {
-      createdAt: 'User since',
-      stars: 'Stars',
-      forks: 'Forks of own repos',
-      followers: 'Followers',
-      commits: 'Total commits',
-      commitMessageWordCount: 'Commit message quality',
-      repos: 'Public repos',
-      pullRequests: 'Pull requests'
-    }
-
     this.commitsLimits = [
       [100, 10000],
       [90, 8000],
@@ -144,16 +134,16 @@ export default {
     ]
 
     this.createdAtLimits = [
-      [100, 6 * (365 * 24 * 60 * 60)], // 6 years
-      [90, 5 * (365 * 24 * 60 * 60)],
-      [80, 4.5 * (365 * 24 * 60 * 60)],
-      [70, 4 * (365 * 24 * 60 * 60)],
-      [60, 3.5 * (365 * 24 * 60 * 60)],
-      [50, 3 * (365 * 24 * 60 * 60)],
-      [40, 2.5 * (365 * 24 * 60 * 60)],
-      [30, 2 * (365 * 24 * 60 * 60)],
-      [20, 1.5 * (365 * 24 * 60 * 60)],
-      [10, (365 * 24 * 60 * 60)]
+      [100, 6], // 6 years
+      [90, 5],
+      [80, 4.5],
+      [70, 4],
+      [60, 3.5],
+      [50, 3],
+      [40, 2.5],
+      [30, 2],
+      [20, 1.5],
+      [10, 1]
     ]
 
     this.pullRequestsLimits = [
@@ -168,10 +158,6 @@ export default {
       [20, 10],
       [10, 5]
     ]
-
-    this.getStatisticsTitles = (name) => {
-      return this.statisticsTitles[name]
-    }
 
     this.getOverallRankingValue = (statisticsValues) => {
       if (this.userdata && this.commitsTotalCount !== null && this.commits) {
@@ -199,7 +185,7 @@ export default {
     statisticsValues () {
       return [
         this.createdAtStatisticsValues,
-        this.followerStatisticsValues,
+        this.followersStatisticsValues,
         this.starsStatisticsValues,
         this.forksStatisticsValues,
         this.commitsStatisticsValues,
@@ -209,112 +195,99 @@ export default {
       ]
     },
     createdAtStatisticsValues () {
+      let createdAtValues = {
+        name: 'createdAt',
+        title: 'User since',
+        value: '-',
+        ranking: 0
+      }
       if (this.userdata) {
         const createdAt = new Date(this.userdata.createdAt)
         const createdAtMoment = moment(createdAt)
-        const createdAtTimestamp = createdAtMoment.unix()
-        const currentTimestamp = moment().unix()
-        return {
-          name: 'createdAt',
-          value: createdAtMoment.fromNow(),
-          additionalValue: createdAtMoment.format('(DD.MM.YYYY)'),
-          ranking: this.getRanking(currentTimestamp - createdAtTimestamp, this.createdAtLimits)
-        }
-      } else {
-        return {
-          name: 'createdAt',
-          value: '-',
-          ranking: 0
-        }
+        const yearsDifference = moment().diff(createdAtMoment, 'years', true)
+        createdAtValues.value = createdAtMoment.fromNow()
+        createdAtValues.additionalValue = createdAtMoment.format('(DD.MM.YYYY)')
+        createdAtValues.ranking = this.getRanking(yearsDifference, this.createdAtLimits)
       }
+      return createdAtValues
     },
-    followerStatisticsValues () {
+    followersStatisticsValues () {
+      let followersValues = {
+        name: 'followers',
+        title: 'Followers',
+        value: 0,
+        ranking: 0
+      }
       if (this.userdata) {
         const followersValue = this.userdata.followers.totalCount
-        return {
-          name: 'followers',
-          value: followersValue,
-          ranking: this.getRanking(followersValue, this.followersLimits)
-        }
-      } else {
-        return {
-          name: 'followers',
-          value: 0,
-          ranking: 0
-        }
+        followersValues.value = followersValue
+        followersValues.ranking = this.getRanking(followersValue, this.followersLimits)
       }
+      return followersValues
     },
     starsStatisticsValues () {
-      if (this.userdata) {
+      let starsValues = {
+        name: 'stars',
+        title: 'Stars',
+        value: 0,
+        ranking: 0
+      }
+      if (this.isAuthorized) {
         if (this.repositories) {
           const starsCount = this.repositories.reduce((starsCount, repo) => {
             return starsCount + repo.stargazers.totalCount
           }, 0)
-          return {
-            name: 'stars',
-            value: starsCount,
-            ranking: this.getRanking(starsCount, this.starsLimits)
-          }
-        } else {
-          return {
-            name: 'stars',
-            value: '???',
-            ranking: 0,
-            disabled: true
-          }
+          starsValues.value = starsCount
+          starsValues.ranking = this.getRanking(starsCount, this.starsLimits)
         }
       } else {
-        return {
-          name: 'stars',
-          value: 0,
-          ranking: 0
-        }
+        starsValues.value = '???'
+        starsValues.disabled = true
       }
+      return starsValues
     },
     forksStatisticsValues () {
-      if (this.userdata) {
+      let forksValues = {
+        name: 'forks',
+        title: 'Forks of own repos',
+        value: 0,
+        ranking: 0
+      }
+      if (this.isAuthorized) {
         if (this.repositories) {
           const forksCount = this.repositories.reduce((forksCount, repo) => {
             return forksCount + repo.forkCount
           }, 0)
-          return {
-            name: 'forks',
-            value: forksCount,
-            ranking: this.getRanking(forksCount, this.forksLimits)
-          }
-        } else {
-          return {
-            name: 'forks',
-            value: '???',
-            ranking: 0,
-            disabled: true
-          }
+          forksValues.value = forksCount
+          forksValues.ranking = this.getRanking(forksCount, this.forksLimits)
         }
       } else {
-        return {
-          name: 'forks',
-          value: 0,
-          ranking: 0
-        }
+        forksValues.value = '???'
+        forksValues.disabled = true
       }
+      return forksValues
     },
     commitsStatisticsValues () {
+      let commitsValues = {
+        name: 'commits',
+        title: 'Total commits',
+        value: 0,
+        ranking: 0
+      }
       if (this.commitsTotalCount) {
         const commitsValue = this.commitsTotalCount
-        return {
-          name: 'commits',
-          value: commitsValue,
-          ranking: this.getRanking(commitsValue, this.commitsLimits)
-        }
-      } else {
-        return {
-          name: 'commits',
-          value: 0,
-          ranking: 0
-        }
+        commitsValues.value = commitsValue
+        commitsValues.ranking = this.getRanking(commitsValue, this.commitsLimits)
       }
+      return commitsValues
     },
     commitMessageWorkCountStatisticsValues () {
+      let commitMessageWordCountValues = {
+        name: 'commitMessageWordCount',
+        title: 'Commit message quality',
+        value: 0,
+        ranking: 0
+      }
       if (this.commits) {
         const commitMessageTotalWordCount = this.commits.reduce((totalWords, commit) => {
           const commitMessage = commit.commit.message
@@ -324,60 +297,44 @@ export default {
         if (this.commits.length > 0) {
           commitMessageWordCountValue = (commitMessageTotalWordCount / this.commits.length).toFixed(1)
         }
-        return {
-          name: 'commitMessageWordCount',
-          value: commitMessageWordCountValue,
-          additionalValue: '(average word count)',
-          ranking: this.getRanking(commitMessageWordCountValue, this.commitMessageWordCountLimits)
-        }
-      } else {
-        return {
-          name: 'commitMessageWordCount',
-          value: 0,
-          ranking: 0
-        }
+        commitMessageWordCountValues.value = commitMessageWordCountValue
+        commitMessageWordCountValues.additionalValue = '(average word count)'
+        commitMessageWordCountValues.ranking = this.getRanking(commitMessageWordCountValue, this.commitMessageWordCountLimits)
       }
+      return commitMessageWordCountValues
     },
     pullRequestsStatisticsValues () {
-      if (this.userdata) {
-        if (this.userdata.pullRequests) {
+      let pullRequestsValues = {
+        name: 'pullRequests',
+        title: 'Pull requests',
+        value: 0,
+        ranking: 0
+      }
+      if (this.isAuthorized) {
+        if (this.userdata) {
           const pullRequestsValue = this.userdata.pullRequests.totalCount
-          return {
-            name: 'pullRequests',
-            value: pullRequestsValue,
-            ranking: this.getRanking(pullRequestsValue, this.pullRequestsLimits)
-          }
-        } else {
-          return {
-            name: 'pullRequests',
-            value: '???',
-            ranking: 0,
-            disabled: true
-          }
+          pullRequestsValues.value = pullRequestsValue
+          pullRequestsValues.ranking = this.getRanking(pullRequestsValue, this.pullRequestsLimits)
         }
       } else {
-        return {
-          name: 'pullRequests',
-          value: 0,
-          ranking: 0
-        }
+        pullRequestsValues.value = '???'
+        pullRequestsValues.disabled = true
       }
+      return pullRequestsValues
     },
     repoStatisticsValues () {
+      let reposValues = {
+        name: 'repos',
+        title: 'Public repos',
+        value: 0,
+        ranking: 0
+      }
       if (this.userdata) {
         const reposValue = this.userdata.repositories.totalCount
-        return {
-          name: 'repos',
-          value: reposValue,
-          ranking: this.getRanking(reposValue, this.reposLimits)
-        }
-      } else {
-        return {
-          name: 'repos',
-          value: 0,
-          ranking: 0
-        }
+        reposValues.value = reposValue
+        reposValues.ranking = this.getRanking(reposValue, this.reposLimits)
       }
+      return reposValues
     },
     userlogin () {
       return this.userdata ? this.userdata.login : ''
@@ -398,10 +355,10 @@ export default {
       }, null)
     },
     overallRankingValue () {
-      if (this.userdata && this.userdata.requestType === 'rest') {
-        return '???'
+      if (this.isAuthorized) {
+        return this.getOverallRankingValue(this.statisticsValues)
       }
-      return this.getOverallRankingValue(this.statisticsValues)
+      return '???'
     },
     maxRanking () {
       return this.getMaxRanking(this.statisticsValues)
