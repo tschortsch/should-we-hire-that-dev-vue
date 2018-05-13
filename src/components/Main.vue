@@ -6,7 +6,7 @@
       </div>
       <div class="col-xl-8 col-lg-10 col-12">
         <h1 class="sr-only">Should we hire that dev?</h1>
-        <github-username-input :username="username" :isLoading="isLoading" />
+        <github-username-input :username="username" :isLoading="isLoading" :fetchUsernameSuggest="fetchUsernameSuggest"/>
         <div class="text-center">
           <div v-if="errorMessage !== ''" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
           <div v-if="!accessToken && userdata" class="alert alert-warning" role="alert">Please authorize with GitHub to get all statistics</div>
@@ -357,6 +357,30 @@ export default {
           }
           return furtherRepositorieContributedTo
         })
+    }
+
+    this.fetchUsernameSuggest = (currentUsernameValue, accessToken) => {
+      if (this.isAuthorized) {
+        const query = `
+        query {
+          search(query: "${currentUsernameValue}", type: USER, first: 5) {
+            userCount
+            edges {
+              node {
+                ... on User {
+                  login
+                  name
+                  avatarUrl
+                }
+              }
+            }
+          }
+        }`
+        // TODO replace accessToken
+        return this.doGraphQlQuery(query, this.accessToken)
+      } else {
+        // TODO implement rest query
+      }
     }
 
     this.doGraphQlQuery = (query, accessToken) => {
