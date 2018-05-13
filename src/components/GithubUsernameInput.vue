@@ -161,6 +161,7 @@ export default {
       this.unwatchUsernameInputValue()
       this.usernameInputValue = option
       this.usersSuggestListOpen = false
+      this.usersSuggestList = []
       this.unwatchUsernameInputValue = this.$watch(
         'usernameInputValue',
         this.usernameInputValueWatcher
