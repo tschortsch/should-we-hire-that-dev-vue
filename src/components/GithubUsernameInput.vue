@@ -1,5 +1,5 @@
 <template>
-  <form class="mb-3" v-on:submit="submitUsernameForm">
+  <form class="mb-3" @submit.prevent="submitUsernameForm">
     <div class="question d-md-flex">
       <div class="label flex-item">Should we hire</div>
       <div class="flex-item">
@@ -11,11 +11,11 @@
                    v-model="usernameInputValue"
                    :placeholder="placeholder"
                    :disabled="isLoading"
-                   v-on:focus="handleUsernameFocus"
-                   v-on:blur="handleUsernameBlur"
+                   @focus="handleUsernameFocus"
+                   @blur="handleUsernameBlur"
             />
-            <button type="submit" class="submitt-button sr-only" tabindex="-1">Submit user search</button>
-            <button class="clear-button" v-visible="usernameInputValue" v-on:click="handleClearButtonClick">
+            <button type="submit" class="sr-only" tabindex="-1">Submit user search</button>
+            <button class="clear-button" v-visible="usernameInputValue" @click.prevent="handleClearButtonClick">
               <span aria-label="Clear username">×</span>
             </button>
           </div>
@@ -58,7 +58,6 @@ export default {
   },
   methods: {
     submitUsernameForm: function (e) {
-      e.preventDefault()
       if (this.usernameInputValue === '') {
         this.$router.push({ name: 'Main' })
       } else if (this.usernameInputValue !== this.username) {
@@ -77,7 +76,6 @@ export default {
       }
     },
     handleClearButtonClick: function (e) {
-      e.preventDefault()
       this.usernameInputValue = ''
       // set focus to username input field
       this.$refs.usernameInput.focus()
@@ -242,6 +240,10 @@ export default {
     cursor: pointer;
     border: 0;
     background: transparent;
+  }
+  // Disable native clear button in IE10 & IE11
+  #username::-ms-clear {
+    display: none;
   }
 }
 </style>
