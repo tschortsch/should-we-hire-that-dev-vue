@@ -22,9 +22,8 @@
               <li v-for="(user, index) in usersSuggestList"
                   v-bind:key="index"
                   :class="{ highlight: index === usersSuggestListPointer }"
-                  @mouseover="usersSuggestListPointer = index"
               >
-                <a href="#" @mousedown.prevent="usernameSelect(user.login)">
+                <a href="#" @mousedown.prevent="usernameSelect(user.login, true)">
                   <img v-if="user.avatarUrl" class="avatar" :src="user.avatarUrl" :alt="user.name || user.login" />
                   <span class="login" v-html="getHighligthedUsername(user.login)"></span>
                 </a>
@@ -67,6 +66,7 @@ export default {
       placeholder: 'that dev',
       placeholderTimeout: null,
       usernameInputValue: this.username,
+      originalUsernameInputValue: null,
       usernameFetchTimeout: null,
       usersSuggestList: [],
       usersSuggestListOpen: false,
@@ -82,8 +82,8 @@ export default {
       }
     },
     usersSuggestList () {
-      // select first element when list changes
-      this.usersSuggestListPointer = 0
+      // deselect when list changes
+      this.usersSuggestListPointer = -1
     }
   },
   methods: {
@@ -117,6 +117,10 @@ export default {
     handleUsernameUp () {
       if (this.usersSuggestListPointer > 0) {
         this.usersSuggestListPointer--
+        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+      } else if (this.usersSuggestListPointer === 0) {
+        this.usersSuggestListPointer--
+        this.usernameSelect(this.originalUsernameInputValue)
       }
     },
     /**
@@ -127,6 +131,7 @@ export default {
     handleUsernameDown () {
       if (this.usersSuggestListPointer < this.usersSuggestList.length - 1) {
         this.usersSuggestListPointer++
+        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
       }
     },
     /**
@@ -135,9 +140,9 @@ export default {
      */
     handleUsernameSelect () {
       if (this.usersSuggestListOpen && this.usersSuggestList[this.usersSuggestListPointer]) {
-        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login, true)
       } else if (this.usernameInputValue.length) {
-        this.usernameSelect(this.usernameInputValue)
+        this.usernameSelect(this.usernameInputValue, true)
       }
     },
     handleUsernameEscape: function (e) {
@@ -158,22 +163,25 @@ export default {
         this.usersSuggestList = userList.data.search.edges.map(({ node: user }) => {
           return user
         })
+        this.originalUsernameInputValue = usernameValue
         this.usersSuggestListOpen = true
       })
     },
-    usernameSelect: function (option) {
+    usernameSelect: function (option, submitForm = false) {
       this.unwatchUsernameInputValue()
       this.usernameInputValue = option
-      this.usersSuggestListOpen = false
-      this.usersSuggestList = []
       this.unwatchUsernameInputValue = this.$watch(
         'usernameInputValue',
         this.usernameInputValueWatcher
       )
-      this.submitUsernameForm()
+      if (submitForm) {
+        this.usersSuggestList = []
+        this.usersSuggestListOpen = false
+        this.submitUsernameForm()
+      }
     },
     getHighligthedUsername: function (username) {
-      const match = username.match(new RegExp(`^(${this.escapeRegExp(this.usernameInputValue)})(.*)`, 'i'))
+      const match = username.match(new RegExp(`^(${this.escapeRegExp(this.originalUsernameInputValue)})(.*)`, 'i'))
       if (!match) {
         return username
       }
