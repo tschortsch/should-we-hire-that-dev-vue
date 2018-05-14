@@ -1,6 +1,6 @@
 <template>
-  <button v-if="!accessToken" class="btn btn-primary btn-sm" v-on:click="handleAuth">Authorize with GitHub <font-awesome-icon :icon="iconGithub" /></button>
-  <button v-else class="btn btn-link btn-sm logout-btn" v-on:click="handleLogout">Logout from GitHub <font-awesome-icon :icon="iconSignOut" /></button>
+  <button v-if="!accessToken" class="btn btn-primary btn-sm" @click.prevent="handleAuth">Authorize with GitHub <font-awesome-icon :icon="iconGithub" /></button>
+  <button v-else class="btn btn-link btn-sm logout-btn" @click.prevent="handleLogout">Logout from GitHub <font-awesome-icon :icon="iconSignOut" /></button>
 </template>
 
 <script>
@@ -19,7 +19,6 @@ export default {
   },
   methods: {
     handleAuth: function (e) {
-      e.preventDefault()
       const clientId = process.env.GH_CLIENT_ID || ''
       if (clientId !== '') {
         let redirectUri = 'https://github.com/login/oauth/authorize?client_id=' + clientId
@@ -32,7 +31,6 @@ export default {
       }
     },
     handleLogout: function (e) {
-      e.preventDefault()
       window.localStorage.removeItem('swhtd-gh-access-token')
       window.location.reload()
     }

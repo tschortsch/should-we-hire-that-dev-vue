@@ -1,22 +1,37 @@
 <template>
-  <form class="mb-3" v-on:submit="submitUsernameForm">
+  <form class="mb-3" @submit.prevent="submitUsernameForm">
     <div class="question d-md-flex">
       <div class="label flex-item">Should we hire</div>
       <div class="flex-item">
         <div class="username-questionmark-wrapper d-flex">
           <div class="username-input-wrapper d-flex align-items-center">
             <label for="username" class="sr-only">Please enter GitHub username:</label>
-            <input type="search" name="username" id="username" class="form-control" autocapitalize="none" autocorrect="off"
+            <input type="search" name="username" id="username" class="form-control" autocapitalize="none" autocorrect="off" autocomplete="off"
                    ref="usernameInput"
                    v-model="usernameInputValue"
                    :placeholder="placeholder"
                    :disabled="isLoading"
-                   v-on:focus="handleUsernameFocus"
-                   v-on:blur="handleUsernameBlur"
+                   @focus="handleUsernameFocus"
+                   @blur="handleUsernameBlur"
+                   @keyup.esc.prevent="handleUsernameEscape"
+                   @keydown.up.prevent="handleUsernameUp"
+                   @keydown.down.prevent="handleUsernameDown"
+                   @keydown.enter.prevent="handleUsernameSelect"
             />
-            <button type="submit" class="submitt-button sr-only" tabindex="-1">Submit user search</button>
-            <button class="clear-button" v-visible="usernameInputValue" v-on:click="handleClearButtonClick">
-              <span aria-label="Clear username">×</span>
+            <ul class="username-suggest-list list-unstyled" v-if="usersSuggestListOpen">
+              <li v-for="(user, index) in usersSuggestList"
+                  v-bind:key="index"
+                  :class="{ highlight: index === usersSuggestListPointer }"
+              >
+                <a href="#" @mousedown.prevent="handleUsernameMousedown(user.login)">
+                  <img v-if="user.avatarUrl" class="avatar" :src="user.avatarUrl" :alt="user.name || user.login" />
+                  <span class="login" v-html="getHighligthedUsername(user.login)"></span>
+                </a>
+              </li>
+            </ul>
+            <button type="submit" class="sr-only" tabindex="-1">Submit user search</button>
+            <button class="clear-button" v-visible="usernameInputValue" @click.prevent="handleClearButtonClick">
+              <span aria-label="Clear username">&times;</span>
             </button>
           </div>
           <div class="questionmark">?</div>
@@ -38,13 +53,24 @@ export default {
   },
   props: {
     username: String,
-    isLoading: Boolean
+    isLoading: Boolean,
+    fetchUsernameSuggest: Function,
+    accessToken: null,
+    usernameSuggestEnabled: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
       placeholder: 'that dev',
       placeholderTimeout: null,
-      usernameInputValue: this.username
+      usernameInputValue: this.username,
+      originalUsernameInputValue: null,
+      usernameFetchTimeout: null,
+      usersSuggestList: [],
+      usersSuggestListOpen: false,
+      usersSuggestListPointer: -1
     }
   },
   watch: {
@@ -54,11 +80,14 @@ export default {
       } else {
         this.usernameInputValue = ''
       }
+    },
+    usersSuggestList () {
+      // deselect when list changes
+      this.usersSuggestListPointer = -1
     }
   },
   methods: {
     submitUsernameForm: function (e) {
-      e.preventDefault()
       if (this.usernameInputValue === '') {
         this.$router.push({ name: 'Main' })
       } else if (this.usernameInputValue !== this.username) {
@@ -68,19 +97,94 @@ export default {
       }
     },
     handleUsernameFocus: function (e) {
+      if (this.usersSuggestList.length > 0) {
+        this.usersSuggestListOpen = true
+      }
       this.clearPlaceholderTimeout()
       this.placeholder = 'that dev'
     },
     handleUsernameBlur: function (e) {
+      this.usersSuggestListOpen = false
       if (e.target.value === '') {
         this.startUsernameAnimation()
       }
     },
+    /**
+     * Move the usersSuggestListPointer visually up the list by
+     * subtracting the current index by one.
+     * @return {void}
+     */
+    handleUsernameUp () {
+      if (this.usersSuggestListPointer > 0) {
+        this.usersSuggestListPointer--
+        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+      } else if (this.usersSuggestListPointer === 0) {
+        this.usersSuggestListPointer--
+        this.usernameSelect(this.originalUsernameInputValue)
+      }
+    },
+    /**
+     * Move the usersSuggestListPointer visually down the list by
+     * adding the current index by one.
+     * @return {void}
+     */
+    handleUsernameDown () {
+      if (this.usersSuggestListPointer < this.usersSuggestList.length - 1) {
+        this.usersSuggestListPointer++
+        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+      }
+    },
+    /**
+     * Select the option at the current usersSuggestListPointer position.
+     * @return {void}
+     */
+    handleUsernameSelect () {
+      if (this.usersSuggestListOpen && this.usersSuggestList[this.usersSuggestListPointer]) {
+        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+      } else if (this.usernameInputValue.length) {
+        this.usernameSelect(this.usernameInputValue)
+      }
+      this.clearUsersSuggestList()
+      this.submitUsernameForm()
+    },
+    handleUsernameEscape: function (e) {
+      // TODO prevent input clear when suggest list is open
+      if (this.usersSuggestListOpen) {
+        this.usersSuggestListOpen = false
+      } else {
+        this.usernameInputValue = ''
+      }
+    },
     handleClearButtonClick: function (e) {
-      e.preventDefault()
       this.usernameInputValue = ''
       // set focus to username input field
       this.$refs.usernameInput.focus()
+    },
+    handleUsernameChange: function (usernameValue) {
+      this.fetchUsernameSuggest(usernameValue, this.accessToken).then(userList => {
+        this.usersSuggestList = userList.data.search.edges.map(({ node: user }) => {
+          return user
+        })
+        this.originalUsernameInputValue = usernameValue
+        this.usersSuggestListOpen = true
+      })
+    },
+    handleUsernameMousedown: function (username) {
+      this.usernameSelect(username)
+      this.clearUsersSuggestList()
+      this.submitUsernameForm()
+    },
+    getHighligthedUsername: function (username) {
+      const match = username.match(new RegExp(`^(${this.escapeRegExp(this.originalUsernameInputValue)})(.*)`, 'i'))
+      if (!match) {
+        return username
+      }
+
+      let usernameHtml = `<span class="highlight">${match[1]}</span>`
+      if (match.length > 2) {
+        usernameHtml += match[2]
+      }
+      return usernameHtml
     }
   },
   computed: {
@@ -89,6 +193,58 @@ export default {
     }
   },
   created: function () {
+    this.escapeRegExp = (str) => {
+      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&') // eslint-disable-line
+    }
+
+    this.usernameInputValueWatcher = (newUsernameValue, oldUsernameValue) => {
+      const requestDelay = 500
+      const autocompleteCharacterLimit = 2
+      this.clearUsernameFetchTimeout()
+
+      if (newUsernameValue !== oldUsernameValue) {
+        if (newUsernameValue.length >= autocompleteCharacterLimit) {
+          this.usernameFetchTimeout = setTimeout(
+            () => {
+              this.handleUsernameChange(newUsernameValue)
+            },
+            requestDelay
+          )
+        } else {
+          this.usersSuggestList = []
+        }
+      }
+    }
+
+    if (this.usernameSuggestEnabled) {
+      // Add dynamically watcher to be able to disable it
+      this.unwatchUsernameInputValue = this.$watch(
+        'usernameInputValue',
+        this.usernameInputValueWatcher
+      )
+    }
+
+    this.clearUsernameFetchTimeout = () => {
+      if (this.usernameFetchTimeout) {
+        clearTimeout(this.usernameFetchTimeout)
+        this.usernameFetchTimeout = null
+      }
+    }
+
+    this.usernameSelect = option => {
+      this.unwatchUsernameInputValue()
+      this.usernameInputValue = option
+      this.unwatchUsernameInputValue = this.$watch(
+        'usernameInputValue',
+        this.usernameInputValueWatcher
+      )
+    }
+
+    this.clearUsersSuggestList = () => {
+      this.usersSuggestList = []
+      this.usersSuggestListOpen = false
+    }
+
     /**
      * Username Placeholder Animation
      */
@@ -206,6 +362,7 @@ export default {
   }
 
   .username-input-wrapper {
+    position: relative;
     flex: 1;
     border-bottom: solid $body-color 3px;
   }
@@ -242,6 +399,60 @@ export default {
     cursor: pointer;
     border: 0;
     background: transparent;
+  }
+  // Disable native clear button in IE10 & IE11
+  #username::-ms-clear {
+    display: none;
+  }
+
+  .username-suggest-list {
+    position: absolute;
+    top: 63px;
+    background-color: #fff;
+    z-index: 100;
+    width: 100%;
+    border: solid 1px $gray-500;
+    border-top: none;
+    font-size: $font-size-base;
+
+    li {
+      margin-bottom: 5px;
+      height: 50px;
+      line-height: 47px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      img.avatar {
+        width: 50px;
+        height: auto;
+      }
+
+      .login {
+        padding: 0 3px;
+        > .highlight {
+          color: $brand;
+        }
+      }
+
+      a {
+        display: block;
+        color: $body-color;
+
+        @include hover-focus {
+          text-decoration: none;
+        }
+      }
+      &:hover {
+        cursor: pointer;
+      }
+      &.highlight,
+      &:hover,
+      &:focus {
+        background-color: $brand-light;
+      }
+    }
   }
 }
 </style>
