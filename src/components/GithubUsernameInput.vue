@@ -23,7 +23,7 @@
                   v-bind:key="index"
                   :class="{ highlight: index === usersSuggestListPointer }"
               >
-                <a href="#" @mousedown.prevent="usernameSelect(user.login, true)">
+                <a href="#" @mousedown.prevent="handleUsernameMousedown(user.login)">
                   <img v-if="user.avatarUrl" class="avatar" :src="user.avatarUrl" :alt="user.name || user.login" />
                   <span class="login" v-html="getHighligthedUsername(user.login)"></span>
                 </a>
@@ -140,10 +140,12 @@ export default {
      */
     handleUsernameSelect () {
       if (this.usersSuggestListOpen && this.usersSuggestList[this.usersSuggestListPointer]) {
-        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login, true)
+        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
       } else if (this.usernameInputValue.length) {
-        this.usernameSelect(this.usernameInputValue, true)
+        this.usernameSelect(this.usernameInputValue)
       }
+      this.clearUsersSuggestList()
+      this.submitUsernameForm()
     },
     handleUsernameEscape: function (e) {
       // TODO prevent input clear when suggest list is open
@@ -167,18 +169,10 @@ export default {
         this.usersSuggestListOpen = true
       })
     },
-    usernameSelect: function (option, submitForm = false) {
-      this.unwatchUsernameInputValue()
-      this.usernameInputValue = option
-      this.unwatchUsernameInputValue = this.$watch(
-        'usernameInputValue',
-        this.usernameInputValueWatcher
-      )
-      if (submitForm) {
-        this.usersSuggestList = []
-        this.usersSuggestListOpen = false
-        this.submitUsernameForm()
-      }
+    handleUsernameMousedown: function (username) {
+      this.usernameSelect(username)
+      this.clearUsersSuggestList()
+      this.submitUsernameForm()
     },
     getHighligthedUsername: function (username) {
       const match = username.match(new RegExp(`^(${this.escapeRegExp(this.originalUsernameInputValue)})(.*)`, 'i'))
@@ -235,6 +229,20 @@ export default {
         clearTimeout(this.usernameFetchTimeout)
         this.usernameFetchTimeout = null
       }
+    }
+
+    this.usernameSelect = option => {
+      this.unwatchUsernameInputValue()
+      this.usernameInputValue = option
+      this.unwatchUsernameInputValue = this.$watch(
+        'usernameInputValue',
+        this.usernameInputValueWatcher
+      )
+    }
+
+    this.clearUsersSuggestList = () => {
+      this.usersSuggestList = []
+      this.usersSuggestListOpen = false
     }
 
     /**
