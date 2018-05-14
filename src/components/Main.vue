@@ -368,7 +368,7 @@ export default {
     this.fetchUsernameSuggest = (currentUsernameValue, accessToken) => {
       const query = `
       query {
-        search(query: "${currentUsernameValue}", type: USER, first: 5) {
+        search(query: "in:login ${currentUsernameValue}", type: USER, first: 5) {
           userCount
           edges {
             node {
