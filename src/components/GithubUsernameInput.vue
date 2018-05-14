@@ -117,7 +117,9 @@ export default {
     handleUsernameUp () {
       if (this.usersSuggestListPointer > 0) {
         this.usersSuggestListPointer--
-        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+        if (this.usersSuggestList[this.usersSuggestListPointer]) {
+          this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+        }
       } else if (this.usersSuggestListPointer === 0) {
         this.usersSuggestListPointer--
         this.usernameSelect(this.originalUsernameInputValue)
@@ -131,7 +133,9 @@ export default {
     handleUsernameDown () {
       if (this.usersSuggestListPointer < this.usersSuggestList.length - 1) {
         this.usersSuggestListPointer++
-        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+        if (this.usersSuggestList[this.usersSuggestListPointer]) {
+          this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+        }
       }
     },
     /**
@@ -379,6 +383,7 @@ export default {
     font-size: $h1-font-size;
     padding: 0;
     line-height: $line-height-base;
+    height: 60px;
     color: $body-color;
     // allow input to shrink (see: https://stackoverflow.com/questions/42421361/input-button-elements-not-shrinking-in-a-flex-container)
     width: 100%;
@@ -408,6 +413,7 @@ export default {
   .username-suggest-list {
     position: absolute;
     top: 63px;
+    left: 0;
     background-color: #fff;
     z-index: 100;
     width: 100%;
