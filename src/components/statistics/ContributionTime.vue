@@ -1,8 +1,8 @@
 <template>
-  <div class="col-12 statistics-container" v-bind:class="{ 'text-muted': commits === null }">
+  <div class="col-12 statistics-container" v-bind:class="{ 'text-muted': !commits || commits.length === 0 }">
     <h3>Most productive</h3>
     <p class="small text-muted">(calculated from the last {{ commitsCount }} commits)</p>
-    <template v-if="commits">
+    <template v-if="commits && commits.length > 0">
       <div class="daytime">
         <div class="icon">
           <font-awesome-icon :icon="daytimeIcon" />

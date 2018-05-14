@@ -19,7 +19,7 @@
         </div>
         <intro :accessToken="accessToken" :userdata="userdata" :isLoading="isLoading" />
         <div class="text-center">
-          <template v-if="errorMessage === '' && ((userdata && commits && commitsTotalCount && organizations) || isLoading)">
+          <template v-if="errorMessage === '' && (userdata || isLoading)">
             <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
             <statistics
               :userdata="userdata"
