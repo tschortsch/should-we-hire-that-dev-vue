@@ -31,7 +31,7 @@
             </ul>
             <button type="submit" class="sr-only" tabindex="-1">Submit user search</button>
             <button class="clear-button" v-visible="usernameInputValue" @click.prevent="handleClearButtonClick">
-              <span aria-label="Clear username">×</span>
+              <span aria-label="Clear username">&times;</span>
             </button>
           </div>
           <div class="questionmark">?</div>
