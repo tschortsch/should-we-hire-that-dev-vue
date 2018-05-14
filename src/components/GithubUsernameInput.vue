@@ -13,7 +13,7 @@
                    :disabled="isLoading"
                    @focus="handleUsernameFocus"
                    @blur="handleUsernameBlur"
-                   @keyup.esc="handleUsernameEscape"
+                   @keyup.esc.prevent="handleUsernameEscape"
                    @keydown.up.prevent="handleUsernameUp"
                    @keydown.down.prevent="handleUsernameDown"
                    @keydown.enter.prevent="handleUsernameSelect"
@@ -134,19 +134,18 @@ export default {
      * @return {void}
      */
     handleUsernameSelect () {
-      if (this.usersSuggestList[this.usersSuggestListPointer]) {
+      if (this.usersSuggestListOpen && this.usersSuggestList[this.usersSuggestListPointer]) {
         this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
       } else if (this.usernameInputValue.length) {
         this.usernameSelect(this.usernameInputValue)
       }
     },
     handleUsernameEscape: function (e) {
-      // TODO fix escape
-      e.preventDefault()
-      console.log('escape')
+      // TODO prevent input clear when suggest list is open
       if (this.usersSuggestListOpen) {
-        console.log('close')
         this.usersSuggestListOpen = false
+      } else {
+        this.usernameInputValue = ''
       }
     },
     handleClearButtonClick: function (e) {
