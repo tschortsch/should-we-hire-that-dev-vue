@@ -55,7 +55,12 @@ export default {
   props: {
     username: String,
     isLoading: Boolean,
-    fetchUsernameSuggest: Function
+    fetchUsernameSuggest: Function,
+    accessToken: null,
+    usernameSuggestEnabled: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
@@ -150,7 +155,7 @@ export default {
       this.$refs.usernameInput.focus()
     },
     handleUsernameChange: function (usernameValue) {
-      this.fetchUsernameSuggest(usernameValue).then(userList => {
+      this.fetchUsernameSuggest(usernameValue, this.accessToken).then(userList => {
         this.usersSuggestList = userList.data.search.edges.map(({ node: user }) => {
           return user
         })
@@ -210,11 +215,13 @@ export default {
       }
     }
 
-    // Add dynamically watcher to be able to disable it
-    this.unwatchUsernameInputValue = this.$watch(
-      'usernameInputValue',
-      this.usernameInputValueWatcher
-    )
+    if (this.usernameSuggestEnabled) {
+      // Add dynamically watcher to be able to disable it
+      this.unwatchUsernameInputValue = this.$watch(
+        'usernameInputValue',
+        this.usernameInputValueWatcher
+      )
+    }
 
     this.clearUsernameFetchTimeout = () => {
       if (this.usernameFetchTimeout) {
@@ -391,19 +398,19 @@ export default {
     width: 100%;
     border: solid 1px $gray-500;
     border-top: none;
-    font-size: $font-size-sm;
+    font-size: $font-size-base;
 
     li {
       margin-bottom: 5px;
-      height: 30px;
-      line-height: 28px;
+      height: 50px;
+      line-height: 47px;
 
       &:last-child {
         margin-bottom: 0;
       }
 
       img.avatar {
-        width: 30px;
+        width: 50px;
         height: auto;
       }
 
@@ -425,7 +432,9 @@ export default {
       &:hover {
         cursor: pointer;
       }
-      &.highlight {
+      &.highlight,
+      &:hover,
+      &:focus {
         background-color: $brand-light;
       }
     }
