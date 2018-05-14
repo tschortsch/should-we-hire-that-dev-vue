@@ -117,7 +117,9 @@ export default {
     handleUsernameUp () {
       if (this.usersSuggestListPointer > 0) {
         this.usersSuggestListPointer--
-        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+        if (this.usersSuggestList[this.usersSuggestListPointer]) {
+          this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+        }
       } else if (this.usersSuggestListPointer === 0) {
         this.usersSuggestListPointer--
         this.usernameSelect(this.originalUsernameInputValue)
@@ -131,7 +133,9 @@ export default {
     handleUsernameDown () {
       if (this.usersSuggestListPointer < this.usersSuggestList.length - 1) {
         this.usersSuggestListPointer++
-        this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+        if (this.usersSuggestList[this.usersSuggestListPointer]) {
+          this.usernameSelect(this.usersSuggestList[this.usersSuggestListPointer].login)
+        }
       }
     },
     /**
