@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import GithubService from '../services/GithubService'
+
 export default {
   name: 'token',
   props: {
@@ -14,7 +16,7 @@ export default {
   },
   created: function () {
     // save token to localstorage
-    window.localStorage.setItem('swhtd-gh-access-token', this.token)
+    GithubService.setAccessToken(this.token)
     // redirect to main route
     if (this.state) {
       this.$router.push({ name: 'Main', params: { username: decodeURI(this.state) } })

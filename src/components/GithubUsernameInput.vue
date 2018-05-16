@@ -45,6 +45,7 @@
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import faGithub from '@fortawesome/fontawesome-free-brands/faGithub'
+import GithubService from '../services/GithubService'
 
 export default {
   name: 'github-username-input',
@@ -54,12 +55,7 @@ export default {
   props: {
     username: String,
     isLoading: Boolean,
-    fetchUsernameSuggest: Function,
-    accessToken: null,
-    usernameSuggestEnabled: {
-      type: Boolean,
-      default: true
-    }
+    isAuthorized: Boolean
   },
   data () {
     return {
@@ -165,7 +161,7 @@ export default {
       this.$refs.usernameInput.focus()
     },
     handleUsernameChange: function (usernameValue) {
-      this.fetchUsernameSuggest(usernameValue, this.accessToken).then(userList => {
+      GithubService.fetchUsernameSuggest(usernameValue).then(userList => {
         this.usersSuggestList = userList.data.search.edges.map(({ node: user }) => {
           return user
         })
@@ -220,7 +216,7 @@ export default {
       }
     }
 
-    if (this.usernameSuggestEnabled) {
+    if (this.isAuthorized) {
       // Add dynamically watcher to be able to disable it
       this.unwatchUsernameInputValue = this.$watch(
         'usernameInputValue',
