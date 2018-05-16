@@ -9,7 +9,6 @@
         <github-username-input
           :username="username"
           :isLoading="isLoading"
-          :fetchUsernameSuggest="fetchUsernameSuggest"
           :isAuthorized="isAuthorized"
         />
         <div class="text-center">
@@ -97,7 +96,7 @@ export default {
       this.isLoading = true
       this.resetState()
 
-      GithubService.doGraphQlQuery(this.getUserQuery(username))
+      GithubService.fetchUserInfo(username)
         .then((userResponse) => {
           let userinfo = userResponse.data.user
           this.userdata = userinfo
@@ -105,7 +104,7 @@ export default {
 
           const repositoriesPromise = new Promise((resolve, reject) => {
             if (userinfo.repositories.pageInfo.hasNextPage) {
-              this.fetchFurtherRepositories(username, userinfo.repositories.pageInfo.endCursor, 2)
+              GithubService.fetchFurtherRepositories(username, userinfo.repositories.pageInfo.endCursor, 2)
                 .then(repositories => {
                   resolve([...userinfo.repositories.nodes, ...repositories])
                 })
@@ -121,7 +120,7 @@ export default {
 
           const repositoriesContributedToPromise = new Promise((resolve, reject) => {
             if (userinfo.repositoriesContributedTo.pageInfo.hasNextPage) {
-              this.fetchFurtherRepositoriesContributedTo(username, userinfo.repositoriesContributedTo.pageInfo.endCursor, 2)
+              GithubService.fetchFurtherRepositoriesContributedTo(username, userinfo.repositoriesContributedTo.pageInfo.endCursor, 2)
                 .then(repositoriesContributedTo => {
                   resolve([...userinfo.repositoriesContributedTo.nodes, ...repositoriesContributedTo])
                 })
@@ -178,7 +177,7 @@ export default {
       this.isLoading = true
       this.resetState()
 
-      GithubService.fetchUserInfo(username)
+      GithubService.fetchUserInfoRest(username)
         .then((userResponse) => {
           console.log('User response', userResponse)
           this.userdata = {
@@ -227,160 +226,6 @@ export default {
           this.errorMessage = err.message
           this.isLoading = false
         })
-    }
-
-    this.getUserQuery = (username) => (`
-      query {
-        user(login: "${username}") {
-          login,
-          name,
-          location,
-          avatarUrl,
-          bio,
-          createdAt,
-          url,
-          followers {
-            totalCount
-          },
-          pullRequests(first: 1) {
-            totalCount
-          },
-          repositories(first: 100) {
-            pageInfo {
-              hasNextPage,
-              endCursor
-            },
-            totalCount,
-            nodes {
-              name,
-              url,
-              description,
-              stargazers {
-                totalCount
-              },
-              forkCount,
-              primaryLanguage {
-                name
-              }
-            }
-          },
-          repositoriesContributedTo(first: 100) {
-            pageInfo {
-              hasNextPage,
-              endCursor
-            },
-            totalCount,
-            nodes {
-              languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
-                edges {
-                  size,
-                  node {
-                    name
-                  }
-                },
-              }
-            }
-          }
-        }
-      }`)
-
-    this.getFurtherRepositoriesQuery = (username, cursor) => {
-      return `
-        query {
-          user(login: "${username}") {
-            repositories(first: 100, after: "${cursor}") {
-              pageInfo {
-                hasNextPage,
-                endCursor
-              },
-              totalCount,
-              nodes {
-                name,
-                url,
-                description,
-                stargazers {
-                  totalCount
-                },
-                forkCount,
-                primaryLanguage {
-                  name
-                }
-              }
-            }
-          }
-        }`
-    }
-
-    this.fetchFurtherRepositories = (username, cursor, currentPage, furtherRepositories = []) => {
-      const maxPages = 5
-      return GithubService.doGraphQlQuery(this.getFurtherRepositoriesQuery(username, cursor))
-        .then(repositoriesResponse => {
-          const repositories = repositoriesResponse.data.user.repositories.nodes
-          furtherRepositories.push(...repositories)
-          const pageInfo = repositoriesResponse.data.user.repositories.pageInfo
-          if (currentPage < maxPages && pageInfo.hasNextPage) {
-            return this.fetchFurtherRepositories(username, pageInfo.endCursor, currentPage + 1, furtherRepositories)
-          }
-          return furtherRepositories
-        })
-    }
-
-    this.getFurtherRepositoriesContributedToQuery = (username, cursor) => {
-      return `
-        query {
-          user(login: "${username}") {
-            repositoriesContributedTo(first: 100, after: "${cursor}") {
-              pageInfo {
-                hasNextPage,
-                endCursor
-              },
-              totalCount,
-              nodes {
-                languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
-                  edges {
-                    size,
-                    node {
-                      name
-                    }
-                  },
-                }
-              }
-            }
-          }
-        }`
-    }
-
-    this.fetchFurtherRepositoriesContributedTo = (username, cursor, currentPage, furtherRepositorieContributedTo = []) => {
-      const maxPages = 5
-      return GithubService.doGraphQlQuery(this.getFurtherRepositoriesContributedToQuery(username, cursor))
-        .then(repositoriesContributedToResponse => {
-          const repositoriesContributedto = repositoriesContributedToResponse.data.user.repositoriesContributedTo.nodes
-          furtherRepositorieContributedTo.push(...repositoriesContributedto)
-          const pageInfo = repositoriesContributedToResponse.data.user.repositoriesContributedTo.pageInfo
-          if (currentPage < maxPages && pageInfo.hasNextPage) {
-            return this.fetchFurtherRepositoriesContributedTo(username, pageInfo.endCursor, currentPage + 1, furtherRepositorieContributedTo)
-          }
-          return furtherRepositorieContributedTo
-        })
-    }
-
-    this.fetchUsernameSuggest = (currentUsernameValue) => {
-      const query = `
-      query {
-        search(query: "in:login ${currentUsernameValue}", type: USER, first: 5) {
-          userCount
-          edges {
-            node {
-              ... on User {
-                login
-                name
-                avatarUrl
-              }
-            }
-          }
-        }
-      }`
-      return GithubService.doGraphQlQuery(query)
     }
 
     this.resetState = () => {

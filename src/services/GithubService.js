@@ -40,6 +40,10 @@ export default {
   },
 
   fetchUserInfo: function (username) {
+    return this.doGraphQlQuery(this.getUserQuery(username))
+  },
+
+  fetchUserInfoRest: function (username) {
     let userQuery = `https://api.github.com/users/${username}`
     return this.doRestQuery(userQuery)
   },
@@ -56,6 +60,162 @@ export default {
   fetchOrganizations: function (username) {
     let organizationsQueryUrl = `https://api.github.com/users/${username}/orgs`
     return this.doRestQuery(organizationsQueryUrl)
+  },
+
+  getUserQuery: function (username) {
+    return `
+      query {
+        user(login: "${username}") {
+          login,
+          name,
+          location,
+          avatarUrl,
+          bio,
+          createdAt,
+          url,
+          followers {
+            totalCount
+          },
+          pullRequests(first: 1) {
+            totalCount
+          },
+          repositories(first: 100) {
+            pageInfo {
+              hasNextPage,
+              endCursor
+            },
+            totalCount,
+            nodes {
+              name,
+              url,
+              description,
+              stargazers {
+                totalCount
+              },
+              forkCount,
+              primaryLanguage {
+                name
+              }
+            }
+          },
+          repositoriesContributedTo(first: 100) {
+            pageInfo {
+              hasNextPage,
+              endCursor
+            },
+            totalCount,
+            nodes {
+              languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+                edges {
+                  size,
+                  node {
+                    name
+                  }
+                },
+              }
+            }
+          }
+        }
+      }`
+  },
+
+  getFurtherRepositoriesQuery: function (username, cursor) {
+    return `
+      query {
+        user(login: "${username}") {
+          repositories(first: 100, after: "${cursor}") {
+            pageInfo {
+              hasNextPage,
+              endCursor
+            },
+            totalCount,
+            nodes {
+              name,
+              url,
+              description,
+              stargazers {
+                totalCount
+              },
+              forkCount,
+              primaryLanguage {
+                name
+              }
+            }
+          }
+        }
+      }`
+  },
+
+  fetchFurtherRepositories: function (username, cursor, currentPage, furtherRepositories = []) {
+    const maxPages = 5
+    return this.doGraphQlQuery(this.getFurtherRepositoriesQuery(username, cursor))
+      .then(repositoriesResponse => {
+        const repositories = repositoriesResponse.data.user.repositories.nodes
+        furtherRepositories.push(...repositories)
+        const pageInfo = repositoriesResponse.data.user.repositories.pageInfo
+        if (currentPage < maxPages && pageInfo.hasNextPage) {
+          return this.fetchFurtherRepositories(username, pageInfo.endCursor, currentPage + 1, furtherRepositories)
+        }
+        return furtherRepositories
+      })
+  },
+
+  getFurtherRepositoriesContributedToQuery: function (username, cursor) {
+    return `
+      query {
+        user(login: "${username}") {
+          repositoriesContributedTo(first: 100, after: "${cursor}") {
+            pageInfo {
+              hasNextPage,
+              endCursor
+            },
+            totalCount,
+            nodes {
+              languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+                edges {
+                  size,
+                  node {
+                    name
+                  }
+                },
+              }
+            }
+          }
+        }
+      }`
+  },
+
+  fetchFurtherRepositoriesContributedTo: function (username, cursor, currentPage, furtherRepositorieContributedTo = []) {
+    const maxPages = 5
+    return this.doGraphQlQuery(this.getFurtherRepositoriesContributedToQuery(username, cursor))
+      .then(repositoriesContributedToResponse => {
+        const repositoriesContributedto = repositoriesContributedToResponse.data.user.repositoriesContributedTo.nodes
+        furtherRepositorieContributedTo.push(...repositoriesContributedto)
+        const pageInfo = repositoriesContributedToResponse.data.user.repositoriesContributedTo.pageInfo
+        if (currentPage < maxPages && pageInfo.hasNextPage) {
+          return this.fetchFurtherRepositoriesContributedTo(username, pageInfo.endCursor, currentPage + 1, furtherRepositorieContributedTo)
+        }
+        return furtherRepositorieContributedTo
+      })
+  },
+
+  fetchUsernameSuggest: function (currentUsernameValue) {
+    const query = `
+        query {
+          search(query: "in:login ${currentUsernameValue}", type: USER, first: 5) {
+            userCount
+            edges {
+              node {
+                ... on User {
+                  login
+                  name
+                  avatarUrl
+                }
+              }
+            }
+          }
+        }`
+    return this.doGraphQlQuery(query)
   },
 
   handleResponseError: function (response) {
