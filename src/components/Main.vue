@@ -105,7 +105,7 @@ export default {
 
           const repositoriesPromise = new Promise((resolve, reject) => {
             if (userinfo.repositories.pageInfo.hasNextPage) {
-              this.fetchFurtherRepositories(username, userinfo.repositories.pageInfo.endCursor, 2, GithubService.getAccessToken())
+              this.fetchFurtherRepositories(username, userinfo.repositories.pageInfo.endCursor, 2)
                 .then(repositories => {
                   resolve([...userinfo.repositories.nodes, ...repositories])
                 })
@@ -121,7 +121,7 @@ export default {
 
           const repositoriesContributedToPromise = new Promise((resolve, reject) => {
             if (userinfo.repositoriesContributedTo.pageInfo.hasNextPage) {
-              this.fetchFurtherRepositoriesContributedTo(username, userinfo.repositoriesContributedTo.pageInfo.endCursor, 2, GithubService.getAccessToken())
+              this.fetchFurtherRepositoriesContributedTo(username, userinfo.repositoriesContributedTo.pageInfo.endCursor, 2)
                 .then(repositoriesContributedTo => {
                   resolve([...userinfo.repositoriesContributedTo.nodes, ...repositoriesContributedTo])
                 })
@@ -311,15 +311,15 @@ export default {
         }`
     }
 
-    this.fetchFurtherRepositories = (username, cursor, currentPage, accessToken, furtherRepositories = []) => {
+    this.fetchFurtherRepositories = (username, cursor, currentPage, furtherRepositories = []) => {
       const maxPages = 5
-      return GithubService.doGraphQlQuery(this.getFurtherRepositoriesQuery(username, cursor), accessToken)
+      return GithubService.doGraphQlQuery(this.getFurtherRepositoriesQuery(username, cursor))
         .then(repositoriesResponse => {
           const repositories = repositoriesResponse.data.user.repositories.nodes
           furtherRepositories.push(...repositories)
           const pageInfo = repositoriesResponse.data.user.repositories.pageInfo
           if (currentPage < maxPages && pageInfo.hasNextPage) {
-            return this.fetchFurtherRepositories(username, pageInfo.endCursor, currentPage + 1, accessToken, furtherRepositories)
+            return this.fetchFurtherRepositories(username, pageInfo.endCursor, currentPage + 1, furtherRepositories)
           }
           return furtherRepositories
         })
@@ -350,15 +350,15 @@ export default {
         }`
     }
 
-    this.fetchFurtherRepositoriesContributedTo = (username, cursor, currentPage, accessToken, furtherRepositorieContributedTo = []) => {
+    this.fetchFurtherRepositoriesContributedTo = (username, cursor, currentPage, furtherRepositorieContributedTo = []) => {
       const maxPages = 5
-      return GithubService.doGraphQlQuery(this.getFurtherRepositoriesContributedToQuery(username, cursor), accessToken)
+      return GithubService.doGraphQlQuery(this.getFurtherRepositoriesContributedToQuery(username, cursor))
         .then(repositoriesContributedToResponse => {
           const repositoriesContributedto = repositoriesContributedToResponse.data.user.repositoriesContributedTo.nodes
           furtherRepositorieContributedTo.push(...repositoriesContributedto)
           const pageInfo = repositoriesContributedToResponse.data.user.repositoriesContributedTo.pageInfo
           if (currentPage < maxPages && pageInfo.hasNextPage) {
-            return this.fetchFurtherRepositoriesContributedTo(username, pageInfo.endCursor, currentPage + 1, accessToken, furtherRepositorieContributedTo)
+            return this.fetchFurtherRepositoriesContributedTo(username, pageInfo.endCursor, currentPage + 1, furtherRepositorieContributedTo)
           }
           return furtherRepositorieContributedTo
         })
