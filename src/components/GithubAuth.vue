@@ -1,5 +1,5 @@
 <template>
-  <button v-if="!accessToken" class="btn btn-primary btn-sm" @click.prevent="handleAuth">Authorize with GitHub <font-awesome-icon :icon="iconGithub" /></button>
+  <button v-if="!isAuthorized" class="btn btn-primary btn-sm" @click.prevent="handleAuth">Authorize with GitHub <font-awesome-icon :icon="iconGithub" /></button>
   <button v-else class="btn btn-link btn-sm logout-btn" @click.prevent="handleLogout">Logout from GitHub <font-awesome-icon :icon="iconSignOut" /></button>
 </template>
 
@@ -7,6 +7,7 @@
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import faGithub from '@fortawesome/fontawesome-free-brands/faGithub'
 import faSignOut from '@fortawesome/fontawesome-pro-regular/faSignOut'
+import GithubService from '../services/GithubService'
 
 export default {
   name: 'github-auth',
@@ -14,7 +15,7 @@ export default {
     FontAwesomeIcon
   },
   props: {
-    accessToken: String,
+    isAuthorized: Boolean,
     username: String
   },
   methods: {
@@ -31,7 +32,7 @@ export default {
       }
     },
     handleLogout: function (e) {
-      window.localStorage.removeItem('swhtd-gh-access-token')
+      GithubService.removeAccessTokenFromLocalStorage()
       window.location.reload()
     }
   },

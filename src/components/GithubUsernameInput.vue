@@ -55,11 +55,7 @@ export default {
     username: String,
     isLoading: Boolean,
     fetchUsernameSuggest: Function,
-    accessToken: null,
-    usernameSuggestEnabled: {
-      type: Boolean,
-      default: true
-    }
+    isAuthorized: Boolean
   },
   data () {
     return {
@@ -165,7 +161,7 @@ export default {
       this.$refs.usernameInput.focus()
     },
     handleUsernameChange: function (usernameValue) {
-      this.fetchUsernameSuggest(usernameValue, this.accessToken).then(userList => {
+      this.fetchUsernameSuggest(usernameValue).then(userList => {
         this.usersSuggestList = userList.data.search.edges.map(({ node: user }) => {
           return user
         })
@@ -220,7 +216,7 @@ export default {
       }
     }
 
-    if (this.usernameSuggestEnabled) {
+    if (this.isAuthorized) {
       // Add dynamically watcher to be able to disable it
       this.unwatchUsernameInputValue = this.$watch(
         'usernameInputValue',

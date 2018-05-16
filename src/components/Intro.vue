@@ -1,5 +1,5 @@
 <template>
-  <ul v-if="(!isLoading && !userdata) || (userdata && !accessToken)" class="faq list-unstyled">
+  <ul v-if="(!isLoading && !userdata) || (userdata && !isAuthorized)" class="faq list-unstyled">
     <li v-if="!isLoading && !userdata">
       <h2 class="h5">What does it do?</h2>
       <p>
@@ -7,7 +7,7 @@
         It also shows the most used programming languages.
       </p>
     </li>
-    <li v-if="!accessToken">
+    <li v-if="!isAuthorized">
       <h2 class="h5">Why do I need to authorize with my GitHub account?</h2>
       <p>
         Since <a href="https://developer.github.com/v3/rate_limit/">GitHub v3 REST API rate limit</a> is pretty low and the <a href="https://developer.github.com/v4/">GitHub v4 GraphQL API</a> doesn't allow to do queries without authorization you need to sign in with your GitHub account first.
@@ -27,7 +27,7 @@
 export default {
   name: 'Intro',
   props: {
-    accessToken: String,
+    isAuthorized: Boolean,
     userdata: Object,
     isLoading: Boolean
   }

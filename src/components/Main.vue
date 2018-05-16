@@ -2,7 +2,7 @@
   <div class="container mt-4 mb-2">
     <div class="row justify-content-center">
       <div class="col-12 text-right mb-3">
-        <github-auth :accessToken="accessToken" :username="username" />
+        <github-auth :isAuthorized="isAuthorized" :username="username" />
       </div>
       <div class="col-xl-8 col-lg-10 col-12">
         <h1 class="sr-only">Should we hire that dev?</h1>
@@ -10,14 +10,13 @@
           :username="username"
           :isLoading="isLoading"
           :fetchUsernameSuggest="fetchUsernameSuggest"
-          :usernameSuggestEnabled="isAuthorized"
-          :accessToken="accessToken"
+          :isAuthorized="isAuthorized"
         />
         <div class="text-center">
           <div v-if="errorMessage !== ''" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
-          <div v-if="!accessToken && userdata" class="alert alert-warning" role="alert">Please authorize with GitHub to get all statistics</div>
+          <div v-if="!isAuthorized && userdata" class="alert alert-warning" role="alert">Please authorize with GitHub to get all statistics</div>
         </div>
-        <intro :accessToken="accessToken" :userdata="userdata" :isLoading="isLoading" />
+        <intro :isAuthorized="isAuthorized" :userdata="userdata" :isLoading="isLoading" />
         <div class="text-center">
           <template v-if="errorMessage === '' && (userdata || isLoading)">
             <user-info  :userdata="userdata" :organizations="organizations" :isLoading="isLoading" />
@@ -64,7 +63,6 @@ export default {
   },
   data () {
     return {
-      accessToken: GithubService.accessToken,
       userdata: null,
       repositories: null,
       repositoriesContributedTo: null,
@@ -72,14 +70,15 @@ export default {
       commitsTotalCount: null,
       organizations: null,
       errorMessage: '',
-      isLoading: false
+      isLoading: false,
+      isAuthorized: GithubService.isAuthorized()
     }
   },
   watch: {
     username: function (newUsername, oldUsername) {
       if (newUsername) {
-        if (this.accessToken) {
-          this.fetchUserInfoAuthorized(this.username, this.accessToken)
+        if (this.isAuthorized) {
+          this.fetchUserInfoAuthorized(this.username)
         } else {
           this.fetchUserInfoUnauthorized(this.username)
         }
@@ -89,22 +88,16 @@ export default {
       }
     }
   },
-  computed: {
-    isAuthorized () {
-      return this.accessToken && this.accessToken !== ''
-    }
-  },
   created: function () {
-    EventBus.$on('token-changed', (token) => {
-      console.log(token)
-      this.accessToken = token
+    EventBus.$on('token-changed', (token, isAuthorized) => {
+      this.isAuthorized = isAuthorized
     })
 
-    this.fetchUserInfoAuthorized = (username, accessToken) => {
+    this.fetchUserInfoAuthorized = (username) => {
       this.isLoading = true
       this.resetState()
 
-      GithubService.doGraphQlQuery(this.getUserQuery(username), accessToken)
+      GithubService.doGraphQlQuery(this.getUserQuery(username))
         .then((userResponse) => {
           let userinfo = userResponse.data.user
           this.userdata = userinfo
@@ -112,7 +105,7 @@ export default {
 
           const repositoriesPromise = new Promise((resolve, reject) => {
             if (userinfo.repositories.pageInfo.hasNextPage) {
-              this.fetchFurtherRepositories(username, userinfo.repositories.pageInfo.endCursor, 2, accessToken)
+              this.fetchFurtherRepositories(username, userinfo.repositories.pageInfo.endCursor, 2, GithubService.getAccessToken())
                 .then(repositories => {
                   resolve([...userinfo.repositories.nodes, ...repositories])
                 })
@@ -128,7 +121,7 @@ export default {
 
           const repositoriesContributedToPromise = new Promise((resolve, reject) => {
             if (userinfo.repositoriesContributedTo.pageInfo.hasNextPage) {
-              this.fetchFurtherRepositoriesContributedTo(username, userinfo.repositoriesContributedTo.pageInfo.endCursor, 2, accessToken)
+              this.fetchFurtherRepositoriesContributedTo(username, userinfo.repositoriesContributedTo.pageInfo.endCursor, 2, GithubService.getAccessToken())
                 .then(repositoriesContributedTo => {
                   resolve([...userinfo.repositoriesContributedTo.nodes, ...repositoriesContributedTo])
                 })
@@ -142,8 +135,8 @@ export default {
             this.repositoriesContributedTo = repositoriesContributedTo
           })
 
-          const commitsFirstPagePromise = GithubService.fetchCommits(username, 1, accessToken)
-          const commitsSecondPagePromise = GithubService.fetchCommits(username, 2, accessToken)
+          const commitsFirstPagePromise = GithubService.fetchCommits(username, 1)
+          const commitsSecondPagePromise = GithubService.fetchCommits(username, 2)
           Promise.all([commitsFirstPagePromise, commitsSecondPagePromise])
             .then(([commitsFirstPage, commitsSecondPage]) => {
               console.log('Commits 1. Page', commitsFirstPage)
@@ -152,7 +145,7 @@ export default {
               this.commitsTotalCount = commitsFirstPage.total_count
             })
 
-          const organizationsPromise = GithubService.fetchOrganizations(username, accessToken)
+          const organizationsPromise = GithubService.fetchOrganizations(username)
             .then(organizations => {
               console.log('Organizations', organizations)
               this.organizations = organizations
@@ -371,7 +364,7 @@ export default {
         })
     }
 
-    this.fetchUsernameSuggest = (currentUsernameValue, accessToken) => {
+    this.fetchUsernameSuggest = (currentUsernameValue) => {
       const query = `
       query {
         search(query: "in:login ${currentUsernameValue}", type: USER, first: 5) {
@@ -387,7 +380,7 @@ export default {
           }
         }
       }`
-      return GithubService.doGraphQlQuery(query, accessToken)
+      return GithubService.doGraphQlQuery(query)
     }
 
     this.resetState = () => {
@@ -402,8 +395,8 @@ export default {
 
     // fetch userinfo on load if username is passed in url
     if (this.username) {
-      if (this.accessToken) {
-        this.fetchUserInfoAuthorized(this.username, this.accessToken)
+      if (this.isAuthorized) {
+        this.fetchUserInfoAuthorized(this.username)
       } else {
         this.fetchUserInfoUnauthorized(this.username)
       }
