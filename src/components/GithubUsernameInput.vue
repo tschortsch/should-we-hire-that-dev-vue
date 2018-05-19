@@ -235,12 +235,16 @@ export default {
     }
 
     this.usernameSelect = option => {
-      this.unwatchUsernameInputValue()
-      this.usernameInputValue = option
-      this.unwatchUsernameInputValue = this.$watch(
-        'usernameInputValue',
-        this.usernameInputValueWatcher
-      )
+      if (this.isAuthorized) {
+        this.unwatchUsernameInputValue()
+        this.usernameInputValue = option
+        this.unwatchUsernameInputValue = this.$watch(
+          'usernameInputValue',
+          this.usernameInputValueWatcher
+        )
+      } else {
+        this.usernameInputValue = option
+      }
     }
 
     this.clearUsersSuggestList = () => {
