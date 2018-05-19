@@ -220,7 +220,7 @@ export default {
     }
 
     if (this.isAuthorized) {
-      // Add dynamically watcher to be able to disable it
+      // Dynamically add watcher to be able to disable it
       this.unwatchUsernameInputValue = this.$watch(
         'usernameInputValue',
         this.usernameInputValueWatcher
