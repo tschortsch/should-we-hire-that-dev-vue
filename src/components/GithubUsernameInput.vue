@@ -175,7 +175,10 @@ export default {
       this.submitUsernameForm()
     },
     getHighligthedUsername: function (username) {
-      const match = username.match(new RegExp(`^(${this.escapeRegExp(this.originalUsernameInputValue)})(.*)`, 'i'))
+      if (this.usernameInputValue.length < 1) {
+        return username
+      }
+      const match = username.match(new RegExp(`^(${this.escapeRegExp(this.usernameInputValue)})(.*)`, 'i'))
       if (!match) {
         return username
       }
@@ -217,7 +220,7 @@ export default {
     }
 
     if (this.isAuthorized) {
-      // Add dynamically watcher to be able to disable it
+      // Dynamically add watcher to be able to disable it
       this.unwatchUsernameInputValue = this.$watch(
         'usernameInputValue',
         this.usernameInputValueWatcher
@@ -232,12 +235,16 @@ export default {
     }
 
     this.usernameSelect = option => {
-      this.unwatchUsernameInputValue()
-      this.usernameInputValue = option
-      this.unwatchUsernameInputValue = this.$watch(
-        'usernameInputValue',
-        this.usernameInputValueWatcher
-      )
+      if (this.isAuthorized) {
+        this.unwatchUsernameInputValue()
+        this.usernameInputValue = option
+        this.unwatchUsernameInputValue = this.$watch(
+          'usernameInputValue',
+          this.usernameInputValueWatcher
+        )
+      } else {
+        this.usernameInputValue = option
+      }
     }
 
     this.clearUsersSuggestList = () => {

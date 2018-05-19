@@ -12,10 +12,10 @@
       <p>
         Since <a href="https://developer.github.com/v3/rate_limit/">GitHub v3 REST API rate limit</a> is pretty low and the <a href="https://developer.github.com/v4/">GitHub v4 GraphQL API</a> doesn't allow to do queries without authorization you need to sign in with your GitHub account first.
       </p>
-      <p>The Authorization only grants this tool to <strong>request data which is already public</strong> anyway. So, no worries!</p>
+      <p>The authorization only grants this tool to <strong>request data which is already public</strong> anyway. So, no worries!</p>
     </li>
     <li v-if="!isLoading && !userdata">
-      <h2 class="h5">How is the scoring calculated?</h2>
+      <h2 class="h5">How are the scores calculated?</h2>
       <p>
         I implemented the scoring algorithm according to my own sentiments. Improvements are very welcome! Just create an <a href="https://github.com/tschortsch/should-we-hire-that-dev-vue/issues">issue</a> or a <a href="https://github.com/tschortsch/should-we-hire-that-dev-vue/pulls">pull request</a> on GitHub.
       </p>
