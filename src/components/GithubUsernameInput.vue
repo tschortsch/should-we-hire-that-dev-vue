@@ -175,7 +175,10 @@ export default {
       this.submitUsernameForm()
     },
     getHighligthedUsername: function (username) {
-      const match = username.match(new RegExp(`^(${this.escapeRegExp(this.originalUsernameInputValue)})(.*)`, 'i'))
+      if (this.usernameInputValue.length < 1) {
+        return username
+      }
+      const match = username.match(new RegExp(`^(${this.escapeRegExp(this.usernameInputValue)})(.*)`, 'i'))
       if (!match) {
         return username
       }
