@@ -417,7 +417,8 @@ export default {
     position: absolute;
     top: 63px;
     left: 0;
-    background-color: #fff;
+    background-color: hsla(0, 0%, 100%, .9);
+    backdrop-filter: blur(3px);
     z-index: 100;
     width: 100%;
     border: solid 1px $gray-500;
