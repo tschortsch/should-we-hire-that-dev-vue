@@ -421,8 +421,7 @@ export default {
     backdrop-filter: blur(2px);
     z-index: 100;
     width: 100%;
-    border: solid 1px $gray-500;
-    border-top: none;
+    box-shadow: 0 0 10px 0 rgba(125, 125, 125, .5);
     font-size: $font-size-base;
 
     li {
