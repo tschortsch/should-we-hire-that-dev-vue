@@ -24,8 +24,10 @@
                   :class="{ highlight: index === usersSuggestListPointer }"
               >
                 <a href="#" @mousedown.prevent="handleUsernameMousedown(user.login)">
-                  <img v-if="user.avatarUrl" class="avatar" :src="user.avatarUrl" :alt="user.name || user.login" />
-                  <span class="login" v-html="getHighligthedUsername(user.login)"></span>
+                  <div class="d-flex align-items-center">
+                    <img v-if="user.avatarUrl" class="avatar" :src="user.avatarUrl" :alt="user.name || user.login" />
+                    <div class="login text-truncate" v-html="getHighligthedUsername(user.login)"></div>
+                  </div>
                 </a>
               </li>
             </ul>
@@ -175,7 +177,7 @@ export default {
       this.submitUsernameForm()
     },
     getHighligthedUsername: function (username) {
-      if (this.usernameInputValue.length < 1) {
+      if (!username || this.usernameInputValue.length < 1) {
         return username
       }
       const match = username.match(new RegExp(`^(${this.escapeRegExp(this.usernameInputValue)})(.*)`, 'i'))
@@ -214,7 +216,7 @@ export default {
             requestDelay
           )
         } else {
-          this.usersSuggestList = []
+          this.clearUsersSuggestList()
         }
       }
     }
@@ -426,8 +428,6 @@ export default {
 
     li {
       margin-bottom: 5px;
-      height: 50px;
-      line-height: 47px;
 
       &:last-child {
         margin-bottom: 0;
@@ -435,11 +435,13 @@ export default {
 
       img.avatar {
         width: 50px;
-        height: auto;
+        height: 50px;
+        object-fit: cover;
+        flex-shrink: 0;
       }
 
       .login {
-        padding: 0 3px;
+        padding: 0 8px;
         > .highlight {
           color: $brand;
         }
