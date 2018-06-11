@@ -6,7 +6,14 @@
         <div class="username-questionmark-wrapper d-flex">
           <div class="username-input-wrapper d-flex align-items-center">
             <label for="username" class="sr-only">Please enter GitHub username:</label>
-            <input type="search" name="username" id="username" class="form-control" autocapitalize="none" autocorrect="off" autocomplete="off"
+            <input type="search"
+                   name="username"
+                   id="username"
+                   class="form-control"
+                   autocapitalize="none"
+                   autocorrect="off"
+                   autocomplete="off"
+                   spellcheck="false"
                    ref="usernameInput"
                    v-model="usernameInputValue"
                    :placeholder="placeholder"
