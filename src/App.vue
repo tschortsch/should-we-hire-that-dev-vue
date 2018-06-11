@@ -24,4 +24,11 @@ h1, .h1 {
     margin-bottom: 0;
   }
 }
+
+::selection {
+  background: $brand-light;
+}
+::-moz-selection {
+  background: $brand-light;
+}
 </style>
