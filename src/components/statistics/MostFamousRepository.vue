@@ -7,9 +7,9 @@
         <a :href="repository.url">{{ repository.name }}</a>
       </h4>
       <ul class="list-inline">
-        <li class="list-inline-item"><font-awesome-icon :icon="iconStar" /> {{ repository.stargazers.totalCount }}</li>
-        <li class="list-inline-item"><font-awesome-icon :icon="iconCodeBranch" /> {{ repository.forkCount }}</li>
-        <li v-if="repository.primaryLanguage" class="list-inline-item"><font-awesome-icon :icon="iconCode" /> {{ repository.primaryLanguage.name }}</li>
+        <li class="list-inline-item"><font-awesome-icon :icon="['far', 'star']" /> {{ repository.stargazers.totalCount }}</li>
+        <li class="list-inline-item"><font-awesome-icon :icon="['far', 'code-branch']" /> {{ repository.forkCount }}</li>
+        <li v-if="repository.primaryLanguage" class="list-inline-item"><font-awesome-icon :icon="['far', 'code']" /> {{ repository.primaryLanguage.name }}</li>
       </ul>
       <p>{{ repository.description }}</p>
     </template>
@@ -20,10 +20,7 @@
 </template>
 
 <script>
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import faStar from '@fortawesome/fontawesome-pro-regular/faStar'
-import faCodeBranch from '@fortawesome/fontawesome-pro-regular/faCodeBranch'
-import faCode from '@fortawesome/fontawesome-pro-regular/faCode'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 export default {
   name: 'MostFamousRepository',
@@ -32,17 +29,6 @@ export default {
   },
   props: {
     repository: Object
-  },
-  computed: {
-    iconStar () {
-      return faStar
-    },
-    iconCodeBranch () {
-      return faCodeBranch
-    },
-    iconCode () {
-      return faCode
-    }
   }
 }
 </script>

@@ -6,6 +6,27 @@ import router from './router'
 import VueAnalytics from 'vue-analytics'
 import VueVisible from 'vue-visible'
 
+// build custom FontAwesome library
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import { faSignOut, faClock, faCalendarAlt, faMoon, faSun, faCoffee, faCouch, faStar, faCode, faCodeBranch, faMapMarkerAlt, faHeart } from '@fortawesome/pro-regular-svg-icons'
+
+library.add(
+  faGithub,
+  faSignOut,
+  faClock,
+  faCalendarAlt,
+  faMoon,
+  faSun,
+  faCoffee,
+  faCouch,
+  faStar,
+  faCode,
+  faCodeBranch,
+  faMapMarkerAlt,
+  faHeart
+)
+
 Vue.config.productionTip = false
 
 const gaTrackingId = process.env.GA_TRACKING_ID || 'UA-XXXXX-Y'

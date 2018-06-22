@@ -10,8 +10,8 @@
         <h4 class="h2 sentence">{{ daytimeSentence }}</h4>
       </div>
       <ul class="list-inline">
-        <li class="list-inline-item"><font-awesome-icon :icon="iconClock" /> {{ contributionTimeSentence }}</li>
-        <li class="list-inline-item"><font-awesome-icon :icon="iconCalendarAlt" /> {{ contributionDaySentence }}</li>
+        <li class="list-inline-item"><font-awesome-icon :icon="['far', 'clock']" /> {{ contributionTimeSentence }}</li>
+        <li class="list-inline-item"><font-awesome-icon :icon="['far', 'calendar-alt']" /> {{ contributionDaySentence }}</li>
       </ul>
       <h5>Time of the day</h5>
       <line-chart v-if="contributionTimesChartData" class="contribution-chart" chartId="contributionTimes" :chartData="contributionTimesChartData" :options="chartOptions" />
@@ -27,13 +27,7 @@
 <script>
 import LineChart from './LineChart'
 import moment from 'moment'
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import faClock from '@fortawesome/fontawesome-pro-regular/faClock'
-import faCalendarAlt from '@fortawesome/fontawesome-pro-regular/faCalendarAlt'
-import faMoon from '@fortawesome/fontawesome-pro-regular/faMoon'
-import faSun from '@fortawesome/fontawesome-pro-regular/faSun'
-import faCoffee from '@fortawesome/fontawesome-pro-regular/faCoffee'
-import faCouch from '@fortawesome/fontawesome-pro-regular/faCouch'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 export default {
   name: 'ContributionTime',
@@ -83,11 +77,11 @@ export default {
     }
     this.getDaytimeIcon = (time) => {
       const daytimes = [
-        [21, this.iconMoon],
-        [18, this.iconCouch],
-        [8, this.iconSun],
-        [6, this.iconCoffee],
-        [0, this.iconMoon]
+        [21, ['far', 'moon']],
+        [18, ['far', 'couch']],
+        [8, ['far', 'sun']],
+        [6, ['far', 'coffee']],
+        [0, ['far', 'moon']]
       ]
       for (let [startTime, icon] of daytimes) {
         if (time >= startTime) {
@@ -219,24 +213,6 @@ export default {
     },
     commitsCount () {
       return this.commits ? this.commits.length : 0
-    },
-    iconClock () {
-      return faClock
-    },
-    iconCalendarAlt () {
-      return faCalendarAlt
-    },
-    iconMoon () {
-      return faMoon
-    },
-    iconSun () {
-      return faSun
-    },
-    iconCoffee () {
-      return faCoffee
-    },
-    iconCouch () {
-      return faCouch
     }
   }
 }

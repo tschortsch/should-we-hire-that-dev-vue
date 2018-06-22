@@ -6,7 +6,7 @@
         <img :src="userdata.avatarUrl" :alt="name" />
       </div>
       <h2><a :href="userdata.url">{{ name }}</a></h2>
-      <p v-if="userdata.location" class="text-muted mb-2"><font-awesome-icon :icon="iconMapMarkerAlt" /> {{ userdata.location }}</p>
+      <p v-if="userdata.location" class="text-muted mb-2"><font-awesome-icon :icon="['far', 'map-marker-alt']" /> {{ userdata.location }}</p>
       <p v-if="userdata.bio">{{ userdata.bio }}</p>
     </template>
     <organizations v-if="organizations" :organizations="organizations" />
@@ -15,8 +15,7 @@
 
 <script>
 import Organizations from './Organizations'
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import faMapMarkerAlt from '@fortawesome/fontawesome-pro-regular/faMapMarkerAlt'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 export default {
   name: 'user-info',
@@ -30,9 +29,6 @@ export default {
     FontAwesomeIcon
   },
   computed: {
-    iconMapMarkerAlt () {
-      return faMapMarkerAlt
-    },
     name () {
       return this.userdata && this.userdata.name ? this.userdata.name : this.userdata.login
     }

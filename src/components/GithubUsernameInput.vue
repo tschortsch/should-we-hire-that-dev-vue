@@ -45,15 +45,14 @@
           </div>
           <div class="questionmark">?</div>
         </div>
-        <p class="form-text text-muted">Enter GitHub <font-awesome-icon :icon="iconGithub" /> username</p>
+        <p class="form-text text-muted">Enter GitHub <font-awesome-icon name="github" :icon="['fab', 'github']" /> username</p>
       </div>
     </div>
   </form>
 </template>
 
 <script>
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import faGithub from '@fortawesome/fontawesome-free-brands/faGithub'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import GithubService from '../services/GithubService'
 
 export default {
@@ -197,11 +196,6 @@ export default {
         usernameHtml += match[2]
       }
       return usernameHtml
-    }
-  },
-  computed: {
-    iconGithub () {
-      return faGithub
     }
   },
   created: function () {
