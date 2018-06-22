@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import GithubUsernameInput from '@/components/GithubUsernameInput'
 
 // import custom directive
@@ -10,7 +10,7 @@ describe('StatisticsBox.vue', () => {
   it('should handle empty values', () => {
     const username = ''
     const isLoading = false
-    const wrapper = mount(GithubUsernameInput, {
+    const wrapper = shallowMount(GithubUsernameInput, {
       propsData: { username: username, isLoading: isLoading }
     })
     expect(wrapper.find('#username').element.value).toEqual('')
@@ -20,7 +20,7 @@ describe('StatisticsBox.vue', () => {
   it('should be disabled during loading', () => {
     const username = ''
     const isLoading = true
-    const wrapper = mount(GithubUsernameInput, {
+    const wrapper = shallowMount(GithubUsernameInput, {
       propsData: { username: username, isLoading: isLoading }
     })
     expect(wrapper.find('#username').element.disabled).toBe(true)
@@ -29,7 +29,7 @@ describe('StatisticsBox.vue', () => {
   it('should have username as value', () => {
     const username = 'tschortsch'
     const isLoading = false
-    const wrapper = mount(GithubUsernameInput, {
+    const wrapper = shallowMount(GithubUsernameInput, {
       propsData: { username: username, isLoading: isLoading }
     })
     expect(wrapper.find('#username').element.value).toEqual(username)

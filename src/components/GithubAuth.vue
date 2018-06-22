@@ -1,12 +1,10 @@
 <template>
-  <button v-if="!isAuthorized" class="btn btn-primary btn-sm" @click.prevent="handleAuth">Authorize with GitHub <font-awesome-icon :icon="iconGithub" /></button>
-  <button v-else class="btn btn-link btn-sm logout-btn" @click.prevent="handleLogout">Logout from GitHub <font-awesome-icon :icon="iconSignOut" /></button>
+  <button v-if="!isAuthorized" class="btn btn-primary btn-sm" @click.prevent="handleAuth">Authorize with GitHub <font-awesome-icon :icon="['fab', 'github']" /></button>
+  <button v-else class="btn btn-link btn-sm logout-btn" @click.prevent="handleLogout">Logout from GitHub <font-awesome-icon :icon="['far', 'sign-out']" /></button>
 </template>
 
 <script>
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import faGithub from '@fortawesome/fontawesome-free-brands/faGithub'
-import faSignOut from '@fortawesome/fontawesome-pro-regular/faSignOut'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import GithubService from '../services/GithubService'
 
 export default {
@@ -34,14 +32,6 @@ export default {
     handleLogout: function (e) {
       GithubService.removeAccessTokenFromLocalStorage()
       window.location.reload()
-    }
-  },
-  computed: {
-    iconGithub () {
-      return faGithub
-    },
-    iconSignOut () {
-      return faSignOut
     }
   }
 }
