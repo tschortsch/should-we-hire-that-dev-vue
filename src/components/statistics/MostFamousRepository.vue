@@ -8,7 +8,7 @@
       </h4>
       <ul class="list-inline">
         <li class="list-inline-item"><font-awesome-icon :icon="['far', 'star']" /> {{ repository.stargazers.totalCount }}</li>
-        <li class="list-inline-item"><font-awesome-icon :icon="['far', 'code-branch']" /> {{ repository.forkCount }}</li>
+        <li class="list-inline-item"><font-awesome-icon :icon="['fas', 'code-branch']" /> {{ repository.forkCount }}</li>
         <li v-if="repository.primaryLanguage" class="list-inline-item"><font-awesome-icon :icon="['far', 'code']" /> {{ repository.primaryLanguage.name }}</li>
       </ul>
       <p>{{ repository.description }}</p>

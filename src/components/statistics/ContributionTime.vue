@@ -78,9 +78,9 @@ export default {
     this.getDaytimeIcon = (time) => {
       const daytimes = [
         [21, ['far', 'moon']],
-        [18, ['far', 'couch']],
+        [18, ['fas', 'couch']],
         [8, ['far', 'sun']],
-        [6, ['far', 'coffee']],
+        [6, ['fas', 'coffee']],
         [0, ['far', 'moon']]
       ]
       for (let [startTime, icon] of daytimes) {

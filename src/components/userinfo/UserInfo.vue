@@ -6,7 +6,7 @@
         <img :src="userdata.avatarUrl" :alt="name" />
       </div>
       <h2><a :href="userdata.url">{{ name }}</a></h2>
-      <p v-if="userdata.location" class="text-muted mb-2"><font-awesome-icon :icon="['far', 'map-marker-alt']" /> {{ userdata.location }}</p>
+      <p v-if="userdata.location" class="text-muted mb-2"><font-awesome-icon :icon="['fas', 'map-marker-alt']" /> {{ userdata.location }}</p>
       <p v-if="userdata.bio">{{ userdata.bio }}</p>
     </template>
     <organizations v-if="organizations" :organizations="organizations" />

@@ -9,11 +9,12 @@ import VueVisible from 'vue-visible'
 // build custom FontAwesome library
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
-import { faSignOut, faClock, faCalendarAlt, faMoon, faSun, faCoffee, faCouch, faStar, faCode, faCodeBranch, faMapMarkerAlt, faHeart } from '@fortawesome/pro-regular-svg-icons'
+import { faSignOutAlt, faCoffee, faCouch, faCode, faCodeBranch, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
+import { faClock, faCalendarAlt, faMoon, faSun, faStar, faHeart } from '@fortawesome/free-regular-svg-icons'
 
 library.add(
   faGithub,
-  faSignOut,
+  faSignOutAlt,
   faClock,
   faCalendarAlt,
   faMoon,
